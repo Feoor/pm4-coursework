@@ -36,8 +36,16 @@
             </div>
 
             <div class="header__right-side">
-                <a href="sign_in.html" class="header__login">Войти</a>
-                <a href="sign_up.html" class="header__sign-up">Зарегистрироваться</a>
+                <div class="header__user-profile align-items-center" style="display: none;">
+                    <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
+                    <span class="header__user-name">Имя пользователя</span>
+                    <button class="header__logout btn btn-primary ms-2">Выйти</button>
+                </div>
+
+                <div class="header__auth-buttons" style="display: none;">
+                    <a href="sign_in.html" class="header__login">Войти</a>
+                    <a href="sign_up.html" class="header__sign-up">Зарегистрироваться</a>
+                </div>
 
                 <button id="headerMenuButton" class="header__menu">
                     <span></span>
@@ -502,5 +510,7 @@
 <!-- Скрипты -->
 <script src="../js/app.js"></script>
 <script src="../js/search_filter.js"></script>
+<script type="module" src="../js/firebase-config.js"></script>
+<script type="module" src="../js/current_user.js"></script>
 </body>
 </html>

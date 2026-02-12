@@ -1,3 +1,5 @@
+import { auth, googleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, db, doc, setDoc } from "./firebase-config.js";
+
 function validateName(name) {
     // Проверяем, что имя не пустое
     if (!name.trim()) {
@@ -25,13 +27,31 @@ function validateName(name) {
     return { valid: true, message: "" };
 }
 
+function returnToMainPage() {
+    window.location.href = "eatly_menu.html";
+}
+
 // Вход через социальные сети
 const googleButton = document.getElementById("googleAuthButton");
 const appleButton = document.getElementById("appleAuthButton");
 
 if (googleButton) {
     googleButton.addEventListener("click", function () {
-        alert("Вход через Google");
+        signInWithPopup(auth, googleAuthProvider)
+            .then((result) => {
+                const user = result.user;
+                
+                console.log("Пользователь вошел через Google:", user);
+                alert("Вы успешно вошли через Google");
+                returnToMainPage();
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+
+                console.error("Ошибка входа через Google:", errorCode, errorMessage);
+                alert(`Ошибка входа через Google: ${errorMessage}`);
+            });
     });
 }
 if (appleButton) {
@@ -50,16 +70,24 @@ if (signInForm) {
     signInForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        alert("Вы успешно вошли в систему");
-
-        console.log("Форма входа отправлена", {
-            email: emailInput.value,
-            password: passwordInput.value
-        });
-
-        // Очистка полей
-        emailInput.value = "";
-        passwordInput.value = "";
+        signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log("Пользователь вошел:", user);
+                alert("Вы успешно вошли в систему");
+                returnToMainPage();
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.error("Ошибка входа:", errorCode, errorMessage);
+                alert(`Ошибка входа: ${errorMessage}`);
+            })
+            .finally(() => {
+                // Очистка полей
+                emailInput.value = "";
+                passwordInput.value = "";
+            });
     })
 }
 
@@ -84,18 +112,37 @@ if (signUpForm) {
             nameInput.setCustomValidity("");
         }
 
-        alert("Вы успешно зарегистрировались");
+        createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+            .then((userCredential) => {
+                // Регистрация успешна
+                const user = userCredential.user;
+                console.log("Пользователь зарегистрирован:", user);
 
-        console.log("Форма регистрации отправлена", {
-            name: nameInput.value,
-            email: emailInput.value,
-            password: passwordInput.value
-        });
-
-        // Очистка полей
-        nameInput.value = "";
-        emailInput.value = "";
-        passwordInput.value = "";
+                // Сохранение имени пользователя в Firestore
+                const userDocRef = doc(db, "users", user.uid);
+                setDoc(userDocRef, { name: nameInput.value }, { merge: true })
+                    .then(() => {
+                        console.log("Имя пользователя сохранено в Firestore");
+                        alert("Вы успешно зарегистрировались");
+                        returnToMainPage();
+                    })
+                    .catch((error) => {
+                        console.error("Ошибка при сохранении имени пользователя:", error);
+                    });
+            })
+            .catch((error) => {
+                // Обработка ошибок регистрации
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.error("Ошибка регистрации:", errorCode, errorMessage);
+                alert(`Ошибка регистрации: ${errorMessage}`);
+            })
+            .finally(() => {
+                // Очистка полей
+                nameInput.value = "";
+                emailInput.value = "";
+                passwordInput.value = "";
+            });
     })
 }
 

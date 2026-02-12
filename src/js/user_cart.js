@@ -78,7 +78,6 @@ class Cart {
             });
         }
 
-
         // Кнопка закрытия окна корзины
         const closeCartMenuButton = sidebarCartMenu.querySelector('#closeCartButton');
 
