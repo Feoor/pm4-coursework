@@ -1,200 +1,366 @@
-@import 'fonts';
-@import "navbar_style";
-@import "footer_style";
-@import "menu_styles";
-@import "restaurant_pages_style";
-@import "contact_us_style";
-@import "auth";
+<script setup>
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+import RestaurantCard from '@/components/RestaurantCard.vue'
+import DishCard from '@/components/DishCard.vue'
+import ReviewCard from '@/components/ReviewCard.vue'
 
-:root {
-  // Шрифты
-  $font-family: "Manrope";
-  $second-family: "Inter";
-  $font3: "Public Sans", sans-serif;
-  $font4: "Quicksand", sans-serif;
-  $font5: "Plus Jakarta Sans", sans-serif;
+import { ref } from 'vue'
+import { getImageUrl } from '@/utils/helpers'
 
-  // Цвета
-  $purple: #6c5fbc;
-  $purple-hover: #5a4aa3;
-  $translucent-white: rgba(197, 197, 197, 0.15);
-  $main-black: #242424;
-}
-/* Базовые стили */
-html {
-  font-family: var($second-family), sans-serif;
-  color: var($main-black);
-}
-/* Прикрепляем футер снизу */
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: #f9f9f9;
-}
-/* Главное занимает всю доступную высоту */
-main {
-  flex: 1 0 auto;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-h2 {
-  font-family: var($font-family), sans-serif;
-  font-weight: 700;
-  font-size: 45px;
-  text-transform: capitalize;
-  color: #323142;
-}
-
-.card {
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-
-  .card-img-top {
-    border-radius: 30px 30px 0 0;
+const restaurants = ref([
+  {
+    id: 1,
+    name: 'The Chicken King',
+    image: getImageUrl('the_chicken_king.webp'),
+    badge: 'Полезно',
+    deliveryTime: 1440,
+    rating: 4.8
+  },
+  {
+    id: 2,
+    name: 'The Fishman',
+    image: getImageUrl('the_fishman.webp'),
+    badge: 'Популярно',
+    deliveryTime: 1440,
+    rating: 4.8
+  },
+  {
+    id: 3,
+    name: 'The Chicken King',
+    image: getImageUrl('the_chicken_king.webp'),
+    badge: 'Полезно',
+    deliveryTime: 1440,
+    rating: 4.8
   }
+])
 
-  .card-body {
-    padding: 0.75rem 2rem 1rem;
-
-    .card-title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    h5 {
-      font-family: var($font-family), sans-serif;
-      font-weight: 800;
-      font-size: 25px;
-      line-height: 162%;
-      color: #323142;
-      margin-bottom: 0;
-    }
+const dishes = ref([
+  {
+    id: 1,
+    restaurantId: 1,
+    name: 'Chicken Hell',
+    image: getImageUrl('chicken_hell_dish.png'),
+    badge: 'Полезно',
+    deliveryTime: 1440,
+    rating: 4.8,
+    price: 1799
+  },
+  {
+    id: 2,
+    restaurantId: 1,
+    name: 'Swe Dish',
+    image: getImageUrl('swe_dish.png'),
+    badge: 'Популярно',
+    deliveryTime: 2040,
+    rating: 4.9,
+    price: 2499
+  },
+  {
+    id: 3,
+    restaurantId: 2,
+    name: 'Fish Hell',
+    image: getImageUrl('fish_hell_dish.png'),
+    badge: 'Эксклюзив',
+    deliveryTime: 1440,
+    rating: 4.9,
+    price: 2499
+  },
+  {
+    id: 4,
+    restaurantId: 1,
+    name: 'Chicken Hell',
+    image: getImageUrl('chicken_hell_dish.png'),
+    badge: 'Полезно',
+    deliveryTime: 1440,
+    rating: 4.8,
+    price: 1799
+  },
+  {
+    id: 5,
+    restaurantId: 1,
+    name: 'Swe Dish',
+    image: getImageUrl('swe_dish.png'),
+    badge: 'Популярно',
+    deliveryTime: 2040,
+    rating: 4.9,
+    price: 2499
   }
-}
+])
 
-.form-control {
-  transition: .2s all;
-
-  &:focus {
-    border: 1px solid var($purple-hover) !important;
-    box-shadow: 0 0 0 .25rem rgba(108, 95, 188, 0.25) !important;
+const reviews = ref([
+  {
+    id: 1,
+    name: 'Анна Петрова',
+    image: getImageUrl('review_author.png'),
+    slogan: '2 года с нами',
+    text: 'Отличный сервис! Еда всегда свежая и вкусная. Рекомендую всем!',
+    rating: 5
+  },
+  {
+    id: 2,
+    name: 'Иван Иванов',
+    image: getImageUrl('review_author.png'),
+    slogan: '1 год с нами',
+    text: 'Очень доволен качеством блюд и быстрой доставкой. Буду заказывать снова!',
+    rating: 4
+  },
+  {
+    id: 3,
+    name: 'Мария Смирнова',
+    image: getImageUrl('review_author.png'),
+    slogan: '6 месяцев с нами',
+    text: 'Прекрасный выбор блюд и отличный сервис. Рекомендую всем любителям вкусной еды!',
+    rating: 5
   }
-}
+])
+</script>
 
-/* Базовые классы */
-.mt-6, m-6 {
-  margin-top: 5rem;
-}
-.mb-6, m-6 {
-  margin-bottom: 5rem;
-}
+<template>
+    <Header />
 
-.menu {
-  .menu__item {
-    font-family: var($second-family), sans-serif;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 150%;
-    cursor: pointer;
+    <main class="main">
+      <!--  Встречающий контент  -->
+      <section class="hero">
+        <div class="container-sm">
+          <div class="hero__wrapper row">
 
-    &:hover {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-  }
-  .menu__item--active {
-    color: var($purple);
-  }
-}
-.highlight--purple {
-  color: var($purple);
-}
-.text-muted {
-  color: #6c757d !important;
-}
-.text-muted--purple {
-  color: #7c6fcd !important;
-}
-.price--cents {
-  font-family: var($font-family), sans-serif;
-  font-weight: 700;
-  font-size: 19px;
-  line-height: 156%;
-  color: #8e97a6;
-}
+            <div class="hero__left-column col-12 col-md-6 d-flex flex-column">
+              <p class="hero__subtitle">БОЛЕЕ 1000 ПОЛЬЗОВАТЕЛЕЙ</p>
 
-.badge {
-  font-family: var($font-family), sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-  padding: 6px 8px;
-}
-.badge.badge-healthy {
-  color: #daa31a;
-  background: #f7edd0;
-}
-.badge.badge-trending {
-  color: #fb471d;
-  background: #f7c5ba;
-}
-.badge.badge-supreme {
-  color: #309d5b;
-  background-color: rgba(51, 172, 100, 0.2);
-}
+              <h1 class="hero__title mb-3">
+                Наслаждайтесь едой со всего
+                <span class="highlight--purple">Мира</span>
+              </h1>
 
-/* Разновидности классов кнопок */
-.btn {
-  border-radius: 12px;
-  border: none;
-  font-family: var($font-family), sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  text-transform: capitalize;
-  transition: .3s all;
-}
-.btn-primary {
-  color: #fff;
-  background: var($purple);
+              <p class="hero__text">С EatLy вы можете ставить цели по сбережениям, получать кэшбэк, получить зарплату на 2 дня раньше (см.условия) и получите бонус <span class="highlight--purple">$20</span>.</p>
 
-  &:hover {
-    background: var($purple-hover);
-  }
-}
-.btn-secondary {
-  color: #6c5fbc;
-  background: inherit;
-  border: 1.50px solid var($purple);
+              <div class="hero__buttons">
+                <router-link to="/sign-up" class="hero__btn btn btn-primary">Приступить</router-link>
+              </div>
 
-  &:hover {
-    background: var($purple);
-    color: #fff;
-  }
-}
+              <div class="hero__reviews col-12 d-flex">
+                <div class="hero__review">
+                  <img class="hero__review-logo" src="@/assets/img/trustpilot_logo.svg" alt="Trustpilot logo">
 
-.input-hint {
-  font-family: var($font-family), sans-serif;
-  font-weight: 500;
-  font-size: 16px;
-  color: #6c5fbc;
-}
+                  <div class="hero__review-stars">
+                      <img v-for="star in 5" :key="star" src="@/assets/icons/full_star.svg" alt="star">
+                  </div>
 
+                  <div class="hero__review-counts">
+                    <span>4900+</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero__right-column col-12 col-md-6">
+              <div class="hero__food-img">
+                <img src="@/assets/img/hero_food.webp" alt="Hero Food">
+              </div>
+              <div class="hero__order-preview">
+                <img src="@/assets/img/order_preview.webp" alt="Order Preview">
+              </div>
+              <div class="hero__graph">
+                <img src="@/assets/img/hero_graph.png" alt="Hero Graph">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Преимущества -->
+      <section class="features">
+        <div class="container-sm">
+
+          <div class="features__wrapper row justify-content-evenly">
+            <div class="features__feature col-12 col-md-3 h-100">
+              <h3 class="features__feature-title">10K+</h3>
+              <p class="features__feature-text">Довольных клиентов <br>По всему миру</p>
+            </div>
+
+            <div class="features__feature col-12 col-md-3 h-100">
+              <h3 class="features__feature-title">4M</h3>
+              <p class="features__feature-text">Продано полезных блюд <br>Включая молочные коктейли</p>
+            </div>
+
+            <div class="features__feature col-12 col-md-3 h-100">
+              <h3 class="features__feature-title">99.99%</h3>
+              <p class="features__feature-text">Надежная поддержка <br>Мы создаем лучший сервис</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Скачать приложение -->
+      <section class="app-download">
+        <div class="container-sm">
+
+          <div class="app-download__wrapper row justify-content-between align-items-center">
+            <div class="app-download__mockup col-12 col-lg-6 order-1 order-lg-0">
+              <div class="app-download__mobile-screen mx-auto">
+                <img src="@/assets/img/mobile_screen.webp" alt="Mobile Screen" class="app-download__mobile-screen">
+              </div>
+            </div>
+
+            <div class="app-download__content col-12 col-lg-6 d-flex flex-column">
+              <h2 class="app-download__title">
+                Премиальное
+                <span class="highlight--purple">качество</span>
+                для вашего здоровья
+              </h2>
+
+              <ul class="app-download__features">
+                <li class="app-download__feature">
+                  <p>Премиальная еда готовится из ингредиентов, богатых важными витаминами и минералами.</p>
+                </li>
+                <li class="app-download__feature">
+                  <p>Эти продукты способствуют общему оздоровлению, поддерживая пищеварение и укрепляя иммунитет.</p>
+                </li>
+              </ul>
+
+              <button class="app-download__btn">Скачать</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Наши лучшие рестораны -->
+      <section class="our-restaurants">
+        <div class="container-sm">
+
+          <!-- Обертка сетки -->
+          <div class="our-restaurants__wrapper">
+            <!-- Титул -->
+            <h2 class="our-restaurants__title text-center">Наши лучшие <span class="highlight--purple">рестораны</span></h2>
+
+            <!-- Карточки ресторанов -->
+            <div class="our-restaurants__restaurants-wrapper col-12 mb-2">
+
+              <RestaurantCard
+                v-for="restaurant in restaurants"
+                :key="restaurant.id"
+                :restaurant="restaurant"
+              />
+
+            </div>
+
+            <!-- Переход на страницу меню -->
+            <div class="col-12 text-end">
+              <router-link to="/menu" class="view-all">Посмотреть все</router-link>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Наши лучшие блюда -->
+      <section class="our-dishes">
+        <div class="container-sm">
+
+          <!-- Обертка сетки -->
+          <div class="our-dishes__wrapper">
+            <!-- Титул -->
+            <h2 class="our-dishes__title col-12 text-center">Наши лучшие <span class="highlight--purple">блюда</span></h2>
+
+            <!-- Карточки блюд -->
+            <div class="our-dishes__dishes-wrapper col-12 mb-2">
+              <DishCard
+                v-for="dish in dishes"
+                :key="dish.id"
+                :dish="dish"
+                mode="preview"
+              />
+            </div>
+            <!-- Переход на страницу меню -->
+            <div class="col-12 text-end">
+              <router-link to="/menu" class="view-all">Посмотреть все</router-link>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Секция об контроле покупок -->
+      <section class="purchases-control">
+        <div class="container-sm">
+          <div class="purchases-control__wrapper row align-items-center">
+
+            <div class="purchases-control__left-column col-12 col-lg-6 d-flex flex-column justify-content-start mb-5 mb-lg-0">
+              <h2 class="purchases-control__title mb-5">
+                Контролируйте
+                <span class="highlight--purple">покупки</span>
+                через панель управления
+              </h2>
+
+              <img src="@/assets/img/order_history.webp" alt="Order History" class="purchases-control__first-image">
+            </div>
+
+            <div class="purchase-control__right-column col-12 col-lg-6 d-flex justify-content-end">
+              <img src="@/assets/img/purchases_control.png" alt="Purchases Control" class="purchases-control__second-image">
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Секция с отзывами -->
+      <section class="reviews">
+        <div class="container-sm">
+          <div class="reviews__wrapper">
+
+            <h2 class="reviews__title text-center">
+              <span class="highlight--purple">Отзывы</span>
+              клиентов
+            </h2>
+
+            <div class="reviews__inner purple-scrollbar">
+              <ReviewCard
+                v-for="review in reviews"
+                :key="review.id"
+                :review="review"
+              />
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Секция с подпиской и купоном на скидку -->
+      <section class="sale">
+        <div class="container-sm">
+          <div class="sale__wrapper">
+
+              <h2 class="sale__title">ПОЛУЧИТЕ 50%</h2>
+
+              <form id="promoForm" class="sale__form">
+                <div class="form-floating col-12 col-md-7 col-xl-5">
+                  <input id="promoEmailInput" type="email" class="sale__email-input form-control" placeholder="name@example.com">
+                  <label for="promoEmailInput">Введите Ваш Email Адрес</label>
+
+                  <button type="submit" class="subscribe__btn">Подписаться</button>
+                </div>
+              </form>
+
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+</template>
+
+<style lang="scss" scoped>
 .view-all {
   position: relative;
   z-index: 1; /* Чтобы тень не перекрывала текст */
   margin-top: 65px;
   padding-right: 40px;
-  font-family: var($font-family), sans-serif;
+  font-family: $font-family, sans-serif;
   font-weight: 500;
   font-size: 20px;
   line-height: 226%;
@@ -206,7 +372,7 @@ h2 {
     content: "";
     width: 24px;
     height: 24px;
-    background: url("../icons/gray_right_arrow.svg") no-repeat;
+    background: url("@/assets/icons/gray_right_arrow.svg") no-repeat;
     background-size: contain;
     position: absolute;
     top: 50%;
@@ -223,26 +389,6 @@ h2 {
   }
 }
 
-/* Фиолетовый скроллбар */
-.purple-scrollbar {
-  $sb-track-color: rgba(108, 95, 188, 0.2);
-  $sb-thumb-color: var($purple);
-  $sb-size: 11px;
-
-  &::-webkit-scrollbar {
-    width: var($sb-size);
-    height: var($sb-size)
-  }
-  &::-webkit-scrollbar-track {
-    background: var($sb-track-color);
-    border-radius: 50px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: var($sb-thumb-color);
-    border-radius: 50px;
-  }
-}
-
 .hero__wrapper {
   padding-top: 250px;
   padding-bottom: 130px;
@@ -250,7 +396,7 @@ h2 {
   .hero__left-column {
     .hero__subtitle {
       padding-left: 76px;
-      font-family: var($font-family), sans-serif;
+      font-family: $font-family, sans-serif;
       font-weight: 900;
       font-size: 15px;
       line-height: 120%;
@@ -273,13 +419,13 @@ h2 {
       }
     }
     .hero__title {
-      font-family: var($font-family), sans-serif;
+      font-family: $font-family, sans-serif;
       font-weight: 900;
       font-size: 60px;
       color: #201f1f;
     }
     .hero__text {
-      font-family: var($second-family), sans-serif;
+      font-family: $second-family, sans-serif;
       font-weight: 400;
       font-size: 18px;
       line-height: 156%;
@@ -318,7 +464,7 @@ h2 {
           width: 96px;
         }
         .hero__review-counts {
-          font-family: var($font5), sans-serif;
+          font-family: $font5, sans-serif;
           font-weight: 400;
           font-size: 16px;
           line-height: 150%;
@@ -349,7 +495,7 @@ h2 {
         width: 101px;
         height: 98px;
         position: absolute;
-        background: url("../icons/spiral_arrow.svg") no-repeat;
+        background: url("@/assets/icons/spiral_arrow.svg") no-repeat;
         background-size: contain;
         z-index: -1;
         top: 23%;
@@ -376,7 +522,7 @@ h2 {
         content: "";
         width: 42px;
         height: 28px;
-        background: url("../icons/illustration_01.svg") no-repeat;
+        background: url("@/assets/icons/illustration_01.svg") no-repeat;
         background-size: contain;
         position: absolute;
         top: -15%;
@@ -403,7 +549,7 @@ h2 {
         height: 37px;
         content: "";
         position: absolute;
-        background: url("../icons/illustration_02.svg") no-repeat;
+        background: url("@/assets/icons/illustration_02.svg") no-repeat;
         background-size: contain;
         z-index: -1;
         bottom: -25%;
@@ -417,17 +563,17 @@ h2 {
 /* Стили для секций */
 /* Наши преимущества */
 .features {
-  background: url("../img/features_bg.svg") no-repeat;
+  background: url("@/assets/img/features_bg.svg") no-repeat;
   background-size: cover;
   padding: 48px 0;
 
   .features__feature {
     &:not(:last-child) {
-      border-right: 1px solid var($translucent-white);
+      border-right: 1px solid $translucent-white;
     }
 
     .features__feature-title {
-      font-family: var($font3), sans-serif;
+      font-family: $font3, sans-serif;
       font-weight: 700;
       font-size: 43px;
       line-height: 125%;
@@ -436,7 +582,7 @@ h2 {
       color: #fff;
     }
     .features__feature-text {
-      font-family: var($second-family), sans-serif;
+      font-family: $second-family, sans-serif;
       font-weight: 500;
       font-size: 14px;
       line-height: 150%;
@@ -464,7 +610,7 @@ h2 {
         content: "";
         width: 52px;
         height: 62px;
-        background: url("../icons/illustration_02.svg") no-repeat;
+        background: url("@/assets/icons/illustration_02.svg") no-repeat;
         position: absolute;
         top: -35px;
         right: -60px;
@@ -474,7 +620,7 @@ h2 {
   }
   .app-download__content {
     .app-download__title {
-      font-family: var($font-family), sans-serif;
+      font-family: $font-family, sans-serif;
       font-weight: 900;
       font-size: 50px;
       color: #18181b;
@@ -487,7 +633,7 @@ h2 {
       margin-bottom: 60px;
 
       .app-download__feature {
-        font-family: var($second-family), sans-serif;
+        font-family: $second-family, sans-serif;
         font-weight: 400;
         font-size: 20px;
         line-height: 150%;
@@ -503,9 +649,9 @@ h2 {
       width: max-content;
       padding: 1.25rem 68px 1.25rem 26px;
       border-radius: 15px;
-      background: var($purple);
+      background: $purple;
       border: none;
-      font-family: var($font-family), sans-serif;
+      font-family: $font-family, sans-serif;
       font-weight: 600;
       font-size: 18px;
       line-height: 125%;
@@ -519,7 +665,7 @@ h2 {
         content: "";
         width: 30px;
         height: 30px;
-        background: url("../icons/right_arrow.svg") no-repeat;
+        background: url("@/assets/icons/right_arrow.svg") no-repeat;
         background-size: contain;
         position: absolute;
         top: 50%;
@@ -532,7 +678,7 @@ h2 {
         content: "";
         width: 169px;
         height: 61px;
-        background: url("../img/long_spiral.svg") no-repeat;
+        background: url("@/assets/img/long_spiral.svg") no-repeat;
         background-size: contain;
         position: absolute;
         z-index: -1;
@@ -540,7 +686,7 @@ h2 {
         right: -85%;
       }
       &:hover {
-        background: var($purple-hover);
+        background: $purple-hover;
       }
       &:hover::after {
         transform: translateX(8px) translateY(-45%);
@@ -571,25 +717,6 @@ h2 {
       display: none;
     }
   }
-  .our-restaurants__restaurant {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    width: 396px;
-    border: 2px solid #f4f4f4;
-    transition: transform .3s ease;
-    position: relative;
-
-    &:hover {
-      transform: translateY(-10px);
-    }
-    .our-restaurants__restaurant-info {
-      font-family: var($font-family), sans-serif;
-      font-weight: 400;
-      font-size: 19px;
-      line-height: 133%;
-      color: #8e97a6;
-    }
-  }
 }
 
 /* Наши лучшие блюда */
@@ -612,38 +739,6 @@ h2 {
 
     &::-webkit-scrollbar {
       display: none;
-    }
-  }
-
-  .our-dishes__dish {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    width: 225px;
-    padding: 37px 20px 26px;
-    border: 2px solid #f4f4f4;
-    border-radius: 30px;
-    position: relative;
-    cursor: pointer;
-    transition: transform .3s ease;
-
-    &:hover {
-      transform: translateY(-10px);
-    }
-
-    .card-img-top {
-      border-radius: 30px 30px 0 0;
-    }
-
-    .card-body {
-      padding: 0;
-
-      .our-dishes__dish-info {
-        font-family: var($font-family), sans-serif;
-        font-weight: 400;
-        font-size: 19px;
-        line-height: 133%;
-        color: #8e97a6;
-      }
     }
   }
 }
@@ -690,52 +785,6 @@ h2 {
     font-weight: 800;
     margin-bottom: 80px;
   }
-  /* Карточки карусели */
-  .reviews__item {
-    min-width: 530px;
-    padding: 38px 43px;
-    border: 2px solid rgba(108, 95, 188, 0.2);
-    border-radius: 14px;
-    scroll-snap-align: start;
-
-    .reviews__header {
-      margin-bottom: 20px;
-
-      img {
-        width: 71px;
-        height: 71px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-      .reviews__info {
-        margin-left: 20px;
-      }
-      .reviews__author {
-        font-family: var($font-family), sans-serif;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 150%;
-        color: #030314;
-      }
-      .review__slogan {
-        font-family: var($font4), sans-serif;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 156%;
-        text-transform: capitalize;
-        color: #5e5d5d;
-      }
-    }
-
-    .reviews__text {
-      font-family: var($font-family), sans-serif;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 1.4;
-      color: #636363;
-    }
-  }
 }
 
 /* Секция с купоном */
@@ -747,7 +796,7 @@ h2 {
   height: 280px;
   padding: 40px 65px;
   border-radius: 30px;
-  background: var($purple) url("../img/sale_bg.webp");
+  background: $purple url("@/assets/img/sale_bg.webp");
   background-size: cover;
   position: relative;
 
@@ -756,7 +805,7 @@ h2 {
     content: "";
     width: 274px;
     height: 276px;
-    background: url("../img/swe_dish.png") no-repeat;
+    background: url("@/assets/img/swe_dish.png") no-repeat;
     background-size: contain;
     position: absolute;
     bottom: -25%;
@@ -770,7 +819,7 @@ h2 {
   }
   /* Стили текста для формы */
   .sale__form {
-    font-family: var($font-family), sans-serif;
+    font-family: $font-family, sans-serif;
     font-weight: 600;
     color: #878787;
     opacity: 0.8;
@@ -782,7 +831,7 @@ h2 {
       border-radius: 14px;
       height: 68px;
       padding-right: 180px;
-      font-family: var($font-family), sans-serif;
+      font-family: $font-family, sans-serif;
       font-weight: 600;
       font-size: 16px;
       color: #323142;
@@ -795,9 +844,9 @@ h2 {
       border-radius: 11px;
       height: 53px;
       padding: 0 24px;
-      background: var($purple);
+      background: $purple;
       border: none;
-      font-family: var($font-family), sans-serif;
+      font-family: $font-family, sans-serif;
       font-weight: 600;
       font-size: 18px;
       line-height: 125%;
@@ -807,7 +856,7 @@ h2 {
       transition: background .3s;
 
       &:hover {
-        background: var($purple-hover);
+        background: $purple-hover;
       }
     }
   }
@@ -816,46 +865,6 @@ h2 {
 /* Адаптивность главной страницы */
 @media screen and (max-width: 1199.98px) {
   // Планшеты в горизонтальной ориентации, Ipad Pro (>= 1024px)
-  h2 {
-    font-size: 45px;
-  }
-  .card {
-    .card-body {
-      padding: 0.5rem 1.5rem 1rem;
-
-      h5 {
-        font-size: 24px;
-      }
-    }
-  }
-  .badge {
-    padding: 4px 6px;
-    font-size: 12px;
-  }
-  .restaurant-bookmark {
-    width: 36px;
-    height: 36px;
-    right: 18px;
-    bottom: 14px;
-
-    &::after {
-      width: 15px;
-      height: 19px;
-    }
-  }
-  .view-all {
-    font-size: 20px;
-    padding-right: 32px;
-
-    &::after {
-      width: 20px;
-      height: 20px;
-      transform: translateY(-50%);
-    }
-  }
-  .price--cents {
-    font-size: 18px;
-  }
 
   .hero__wrapper {
     padding-top: 200px;
@@ -1022,17 +1031,6 @@ h2 {
       margin-top: 0;
       margin-bottom: 40px;
     }
-
-    .our-restaurants__restaurant {
-      .our-restaurants__restaurant-info {
-        font-size: 18px;
-
-        img {
-          width: 24px;
-          height: 24px;
-        }
-      }
-    }
   }
 
   .our-dishes__wrapper {
@@ -1045,24 +1043,6 @@ h2 {
     }
     .our-dishes__dishes-wrapper {
       gap: 22px;
-    }
-    .our-dishes__dish {
-      width: 175px;
-      padding: 1rem;
-
-      h5 {
-        font-size: 22px;
-      }
-      .card-body {
-        .our-dishes__dish-info {
-          font-size: 16px;
-
-          img {
-            width: 23px;
-            height: 23px;
-          }
-        }
-      }
     }
   }
 
@@ -1091,33 +1071,6 @@ h2 {
     .reviews__title {
       font-size: 44px;
       margin-bottom: 54px;
-    }
-    .reviews__item {
-      min-width: 400px;
-      padding: 20px 24px;
-
-      .reviews__header {
-        margin-bottom: 16px;
-
-        img {
-          width: 60px;
-          height: 60px;
-        }
-        .reviews__info {
-          margin-left: 12px;
-        }
-        .reviews__author {
-          font-size: 18px;
-        }
-        .review__slogan {
-          font-size: 15px;
-          margin-bottom: 0;
-        }
-      }
-
-      .reviews__text {
-        font-size: 18px;
-      }
     }
   }
   .sale {
@@ -1151,9 +1104,6 @@ h2 {
 
 @media screen and (max-width: 991.98px) {
   // Планшеты в вертикальной ориентации (>= 768px)
-  h2 {
-    font-size: 40px;
-  }
 
   .hero__wrapper {
     padding-top: 180px;
@@ -1299,33 +1249,12 @@ h2 {
       margin-top: 0;
       margin-bottom: 40px;
     }
-    .our-restaurants__restaurant {
-      width: 350px;
-    }
+
   }
 
   .our-dishes__wrapper {
     padding-top: 70px;
     padding-bottom: 76px;
-
-    .our-dishes__dish {
-      width: 200px;
-      padding: 1rem;
-
-      h5 {
-        font-size: 24px;
-      }
-      .card-body {
-        .our-dishes__dish-info {
-          font-size: 18px;
-
-          img {
-            width: 24px;
-            height: 24px;
-          }
-        }
-      }
-    }
   }
 
   .purchases-control__wrapper {
@@ -1384,9 +1313,6 @@ h2 {
 
 @media screen and (max-width: 767.98px) {
   // Телефоны в горизонтальной ориентации (>= 576px)
-  h2 {
-    font-size: 35px;
-  }
 
   .hero__wrapper {
     padding-top: 140px;
@@ -1465,7 +1391,7 @@ h2 {
   }
 
   .features {
-    background: url("../img/features_bg-sm.svg") no-repeat;
+    background: url("@/assets/img/features_bg-sm.svg") no-repeat;
     background-size: cover;
 
     .features__feature {
@@ -1473,7 +1399,7 @@ h2 {
 
       &:not(:last-child) {
         border-right: none;
-        border-bottom: 1px solid var($translucent-white);
+        border-bottom: 1px solid $translucent-white;
       }
       .features__feature-title {
         font-size: 45px;
@@ -1508,33 +1434,12 @@ h2 {
   .our-restaurants__wrapper {
     padding-top: 50px;
     padding-bottom: 60px;
-
-    .our-restaurants__restaurant {
-      width: 300px;
-    }
   }
   .our-dishes__wrapper {
     padding-top: 50px;
     padding-bottom: 60px;
 
-    .our-dishes__dish {
-      width: 175px;
-      padding: 1rem;
-
-      h5 {
-        font-size: 20px;
-      }
-      .card-body {
-        .our-dishes__dish-info {
-          font-size: 16px;
-
-          img {
-            width: 22px;
-            height: 22px;
-          }
-        }
-      }
-    }
+    
   }
 
   .purchases-control__wrapper {
@@ -1553,23 +1458,6 @@ h2 {
     .reviews__title {
       font-size: 35px;
       margin-bottom: 40px;
-    }
-    .reviews__item {
-      min-width: 100%;
-
-      .reviews__header {
-        img {
-          width: 68px;
-          height: 68px;
-        }
-        .reviews__author {
-          font-size: 20px;
-        }
-        .review__slogan {
-          font-size: 18px;
-          margin-bottom: 0;
-        }
-      }
     }
   }
 
@@ -1591,15 +1479,6 @@ h2 {
 
 @media screen and (max-width: 566.98px) {
   // Телефоны в вертикальной ориентации (< 567px)
-  .card {
-    .card-body {
-      padding: 0.5rem 1rem 1rem;
-
-      h5 {
-        font-size: 18px;
-      }
-    }
-  }
 
   .hero__wrapper {
     .hero__left-column {
@@ -1724,25 +1603,6 @@ h2 {
     .our-restaurants__title {
       margin-bottom: 36px;
     }
-    .our-restaurants__restaurant {
-      width: 250px;
-
-      .our-restaurants__restaurant-info {
-        font-size: 16px;
-      }
-    }
-  }
-  .our-dishes__wrapper {
-    .our-dishes__dish {
-      h5 {
-        font-size: 20px;
-      }
-      .card-body {
-        .our-dishes__dish-info {
-          font-size: 16px;
-        }
-      }
-    }
   }
 
   .sale {
@@ -1818,3 +1678,4 @@ h2 {
     }
   }
 }
+</style>

@@ -1,0 +1,329 @@
+/* Fonts  Inter */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    src: url('@/assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+}
+
+/* Fonts Manrope */
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 100 900;
+    src: url('@/assets/fonts/Manrope/Manrope-VariableFont_wght.ttf') format('truetype');
+}
+
+/* Fonts Plus Jakarta Sans */
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 100 800;
+    src: url('@/assets/fonts/Plus_Jakarta_Sans/PlusJakartaSans-VariableFont_wght.ttf') format('truetype');
+}
+
+/* Fonts Public Sans */
+@font-face {
+    font-family: 'Public Sans';
+    font-style: normal;
+    font-weight: 100 900;
+    src: url('@/assets/fonts/Public_Sans/PublicSans-VariableFont_wght.ttf') format('truetype');
+}
+
+/* Fonts Quicksand */
+@font-face {
+    font-family: 'Quicksand';
+    font-style: normal;
+    font-weight: 100 700;
+    src: url('@/assets/fonts/Quicksand/Quicksand-VariableFont_wght.ttf') format('truetype');
+}
+
+:root {
+  // Шрифты
+  $font-family: "Manrope" !global;
+  $second-family: "Inter" !global;
+  $font3: "Public Sans", sans-serif !global;
+  $font4: "Quicksand", sans-serif !global;
+  $font5: "Plus Jakarta Sans", sans-serif !global;
+
+  // Цвета
+  $purple: #6c5fbc !global;
+  $purple-hover: #5a4aa3 !global;
+  $translucent-white: rgba(197, 197, 197, 0.15) !global;
+  $main-black: #242424 !global;
+}
+
+/* Базовые стили */
+html {
+  font-family: $second-family, sans-serif;
+  color: $main-black;
+}
+
+/* Прикрепляем футер снизу */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f9f9f9;
+}
+
+/* Главное занимает всю доступную высоту */
+main {
+  flex: 1 0 auto;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+h2 {
+  font-family: $font-family, sans-serif;
+  font-weight: 700;
+  font-size: 45px;
+  text-transform: capitalize;
+  color: #323142;
+}
+
+.card {
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+
+  .card-img-top {
+    border-radius: 30px 30px 0 0;
+  }
+
+  .card-body {
+    padding: 0.75rem 2rem 1rem;
+
+    .card-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    h5 {
+      font-family: $font-family, sans-serif;
+      font-weight: 800;
+      font-size: 25px;
+      line-height: 162%;
+      color: #323142;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.form-control {
+  transition: .2s all;
+
+  &:focus {
+    border: 1px solid $purple-hover !important;
+    box-shadow: 0 0 0 .25rem rgba(108, 95, 188, 0.25) !important;
+  }
+}
+
+/* Базовые классы */
+.mt-6, m-6 {
+  margin-top: 5rem;
+}
+.mb-6, m-6 {
+  margin-bottom: 5rem;
+}
+.eatly-logo {
+  position: relative;
+  padding-left: 54px;
+
+  /* Логотип */
+  &::before {
+    display: inline-block;
+    content: "";
+    width: 46px;
+    height: 46px;
+    background: url("@/assets/icon.svg") no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 50%;
+    right: 68px;
+    transform: translateY(-45%);
+  }
+}
+
+.menu {
+  .menu__item {
+    font-family: $second-family, sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 150%;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+  .menu__item--active {
+    color: $purple;
+  }
+}
+.highlight--purple {
+  color: $purple;
+}
+.text-muted {
+  color: #6c757d !important;
+}
+.text-muted--purple {
+  color: #7c6fcd !important;
+}
+.price--cents {
+  font-family: $font-family, sans-serif;
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 156%;
+  color: #8e97a6;
+}
+
+.badge {
+  font-family: $font-family, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 8px;
+}
+.badge.badge-healthy {
+  color: #daa31a;
+  background: #f7edd0;
+}
+.badge.badge-trending {
+  color: #fb471d;
+  background: #f7c5ba;
+}
+.badge.badge-supreme {
+  color: #309d5b;
+  background-color: rgba(51, 172, 100, 0.2);
+}
+
+/* Разновидности классов кнопок */
+.btn {
+  border-radius: 12px;
+  border: none;
+  font-family: $font-family, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  text-transform: capitalize;
+  transition: .3s all;
+}
+.btn-primary {
+  color: #fff;
+  background: $purple;
+
+  &:hover {
+    background: $purple-hover;
+  }
+}
+.btn-secondary {
+  color: #6c5fbc;
+  background: inherit;
+  border: 1.50px solid $purple;
+
+  &:hover {
+    background: $purple;
+    color: #fff;
+  }
+}
+
+.input-hint {
+  font-family: $font-family, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #6c5fbc;
+}
+
+/* Фиолетовый скроллбар */
+.purple-scrollbar {
+  $sb-track-color: rgba(108, 95, 188, 0.2);
+  $sb-thumb-color: $purple;
+  $sb-size: 11px;
+
+  &::-webkit-scrollbar {
+    width: $sb-size;
+    height: $sb-size
+  }
+  &::-webkit-scrollbar-track {
+    background: $sb-track-color;
+    border-radius: 50px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $sb-thumb-color;
+    border-radius: 50px;
+  }
+}
+
+// Адаптивные стили
+@media screen and (max-width: 1199.98px) {
+  // Планшеты в горизонтальной ориентации, Ipad Pro (>= 1024px)
+  h2 {
+    font-size: 45px;
+  }
+  .card {
+    .card-body {
+      padding: 0.5rem 1.5rem 1rem;
+
+      h5 {
+        font-size: 24px;
+      }
+    }
+  }
+  .badge {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+  .restaurant-bookmark {
+    width: 36px;
+    height: 36px;
+    right: 18px;
+    bottom: 14px;
+
+    &::after {
+      width: 15px;
+      height: 19px;
+    }
+  }
+  .view-all {
+    font-size: 20px;
+    padding-right: 32px;
+
+    &::after {
+      width: 20px;
+      height: 20px;
+      transform: translateY(-50%);
+    }
+  }
+  .price--cents {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 991.98px) {
+  // Планшеты в вертикальной ориентации (>= 768px)
+  h2 {
+    font-size: 40px;
+  }
+}
+
+@media screen and (max-width: 767.98px) {
+  // Телефоны в горизонтальной ориентации (>= 576px)
+  h2 {
+    font-size: 35px;
+  }
+}
+
+@media screen and (max-width: 566.98px) {
+  // Телефоны в вертикальной ориентации (< 567px)
+  .card {
+    .card-body {
+      padding: 0.5rem 1rem 1rem;
+
+      h5 {
+        font-size: 18px;
+      }
+    }
+  }
+}

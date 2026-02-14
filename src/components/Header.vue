@@ -1,0 +1,692 @@
+<script setup>
+
+</script>
+
+<template>
+<!-- Навбар -->
+<header class="header">
+    <div class="container-sm">
+        <!--  Навигация  -->
+        <div class="header__wrapper">
+
+            <div class="header__left-side">
+                <div class="header__logo">
+                    <router-link to="/" class="eatly-logo">eatly</router-link>
+
+                </div>
+
+                <nav class="header__nav">
+                    <ul class="header__list menu list-reset">
+                        <li class="menu__item menu__item--active"><router-link to="/menu">Меню</router-link></li>
+                        <li class="menu__item"><router-link to="/contacts">Контакты</router-link></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="header__right-side">
+                <div class="header__user-profile align-items-center" style="display: none;">
+                    <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
+                    <span class="header__user-name">Имя пользователя</span>
+                    <button class="header__logout btn btn-primary ms-2">Выйти</button>
+                </div>
+
+                <div class="header__auth-buttons" style="display: none;">
+                    <router-link to="/sign-in" class="header__login">Войти</router-link>
+                    <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
+                </div>
+
+                <button id="headerMenuButton" class="header__menu">
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Боковое меню -->
+            <div id="sidebar" class="sidebar">
+                <div class="sidebar__menu-nav">
+                    <div class="sidebar__header">
+                        <div class="sidebar__brand">
+                            <!-- Логотип без текста -->
+                            <router-link to="/" class="eatly-logo"></router-link>
+                        </div>
+                    </div>
+                    <div class="sidebar__nav">
+                        <ul class="sidebar__list menu list-reset">
+                            <li class="menu__item"><router-link to="/menu">Меню</router-link></li>
+                            <li class="menu__item"><router-link to="/contacts">Контакты</router-link></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar__buttons d-flex flex-column justify-content-between text-center">
+                        <router-link to="/sign-in" class="sidebar__login w-100">Войти</router-link>
+                        <router-link to="/sign-up" class="sidebar__sign-up w-100">Зарегистрироваться</router-link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</template>
+
+<style lang="scss" scoped>
+body.lock {
+  overflow: hidden;
+}
+.list-reset {
+  list-style: none;
+  padding-left: 0;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  z-index: 100;
+}
+.header__wrapper {
+  padding: 1.5rem 0;
+  border-bottom: 2px solid #cbcbcb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .header__left-side {
+    display: flex;
+    align-items: center;
+    gap: 72px;
+
+    .header__logo {
+      font-family: $font-family, sans-serif;
+      font-weight: 900;
+      font-size: 24px;
+      line-height: 130%;
+      color: $purple;
+      cursor: pointer;
+    }
+
+    .header__list {
+      display: flex;
+      margin: 0;
+      gap: 38px;
+      color: #606060;
+    }
+  }
+
+  .header__right-side {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    // Кнопки авторизации
+    .header__login {
+      font-family: $second-family, sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 150%;
+      color: #606060;
+      background-color: inherit;
+      border: none;
+      border-radius: 17px;
+      padding: 17px 26px;
+      cursor: pointer;
+      transition: background-color .2s;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
+    .header__sign-up {
+      font-family: $second-family, sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 150%;
+      color: #f9f9f9;
+      background: $purple;;
+      border: none;
+      border-radius: 17px;
+      padding: 17px 26px;
+      cursor: pointer;
+      transition: background .2s;
+
+      &:hover {
+        background: $purple-hover;
+      }
+    }
+    .header__menu {
+      display: none;
+      position: relative;
+      width: 30px;
+      height: 20px;
+      border: none;
+      background: inherit;
+      overflow: hidden;
+      z-index: 200;
+
+      // Линии меню
+      &::after,
+      &::before,
+      span {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: #606060;
+        left: 0;
+        transition: transform .3s ease;
+      }
+      // Выравнивание линий
+      &::after {
+        bottom: 0;
+      }
+      &::before {
+        top: 2px;
+      }
+      span {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      // Анимация
+      &--toggle {
+        &::after {
+          background-color: #fff;
+          bottom: 50%;
+          transform: rotate(45deg);
+        }
+        &::before {
+          top: 50%;
+          background-color: #fff;
+          transform: rotate(-45deg);
+        }
+        span {
+          background-color: #fff;
+          display: none;
+        }
+      }
+    }
+  }
+
+  // Боковое меню
+  .sidebar {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    justify-content: flex-end;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity .3s ease;
+
+    // Меню навигации
+    .sidebar__menu-nav {
+      position: relative;
+      display: none;
+      flex-direction: column;
+      width: 95%;
+      height: 100%;
+      border-top-left-radius: 40px;
+      border-bottom-left-radius: 40px;
+      padding: 0.75rem 1.5rem 0;
+      background-color: $main-black;
+      color: #fff;
+      transform: translateX(100%);
+      opacity: 0;
+      transition: transform .3s ease;
+      z-index: 200;
+
+      &--show {
+        display: flex;
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    .sidebar__header {
+      display: flex;
+      flex: 0 0 auto;
+      // Размер главного хэдера страницы
+      height: 56px;
+      align-items: center;
+      margin-bottom: 32px;
+
+      .eatly-logo::before {
+        right: 6px;
+      }
+
+      .sidebar__close-btn {
+        position: absolute;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        margin: 1.5rem 0.75rem 0 0;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        top: 0;
+        right: 0;
+
+        &::after {
+          display: inline-block;
+          content: "";
+          width: 23px;
+          height: 23px;
+          background: url("@/assets/icons/close_icon.svg") no-repeat;
+          background-size: contain;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+    .sidebar__nav {
+      overflow-y: auto;
+      margin-bottom: 11rem;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .menu__item > a {
+        display: inline-block;
+        width: 100%;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid $translucent-white;
+      }
+    }
+    .sidebar__buttons {
+      display: flex;
+      gap: 12px;
+      padding: 0 1.5rem 2rem;
+      position: absolute;
+      right: 0;
+      bottom: 48px; // По какой-то причине 0 недостаточно и элемент уходи за экран
+      left: 0;
+
+      a,
+      button {
+        padding: 0.75rem 1rem;
+        border-radius: 16px;
+        font-family: $second-family, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background .2s ease, color .2s ease;
+      }
+    }
+    .sidebar__login {
+      border: 1px solid $translucent-white;
+      background-color: $purple-hover;
+
+      &:hover {
+        background-color: $purple;
+      }
+    }
+    .sidebar__sign-up {
+      border: 1px solid #fff;
+      background-color: $main-black;
+      color: #fff;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+    }
+
+    // Боковая корзина
+    .sidebar__menu-cart {
+      position: relative;
+      display: none;
+      flex-direction: column;
+      width: 95%;
+      max-width: 550px;
+      height: 100%;
+      border-top-left-radius: 40px;
+      border-bottom-left-radius: 40px;
+      padding: 0.75rem 0 0;
+      background-color: $main-black;
+      color: #fff;
+      transform: translateX(100%);
+      opacity: 0;
+      transition: transform .3s ease;
+
+      &--show {
+        display: flex;
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    .menu-cart__content {
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      margin-bottom: 9rem;
+      flex-grow: 1;
+      color: #fff;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .menu-cart__title {
+        padding: 0 1.5rem;
+        font-family: $font-family, sans-serif;
+        font-size: 28px;
+        font-weight: 800;
+        color: #fff
+      }
+
+      .menu-cart__separator {
+        width: 100%;
+        height: 1px;
+        background-color: $translucent-white;
+        margin: 0.75rem 0;
+      }
+
+      .menu-cart__restaurant-name {
+        padding: 0 1.5rem;
+        font-family: $font-family, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff;
+      }
+    }
+    .menu-cart__dish {
+      font-family: $font-family, sans-serif;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+
+      &:hover {
+        background-color: #353535;
+      }
+
+      // Информация о блюде
+      .cart-dish__image {
+        width: 100px;
+        height: 100px;
+        border-radius: 30px;
+      }
+      .cart-dish__details {
+        margin-left: 16px;
+      }
+      .cart-dish__name {
+        font-size: 20px;
+      }
+      .cart-dish__price {
+        font-size: 18px;
+      }
+
+      // Кнопки управлением кол-вом блюд
+      .cart-dish__qty {
+        font-size: 20px;
+        gap: 16px;
+
+        button {
+          position: relative;
+          width: 40px;
+          height: 40px;
+          font-family: $font-family, sans-serif;
+          font-size: 32px;
+          border-radius: 10px;
+          transition: background-color .2s ease;
+
+          &::after {
+            display: inline-block;
+            content: "";
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+      }
+      .cart-dish__minus-btn {
+        background-color: $main-black;
+        color: #fff;
+        border: 1px solid #fff;
+
+        &::after {
+          background: url("@/assets/icons/minus.svg") no-repeat;
+          background-size: contain;
+        }
+        &:hover {
+          background-color: $translucent-white;
+        }
+      }
+      .cart-dish__plus-btn {
+        background-color: #fff;
+        color: $main-black;
+        border: 1px solid #fff;
+
+        &::after {
+          background: url("@/assets/icons/plus-black.svg") no-repeat;
+          background-size: contain;
+        }
+        &:hover {
+          background-color: $translucent-white;
+
+          &::after {
+            background: url("@/assets/icons/plus.svg") no-repeat;
+            background-size: contain;
+          }
+        }
+      }
+      .cart-dish__total-price {
+        margin-top: 4px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+      }
+    }
+    .sidebar__checkout-btn {
+      border: 1px solid #fff;
+      background-color: $main-black;
+      color: #fff;
+      text-align: center;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+    }
+
+    &--show {
+      display: flex;
+      opacity: 1;
+    }
+    // Чтобы родительский элемент был над кнопкой меню
+    &--with-close-btn-show {
+      z-index: 300;
+      display: flex;
+      opacity: 1;
+    }
+  }
+}
+
+/* Адаптивность навбара */
+@media screen and (max-width: 1199.98px) {
+  // Планшеты в горизонтальной ориентации, Ipad Pro
+  .eatly-logo {
+    &::before {
+      width: 46px;
+      height: 46px;
+      right: 60px;
+    }
+  }
+
+  .header__wrapper {
+    height: 82px;
+
+    .header__left-side {
+      gap: 48px;
+
+      .header__logo {
+        font-size: 21px;
+      }
+      .header__list {
+        gap: 30px;
+
+        .menu__item {
+          font-size: 18px;
+        }
+      }
+    }
+    .header__right-side {
+      gap: 8px;
+
+      .header__login {
+          font-size: 18px;
+          padding: 14px 22px;
+      }
+      .header__sign-up {
+          font-size: 18px;
+          padding: 14px 22px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 991.98px) {
+  // Планшеты в вертикальной ориентации (>= 768px)
+  .header__wrapper {
+    padding: 0.75rem 0;
+
+    .header__left-side {
+      gap: 16px;
+    }
+
+    .header__right-side {
+      gap: 8px;
+
+      .header__login {
+        font-size: 16px;
+        padding: 16px 20px;
+      }
+      .header__sign-up {
+        font-size: 16px;
+        padding: 16px 20px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767.98px) {
+  // Телефоны в горизонтальной ориентации (>= 576px)
+  .eatly-logo {
+    padding-left: 52px;
+
+    &::before {
+      width: 46px;
+      height: 42px;
+      right: 58px;
+    }
+  }
+
+  .header__wrapper {
+    padding: 0.75rem 0;
+
+    .header__left-side {
+      .header__list {
+        display: none;
+      }
+    }
+    .header__right-side {
+      gap: 16px;
+
+      .header__menu {
+        display: block;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 566.98px) {
+  // Телефоны в вертикальной ориентации (< 567px)
+  .header__wrapper {
+    height: 77px;
+    padding: 1.5rem 0;
+
+    .header__right-side {
+      .header__login,
+      .header__sign-up {
+        display: none;
+      }
+    }
+
+    .cart-btn {
+      width: 400px;
+    }
+
+    // Боковое меню
+    .sidebar {
+      .sidebar__menu-nav {
+        border-radius: 0;
+        padding: 1.5rem 1.5rem 0;
+        width: 100%;
+      }
+      .sidebar__header {
+        height: 27px;
+      }
+
+      // Боковая корзина
+      .sidebar__menu-cart {
+        border-radius: 0;
+        padding: 1.5rem 0 0;
+        width: 100%;
+      }
+      .menu-cart__dish {
+        // Информация о блюде
+        .cart-dish__image {
+          width: 56px;
+          height: 56px;
+          border-radius: 30px;
+        }
+        .cart-dish__details {
+          margin-left: 16px;
+          margin-right: 16px;
+        }
+        .cart-dish__name {
+          font-size: 18px;
+        }
+        .cart-dish__price {
+          font-size: 16px;
+        }
+
+        // Кнопки управлением кол-вом блюд
+        .cart-dish__qty {
+          font-size: 16px;
+          gap: 12px;
+
+          button {
+            width: 32px;
+            height: 32px;
+
+            &::after {
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+
+        .cart-dish__total-price {
+          margin-top: 4px;
+          font-size: 18px;
+          font-weight: 700;
+          color: #fff;
+        }
+      }
+      .sidebar__checkout-btn {
+        border: 1px solid #fff;
+        background-color: $main-black;
+        color: #fff;
+        text-align: center;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      }
+    }
+  }
+}
+</style>
