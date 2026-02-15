@@ -9,10 +9,6 @@ const props = defineProps({
   mode: {
     type: String,
     default: 'preview' // 'preview' - отображение карточки как реклама, 'full' - отображение карточки на странице ресторана
-  },
-  restaurantId: {
-    type: [String, Number], // В будующем стоит оставить только String, так как id ресторана должен быть строкой
-    required: true
   }
 })
 

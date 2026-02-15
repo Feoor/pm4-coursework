@@ -1437,9 +1437,7 @@ const reviews = ref([
   }
   .our-dishes__wrapper {
     padding-top: 50px;
-    padding-bottom: 60px;
-
-    
+    padding-bottom: 60px;    
   }
 
   .purchases-control__wrapper {
