@@ -390,7 +390,7 @@ const reviews = ref([
 }
 
 .hero__wrapper {
-  padding-top: 250px;
+  padding-top: 70px;
   padding-bottom: 130px;
 
   .hero__left-column {
@@ -867,7 +867,7 @@ const reviews = ref([
   // Планшеты в горизонтальной ориентации, Ipad Pro (>= 1024px)
 
   .hero__wrapper {
-    padding-top: 200px;
+    padding-top: 20px;
     padding-bottom: 100px;
 
     .hero__left-column {
@@ -1106,7 +1106,7 @@ const reviews = ref([
   // Планшеты в вертикальной ориентации (>= 768px)
 
   .hero__wrapper {
-    padding-top: 180px;
+    padding-top: 0;
     padding-bottom: 90px;
 
     .hero__left-column {
@@ -1315,7 +1315,6 @@ const reviews = ref([
   // Телефоны в горизонтальной ориентации (>= 576px)
 
   .hero__wrapper {
-    padding-top: 140px;
     padding-bottom: 120px;
 
     .hero__left-column {

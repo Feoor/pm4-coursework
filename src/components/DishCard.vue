@@ -12,12 +12,14 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['add-to-cart'])
+const emit = defineEmits(['add-to-cart', 'add-to-favorites'])
 
-const handleClick = () => {
-  if (props.mode === 'full') {
-    emit('add-to-cart', props.dish)
-  }
+const handleAddToCart = () => {
+  emit('add-to-cart', props.dish)
+}
+
+const handleFavoriteClick = () => {
+  emit('add-to-favorites', props.dish)
 }
 </script>
 
@@ -43,19 +45,23 @@ const handleClick = () => {
 
     <!-- Для full -->
     <div v-else>
-      <img :src="dish.image" :alt="dish.name" class="dish-card__image">
+      <button class="dish-card__favorite-btn" @click="handleFavoriteClick"></button>
+
+      <img :src="dish.image" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">
 
       <div class="card-body">
         <span :class="`badge ${getBadgeClass(dish.badge)}`">{{ dish.badge }}</span>
-        <h5 class="dish-card__title">{{ dish.name }}</h5>
+        <h5 class="dish-card__title card-title mt-0">{{ dish.name }}</h5>
 
         <div class="dish-card__info d-flex align-items-center mb-2">
-          <span class="me-1 me-xl-2">{{ dish.deliveryTime }} •</span>
+          <span class="me-2">{{ formatDeliveryTime(dish.deliveryTime) }} •</span>
           <img src="@/assets/icons/purple_star.svg" alt="Purple star">
           <span class="ms-1">{{ dish.rating }}</span>
         </div>
+        <h5 class="dish-card__price menu-section__dish-price">{{ formatPrice(dish.price) }}</h5>
 
-        <h5 class="dish-card__price">{{ formatPrice(dish.price) }}</h5>
+        <!-- Кнопка "Добавить в корзину" -->
+        <button class="dish-card__cart-btn add-to-cart" @click="handleAddToCart"></button>
       </div>
     </div>
   </div>
@@ -81,6 +87,34 @@ const handleClick = () => {
     border-radius: 30px 30px 0 0;
   }
 
+  /* Добавить блюдо в любимое */
+  .dish-card__favorite-btn {
+    position: absolute;
+    top: 14px;
+    right: 12px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    width: 40px;
+    height: 40px;
+    transition: background-color .2s;
+
+    &::after {
+      display: inline-block;
+      content: "";
+      max-width: 22px;
+      max-height: 19px;
+      background: url("@/assets/icons/heart.svg") no-repeat;
+      background-size: contain;
+      position: absolute;
+      margin: auto;
+      top: 0; left: 0; bottom: 0; right: 0;
+    }
+    &:hover {
+      background-color: #f7c5ba;
+    }
+  }
+
   .card-body {
     padding: 0;
 
@@ -91,6 +125,34 @@ const handleClick = () => {
       line-height: 133%;
       color: #8e97a6;
     }
+
+    /* Добавить блюдо в корзину */
+    .dish-card__cart-btn {
+      position: absolute;
+      bottom: 26px;
+      right: 24px;
+      border: none;
+      border-radius: 9px;
+      background-color: #323142;
+      width: 44px;
+      height: 40px;
+      transition: background-color .2s;
+
+      &::after {
+        display: inline-block;
+        content: "";
+        width: 24px;
+        height: 24px;
+        background: url("@/assets/icons/plus.svg") no-repeat;
+        background-size: contain;
+        position: absolute;
+        margin: auto;
+        top: 0; left: 0; bottom: 0; right: 0;
+      }
+      &:hover {
+        background-color: $purple;
+      }
+    }
   }
 }
 
@@ -100,6 +162,11 @@ const handleClick = () => {
   .dish-card {
     width: 175px;
     padding: 1rem;
+
+    .dish-card__favorite-btn {
+      top: 8px;
+      right: 8px;
+    }
 
     h5 {
       font-size: 22px;
@@ -113,6 +180,13 @@ const handleClick = () => {
           width: 23px;
           height: 23px;
         }
+      }
+
+      .add-to-cart {
+        width: 40px;
+        height: 36px;
+        right: 16px;
+        bottom: 20px;
       }
     }
   }
@@ -129,6 +203,17 @@ const handleClick = () => {
       font-size: 24px;
     }
 
+    .dish-card__favorite-btn {
+      top: 12px;
+      width: 35px;
+      height: 35px;
+
+      &::after {
+        width: 23px;
+        height: 19px;
+      }
+    }
+
     .card-body {
       .dish-card__info {
         font-size: 18px;
@@ -137,6 +222,11 @@ const handleClick = () => {
           width: 24px;
           height: 24px;
         }
+      }
+
+      .dish-card__cart-btn {
+        width: 40px;
+        height: 36px;
       }
     }
   }

@@ -54,6 +54,10 @@ import Footer from '@/components/Footer.vue'
 </template>
 
 <style lang="scss" scoped>
+main {
+  padding-top: 0; // Необходимо для корректного отображения визуальных иллюстраций
+}
+
 .contact__wrapper {
   padding-top: 180px;
   padding-bottom: 50px;

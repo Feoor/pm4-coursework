@@ -1,16 +1,5 @@
-.auth-page {
-  background-image: url("../img/auth_bg.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-
-  .header {
-    position: relative;
-    background: transparent;
-
-    .header__wrapper {
-      border-bottom: none;
-    }
-  }
+main {
+  padding-top: 0;
 }
 
 .auth__wrapper {
@@ -24,15 +13,16 @@
       bottom: -45%;
 
       h5 {
-        font-family: var(--third-family), sans-serif;
+        font-family: $font3, sans-serif;
         font-weight: 800;
         font-size: 32px;
         line-height: 110%;
         text-align: center;
         color: #fff
       }
+
       p {
-        font-family: var(--third-family), sans-serif;
+        font-family: $font3, sans-serif;
         font-weight: 500;
         font-size: 14px;
         line-height: 150%;
@@ -43,7 +33,7 @@
   }
 
   .auth__title {
-    font-family: var(--font-family), sans-serif;
+    font-family: $font-family, sans-serif;
     font-weight: 700;
     font-size: 35px;
     color: #323142;
@@ -60,7 +50,7 @@
     transition: .3s all;
 
     &:hover {
-      background-color: var(--purple);
+      background-color: $purple;
     }
 
     // Иконки соц. сетей авторизации
@@ -69,33 +59,41 @@
       content: "";
       width: 23px;
       height: 23px;
-      background: url("../icons/google_icon.svg") no-repeat;
+      background: url("@/assets/icons/google_icon.svg") no-repeat;
       background-size: contain;
       position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
       margin: auto;
     }
+
     &--apple::after {
       display: inline-block;
       content: "";
       width: 27px;
       height: 31px;
-      background: url("../icons/apple_icon.svg") no-repeat;
+      background: url("@/assets/icons/apple_icon.svg") no-repeat;
       background-size: contain;
       position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
       margin: auto;
     }
   }
 
   .auth__subtitle {
-    font-family: var(--font-family), sans-serif;
+    font-family: $font-family, sans-serif;
     font-weight: 600;
     font-size: 22px;
     color: #cfcfd3;
   }
+
   .auth__text-divider {
-    font-family: var(--font-family), sans-serif;
+    font-family: $font-family, sans-serif;
     font-weight: 600;
     font-size: 20px;
     color: rgba(0, 90, 100, 0.35);
@@ -114,7 +112,8 @@
       &:focus {
         background: #fff;
       }
-      &:focus ~ label {
+
+      &:focus~label {
         transform: scale(.85) translateY(-.5rem) translateX(0.55rem);
 
         &::after {
@@ -122,6 +121,7 @@
         }
       }
     }
+
     label {
       padding-left: 4rem;
 
@@ -136,32 +136,34 @@
       content: "";
       width: 22px;
       height: 23px;
-      background: url("../icons/user_icon.svg") no-repeat;
+      background: url("@/assets/icons/user_icon.svg") no-repeat;
       background-size: contain;
       position: absolute;
       top: 50%;
       left: 1.5rem;
       transform: translateY(-50%);
     }
+
     &--email::before {
       display: inline-block;
       content: "";
       width: 23px;
       height: 18px;
-      background: url("../icons/email_icon.svg") no-repeat;
+      background: url("@/assets/icons/email_icon.svg") no-repeat;
       background-size: contain;
       position: absolute;
       top: 50%;
       left: 1.5rem;
       transform: translateY(-50%);
     }
+
     &--password {
       &::before {
         display: inline-block;
         content: "";
         width: 19px;
         height: 24px;
-        background: url("../icons/password_icon.svg") no-repeat;
+        background: url("@/assets/icons/password_icon.svg") no-repeat;
         background-size: contain;
         position: absolute;
         top: 50%;
@@ -185,7 +187,7 @@
   }
 
   .auth__footer {
-    font-family: var(--font-family), sans-serif;
+    font-family: $font-family, sans-serif;
     font-weight: 500;
     font-size: 18px;
     letter-spacing: 0.01em;
@@ -200,8 +202,9 @@
 
 // Адаптивность для страниц авторизации и регистрации
 @media screen and (max-width: 1199.98px) {
+
   // Планшеты в горизонтальной ориентации, Ipad Pro (>= 1024px)
-  .auth-page {
+  section.auth {
     .header {
       .header__wrapper {
         min-height: 104px; // Выравнивание header со всеми страницами
@@ -213,6 +216,7 @@
     .auth__title {
       font-size: 28px;
     }
+
     .auth__subtitle {
       font-size: 20px;
     }
@@ -224,6 +228,7 @@
         width: 21px;
         height: 21px;
       }
+
       &--apple::after {
         width: 23px;
         height: 29px;
@@ -238,6 +243,7 @@
       input {
         padding-left: 3rem;
       }
+
       label {
         padding-left: 3rem;
       }
@@ -248,11 +254,13 @@
         height: 21px;
         left: 1rem;
       }
+
       &--email::before {
         width: 21px;
         height: 16px;
         left: 1rem;
       }
+
       &--password {
         &::before {
           width: 17px;
@@ -272,7 +280,7 @@
     }
 
     // Карусель справа
-    .forget-password__auth ~ .auth__carousel {
+    .forget-password__auth~.auth__carousel {
       min-height: 540px;
 
       .carousel-caption {
@@ -280,6 +288,7 @@
 
       }
     }
+
     .auth__carousel {
       .carousel-caption {
         bottom: -80%;
@@ -287,6 +296,7 @@
         h5 {
           font-size: 24px;
         }
+
         p {
           font-size: 14px;
         }
@@ -296,9 +306,10 @@
 }
 
 @media screen and (max-width: 991.98px) {
+
   // Планшеты в вертикальной ориентации (>= 768px)
-  .auth-page {
-    background-image: url("../img/auth_bg_md.png"); // Уменьшенный фон для планшетов
+  section.auth {
+    background-image: url("@/assets/img/auth_bg_md.png"); // Уменьшенный фон для планшетов
     background-size: cover;
     background-repeat: no-repeat;
 
@@ -313,6 +324,7 @@
     .auth__title {
       font-size: 24px;
     }
+
     .auth__subtitle {
       font-size: 18px;
     }
@@ -324,6 +336,7 @@
         width: 20px;
         height: 20px;
       }
+
       &--apple::after {
         width: 21px;
         height: 27px;
@@ -344,7 +357,7 @@
     }
 
     // Карусель справа
-    .forget-password__auth ~ .auth__carousel {
+    .forget-password__auth~.auth__carousel {
       min-height: 500px;
 
       .carousel-caption {
@@ -352,6 +365,7 @@
 
       }
     }
+
     .auth__carousel {
       .carousel-caption {
         bottom: -130%;
@@ -359,6 +373,7 @@
         h5 {
           font-size: 22px;
         }
+
         p {
           font-size: 14px;
         }
@@ -368,8 +383,9 @@
 }
 
 @media screen and (max-width: 767.98px) {
+
   // Телефоны в горизонтальной ориентации (>= 576px)
-  .auth-page {
+  section.auth {
     background: #f9f9f9;
 
     .header {
@@ -388,6 +404,7 @@
     .auth__title {
       font-size: 32px;
     }
+
     .auth__subtitle {
       font-size: 20px;
     }
@@ -399,6 +416,7 @@
         width: 21px;
         height: 21px;
       }
+
       &--apple::after {
         width: 23px;
         height: 29px;
@@ -421,11 +439,13 @@
 }
 
 @media screen and (max-width: 566.98px) {
+
   // Телефоны в вертикальной ориентации (< 567px)
   .auth__wrapper {
     .auth__title {
       font-size: 28px;
     }
+
     .auth__subtitle {
       font-size: 18px;
     }

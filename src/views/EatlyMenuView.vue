@@ -327,7 +327,6 @@ const dishes = ref([
 
 <style lang="scss" scoped>
 .food-filter__wrapper {
-  padding-top: 180px;
   padding-bottom: 30px;
 
   /* Левая колонка, баннер, поиск */
@@ -978,7 +977,6 @@ const dishes = ref([
 @media screen and (max-width: 767.98px) {
   // Телефоны в горизонтальной ориентации (>= 576px)
   .food-filter__wrapper {
-    padding-top: 130px;
 
     /* Левая колонка, баннер, поиск */
     .food-filter__promo-banner {
@@ -1088,7 +1086,6 @@ const dishes = ref([
 @media screen and (max-width: 566.98px) {
   // Телефоны в вертикальной ориентации (< 567px)
   .food-filter__wrapper {
-    padding-top: 100px;
 
     /* Левая колонка, баннер, поиск */
     .food-filter__promo-banner {

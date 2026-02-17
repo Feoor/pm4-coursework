@@ -39,6 +39,9 @@
 }
 
 :root {
+  // Глобальные переменные
+  --header-height: 180px;
+
   // Шрифты
   $font-family: "Manrope" !global;
   $second-family: "Inter" !global;
@@ -310,6 +313,10 @@ h2 {
 
 @media screen and (max-width: 767.98px) {
   // Телефоны в горизонтальной ориентации (>= 576px)
+  :root {
+    --header-height: 130px;
+  }
+
   h2 {
     font-size: 35px;
   }
@@ -317,6 +324,10 @@ h2 {
 
 @media screen and (max-width: 566.98px) {
   // Телефоны в вертикальной ориентации (< 567px)
+  :root {
+    --header-height: 100px;
+  }
+
   .card {
     .card-body {
       padding: 0.5rem 1rem 1rem;

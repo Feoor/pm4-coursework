@@ -9,7 +9,7 @@ export const getBadgeClass = (badge) => {
 }
 
 export const formatDeliveryTime = (time) => {
-  return `${time / 60} min`;
+  return `${(time / 60).toFixed(1)} min`;
 }
 
 export const formatPrice = (price) => {

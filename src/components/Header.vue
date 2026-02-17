@@ -1,75 +1,82 @@
 <script setup>
-
+defineProps({
+  mode: {
+    type: String,
+    default: 'full' // 'full' для полного отображения(блок аунтификации), 'lite' для отображения только логотипа
+  }
+})
 </script>
 
 <template>
-<!-- Навбар -->
-<header class="header">
+  <!-- Навбар -->
+  <header class="header" :class="mode === 'lite' ? 'header--lite' : ''">
     <div class="container-sm">
-        <!--  Навигация  -->
-        <div class="header__wrapper">
+      <!--  Навигация  -->
+      <div class="header__wrapper">
 
-            <div class="header__left-side">
-                <div class="header__logo">
-                    <router-link to="/" class="eatly-logo">eatly</router-link>
+        <!--  Левая часть  -->
+        <div class="header__left-side">
+          <div class="header__logo">
+            <router-link to="/" class="eatly-logo">eatly</router-link>
 
-                </div>
+          </div>
 
-                <nav class="header__nav">
-                    <ul class="header__list menu list-reset">
-                        <li class="menu__item menu__item--active"><router-link to="/menu">Меню</router-link></li>
-                        <li class="menu__item"><router-link to="/contacts">Контакты</router-link></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="header__right-side">
-                <div class="header__user-profile align-items-center" style="display: none;">
-                    <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
-                    <span class="header__user-name">Имя пользователя</span>
-                    <button class="header__logout btn btn-primary ms-2">Выйти</button>
-                </div>
-
-                <div class="header__auth-buttons" style="display: none;">
-                    <router-link to="/sign-in" class="header__login">Войти</router-link>
-                    <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
-                </div>
-
-                <button id="headerMenuButton" class="header__menu">
-                    <span></span>
-                </button>
-            </div>
-
-            <!-- Боковое меню -->
-            <div id="sidebar" class="sidebar">
-                <div class="sidebar__menu-nav">
-                    <div class="sidebar__header">
-                        <div class="sidebar__brand">
-                            <!-- Логотип без текста -->
-                            <router-link to="/" class="eatly-logo"></router-link>
-                        </div>
-                    </div>
-                    <div class="sidebar__nav">
-                        <ul class="sidebar__list menu list-reset">
-                            <li class="menu__item"><router-link to="/menu">Меню</router-link></li>
-                            <li class="menu__item"><router-link to="/contacts">Контакты</router-link></li>
-                        </ul>
-                    </div>
-                    <div class="sidebar__buttons d-flex flex-column justify-content-between text-center">
-                        <router-link to="/sign-in" class="sidebar__login w-100">Войти</router-link>
-                        <router-link to="/sign-up" class="sidebar__sign-up w-100">Зарегистрироваться</router-link>
-                    </div>
-                </div>
-            </div>
+          <nav v-if="mode === 'full'" class="header__nav">
+            <ul class="header__list menu list-reset">
+              <li class="menu__item menu__item--active"><router-link to="/menu">Меню</router-link></li>
+              <li class="menu__item"><router-link to="/contacts">Контакты</router-link></li>
+            </ul>
+          </nav>
         </div>
+
+        <div class="header__right-side">
+          <div v-if="mode === 'full'" class="header__user-profile align-items-center" style="display: none;">
+            <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
+            <span class="header__user-name">Имя пользователя</span>
+            <button class="header__logout btn btn-primary ms-2">Выйти</button>
+          </div>
+
+          <div v-if="mode === 'full'" class="header__auth-buttons" style="display: none;">
+            <router-link to="/sign-in" class="header__login">Войти</router-link>
+            <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
+          </div>
+
+          <button id="headerMenuButton" class="header__menu">
+            <span></span>
+          </button>
+        </div>
+
+        <!-- Боковое меню -->
+        <div id="sidebar" class="sidebar">
+          <div class="sidebar__menu-nav">
+            <div class="sidebar__header">
+              <div class="sidebar__brand">
+                <!-- Логотип без текста -->
+                <router-link to="/" class="eatly-logo"></router-link>
+              </div>
+            </div>
+            <div class="sidebar__nav">
+              <ul class="sidebar__list menu list-reset">
+                <li class="menu__item"><router-link to="/menu">Меню</router-link></li>
+                <li class="menu__item"><router-link to="/contacts">Контакты</router-link></li>
+              </ul>
+            </div>
+            <div class="sidebar__buttons d-flex flex-column justify-content-between text-center">
+              <router-link to="/sign-in" class="sidebar__login w-100">Войти</router-link>
+              <router-link to="/sign-up" class="sidebar__sign-up w-100">Зарегистрироваться</router-link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</header>
+  </header>
 </template>
 
 <style lang="scss" scoped>
 body.lock {
   overflow: hidden;
 }
+
 .list-reset {
   list-style: none;
   padding-left: 0;
@@ -82,7 +89,17 @@ body.lock {
   right: 0;
   background: #fff;
   z-index: 100;
+
+  &--lite {
+    position: relative;
+    background: transparent;
+
+    .header__wrapper {
+      border-bottom: none;
+    }
+  }
 }
+
 .header__wrapper {
   padding: 1.5rem 0;
   border-bottom: 2px solid #cbcbcb;
@@ -135,13 +152,15 @@ body.lock {
         background-color: rgba(0, 0, 0, 0.05);
       }
     }
+
     .header__sign-up {
       font-family: $second-family, sans-serif;
       font-weight: 700;
       font-size: 18px;
       line-height: 150%;
       color: #f9f9f9;
-      background: $purple;;
+      background: $purple;
+      ;
       border: none;
       border-radius: 17px;
       padding: 17px 26px;
@@ -152,6 +171,7 @@ body.lock {
         background: $purple-hover;
       }
     }
+
     .header__menu {
       display: none;
       position: relative;
@@ -174,13 +194,16 @@ body.lock {
         left: 0;
         transition: transform .3s ease;
       }
+
       // Выравнивание линий
       &::after {
         bottom: 0;
       }
+
       &::before {
         top: 2px;
       }
+
       span {
         top: 50%;
         transform: translateY(-50%);
@@ -193,11 +216,13 @@ body.lock {
           bottom: 50%;
           transform: rotate(45deg);
         }
+
         &::before {
           top: 50%;
           background-color: #fff;
           transform: rotate(-45deg);
         }
+
         span {
           background-color: #fff;
           display: none;
@@ -243,6 +268,7 @@ body.lock {
         transform: translateX(0);
       }
     }
+
     .sidebar__header {
       display: flex;
       flex: 0 0 auto;
@@ -281,6 +307,7 @@ body.lock {
         }
       }
     }
+
     .sidebar__nav {
       overflow-y: auto;
       margin-bottom: 11rem;
@@ -289,13 +316,14 @@ body.lock {
         display: none;
       }
 
-      .menu__item > a {
+      .menu__item>a {
         display: inline-block;
         width: 100%;
         padding: 1.5rem 0;
         border-bottom: 1px solid $translucent-white;
       }
     }
+
     .sidebar__buttons {
       display: flex;
       gap: 12px;
@@ -315,6 +343,7 @@ body.lock {
         transition: background .2s ease, color .2s ease;
       }
     }
+
     .sidebar__login {
       border: 1px solid $translucent-white;
       background-color: $purple-hover;
@@ -323,6 +352,7 @@ body.lock {
         background-color: $purple;
       }
     }
+
     .sidebar__sign-up {
       border: 1px solid #fff;
       background-color: $main-black;
@@ -356,6 +386,7 @@ body.lock {
         transform: translateX(0);
       }
     }
+
     .menu-cart__content {
       display: flex;
       flex-direction: column;
@@ -391,6 +422,7 @@ body.lock {
         color: #fff;
       }
     }
+
     .menu-cart__dish {
       font-family: $font-family, sans-serif;
       font-weight: 600;
@@ -406,12 +438,15 @@ body.lock {
         height: 100px;
         border-radius: 30px;
       }
+
       .cart-dish__details {
         margin-left: 16px;
       }
+
       .cart-dish__name {
         font-size: 20px;
       }
+
       .cart-dish__price {
         font-size: 18px;
       }
@@ -442,6 +477,7 @@ body.lock {
           }
         }
       }
+
       .cart-dish__minus-btn {
         background-color: $main-black;
         color: #fff;
@@ -451,10 +487,12 @@ body.lock {
           background: url("@/assets/icons/minus.svg") no-repeat;
           background-size: contain;
         }
+
         &:hover {
           background-color: $translucent-white;
         }
       }
+
       .cart-dish__plus-btn {
         background-color: #fff;
         color: $main-black;
@@ -464,6 +502,7 @@ body.lock {
           background: url("@/assets/icons/plus-black.svg") no-repeat;
           background-size: contain;
         }
+
         &:hover {
           background-color: $translucent-white;
 
@@ -473,6 +512,7 @@ body.lock {
           }
         }
       }
+
       .cart-dish__total-price {
         margin-top: 4px;
         font-size: 20px;
@@ -480,6 +520,7 @@ body.lock {
         color: #fff;
       }
     }
+
     .sidebar__checkout-btn {
       border: 1px solid #fff;
       background-color: $main-black;
@@ -495,6 +536,7 @@ body.lock {
       display: flex;
       opacity: 1;
     }
+
     // Чтобы родительский элемент был над кнопкой меню
     &--with-close-btn-show {
       z-index: 300;
@@ -506,6 +548,7 @@ body.lock {
 
 /* Адаптивность навбара */
 @media screen and (max-width: 1199.98px) {
+
   // Планшеты в горизонтальной ориентации, Ipad Pro
   .eatly-logo {
     &::before {
@@ -524,6 +567,7 @@ body.lock {
       .header__logo {
         font-size: 21px;
       }
+
       .header__list {
         gap: 30px;
 
@@ -532,22 +576,25 @@ body.lock {
         }
       }
     }
+
     .header__right-side {
       gap: 8px;
 
       .header__login {
-          font-size: 18px;
-          padding: 14px 22px;
+        font-size: 18px;
+        padding: 14px 22px;
       }
+
       .header__sign-up {
-          font-size: 18px;
-          padding: 14px 22px;
+        font-size: 18px;
+        padding: 14px 22px;
       }
     }
   }
 }
 
 @media screen and (max-width: 991.98px) {
+
   // Планшеты в вертикальной ориентации (>= 768px)
   .header__wrapper {
     padding: 0.75rem 0;
@@ -563,6 +610,7 @@ body.lock {
         font-size: 16px;
         padding: 16px 20px;
       }
+
       .header__sign-up {
         font-size: 16px;
         padding: 16px 20px;
@@ -572,6 +620,7 @@ body.lock {
 }
 
 @media screen and (max-width: 767.98px) {
+
   // Телефоны в горизонтальной ориентации (>= 576px)
   .eatly-logo {
     padding-left: 52px;
@@ -591,6 +640,7 @@ body.lock {
         display: none;
       }
     }
+
     .header__right-side {
       gap: 16px;
 
@@ -602,12 +652,14 @@ body.lock {
 }
 
 @media screen and (max-width: 566.98px) {
+
   // Телефоны в вертикальной ориентации (< 567px)
   .header__wrapper {
     height: 77px;
     padding: 1.5rem 0;
 
     .header__right-side {
+
       .header__login,
       .header__sign-up {
         display: none;
@@ -625,6 +677,7 @@ body.lock {
         padding: 1.5rem 1.5rem 0;
         width: 100%;
       }
+
       .sidebar__header {
         height: 27px;
       }
@@ -635,20 +688,25 @@ body.lock {
         padding: 1.5rem 0 0;
         width: 100%;
       }
+
       .menu-cart__dish {
+
         // Информация о блюде
         .cart-dish__image {
           width: 56px;
           height: 56px;
           border-radius: 30px;
         }
+
         .cart-dish__details {
           margin-left: 16px;
           margin-right: 16px;
         }
+
         .cart-dish__name {
           font-size: 18px;
         }
+
         .cart-dish__price {
           font-size: 16px;
         }
@@ -676,6 +734,7 @@ body.lock {
           color: #fff;
         }
       }
+
       .sidebar__checkout-btn {
         border: 1px solid #fff;
         background-color: $main-black;
