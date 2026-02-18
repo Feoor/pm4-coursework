@@ -1,4 +1,8 @@
 <script setup>
+import { defineProps } from 'vue';
+import { useAuthStore } from '@/store/authStore';
+const authStore = useAuthStore();
+
 defineProps({
   mode: {
     type: String,
@@ -30,14 +34,14 @@ defineProps({
         </div>
 
         <div class="header__right-side">
-          <div v-if="mode === 'full'" class="header__user-profile align-items-center" style="display: none;">
+          <div v-if="mode === 'full' && authStore.profile" class="header__user-profile align-items-center">
             <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
-            <span class="header__user-name">Имя пользователя</span>
+            <span class="header__user-name">{{ authStore.profile.displayName }}</span>
             <button class="header__logout btn btn-primary ms-2">Выйти</button>
           </div>
 
-          <div v-if="mode === 'full'" class="header__auth-buttons" style="display: none;">
-            <router-link to="/sign-in" class="header__login">Войти</router-link>
+          <div v-if="mode === 'full' && !authStore.profile" class="header__auth-buttons">
+            <router-link to="/sign-in" class="header__login me-2">Войти</router-link>
             <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
           </div>
 
