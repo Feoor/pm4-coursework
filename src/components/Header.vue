@@ -11,16 +11,6 @@ defineProps({
 })
 
 // Открываем сайдбар меню при нажатии на кнопку
-// const headerButton = document.getElementById('headerMenuButton');
-// const sidebar = document.getElementById('sidebar');
-// const sidebarMenuNav = sidebar.querySelector(".sidebar__menu-nav")
-
-// headerButton.addEventListener('click', () => {
-//     body.classList.toggle('lock')
-//     headerButton.classList.toggle('header__menu--toggle');
-//     sidebar.classList.toggle('sidebar--show')
-//     sidebarMenuNav.classList.toggle('sidebar__menu-nav--show');
-// });
 const isMenuOpen = ref(false);
 
 const handleMenuToggle = () => {
@@ -60,13 +50,14 @@ watch(isMenuOpen, (newValue) => {
         </div>
 
         <div class="header__right-side">
-          <div v-if="mode === 'full' && authStore.profile" class="header__user-profile align-items-center">
+          <div v-if="mode === 'full' && authStore.profile && authStore.isAuthInitialized" class="header__user-profile align-items-center">
             <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
-            <span class="header__user-name">{{ authStore.profile.displayName }}</span>
-            <button class="header__logout btn btn-primary ms-2">Выйти</button>
+            <span class="header__user-name">{{ authStore.profile.shortName }}</span>
+            <button @click="authStore.logout()" class="header__logout btn btn-primary ms-2">Выйти</button>
           </div>
 
-          <div v-if="mode === 'full' && !authStore.profile" class="header__auth-buttons">
+          <!-- FIXME: Профиль пользователя и кнопки аутификации не одного размера -->
+          <div v-if="mode === 'full' && !authStore.profile && authStore.isAuthInitialized" class="header__auth-buttons">
             <router-link to="/sign-in" class="header__login me-2">Войти</router-link>
             <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
           </div>
