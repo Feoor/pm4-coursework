@@ -7,6 +7,10 @@ import RestaurantCard from '../components/RestaurantCard.vue';
 import { ref } from 'vue'
 import { getImageUrl } from '@/utils/helpers'
 
+const handleFaqClick = (faq) => {
+  faq.active = !faq.active;
+}
+
 const restaurants = ref([
   {
     id: 1,
@@ -84,6 +88,39 @@ const dishes = ref([
     deliveryTime: 2040,
     rating: 4.9,
     price: 2499
+  }
+])
+
+const faqItems = ref([
+  {
+    id: 1,
+    question: 'Как оформить заказ на сайте?',
+    answer: 'Выберите понравившиеся блюда или ресторан, добавьте позиции в корзину и следуйте инструкциям для оформления заказа.',
+    active: false
+  },
+  {
+    id: 2,
+    question: 'Можно ли оплатить заказ онлайн?',
+    answer: 'Да, вы можете оплатить заказ онлайн банковской картой или через электронные кошельки.',
+    active: false
+  },
+  {
+    id: 3,
+    question: 'Как узнать статус моего заказа?',
+    answer: 'После оформления заказа вы получите уведомление и сможете отслеживать статус в личном кабинете.',
+    active: false
+  },
+  {
+    id: 4,
+    question: 'Можно ли отменить или изменить заказ?',
+    answer: 'Да, вы можете отменить или изменить заказ до его подтверждения рестораном, связавшись с поддержкой.',
+    active: false
+  },
+  {
+    id: 5,
+    question: 'Как воспользоваться промокодом?',
+    answer: 'Введите промокод в специальное поле при оформлении заказа, и скидка будет применена автоматически.',
+    active: false
   }
 ])
 </script>
@@ -257,61 +294,22 @@ const dishes = ref([
           </h2>
 
           <!-- Вопросы и ответы -->
-          <div class="faq__question col-12">
+          <div
+           v-for="faq in faqItems" 
+           :key="faq.id" 
+           class="faq__question col-12" 
+           :class="faq.active ? 'faq__question--active' : ''"
+           >
             <!-- Вопрос, заголовок всегда виден -->
             <div class="faq__question-header">
-              <button class="faq__header-btn">
-                Как оформить заказ на сайте?
+              <button class="faq__header-btn" @click="handleFaqClick(faq)">
+                {{ faq.question }}
               </button>
             </div>
+
             <!-- Ответ, скрытый по умолчанию -->
-            <div class="faq__question-body" id="faqAnswerOne">
-              Выберите понравившиеся блюда или ресторан, добавьте позиции в корзину и следуйте инструкциям
-              для оформления заказа.
-            </div>
-          </div>
-
-          <div class="faq__question col-12">
-            <div class="faq__question-header">
-              <button class="faq__header-btn">
-                Можно ли оплатить заказ онлайн?
-              </button>
-            </div>
             <div class="faq__question-body">
-              Да, вы можете оплатить заказ онлайн банковской картой или через электронные кошельки.
-            </div>
-          </div>
-
-          <div class="faq__question col-12">
-            <div class="faq__question-header">
-              <button class="faq__header-btn">
-                Как узнать статус моего заказа?
-              </button>
-            </div>
-            <div class="faq__question-body">
-              После оформления заказа вы получите уведомление и сможете отслеживать статус в личном кабинете.
-            </div>
-          </div>
-
-          <div class="faq__question col-12">
-            <div class="faq__question-header">
-              <button class="faq__header-btn">
-                Можно ли отменить или изменить заказ?
-              </button>
-            </div>
-            <div class="faq__question-body">
-              Да, вы можете отменить или изменить заказ до его подтверждения рестораном, связавшись с поддержкой.
-            </div>
-          </div>
-
-          <div class="faq__question col-12">
-            <div class="faq__question-header">
-              <button class="faq__header-btn">
-                Как воспользоваться промокодом?
-              </button>
-            </div>
-            <div class="faq__question-body">
-              Введите промокод в специальное поле при оформлении заказа, и скидка будет применена автоматически.
+              {{ faq.answer }}
             </div>
           </div>
 
