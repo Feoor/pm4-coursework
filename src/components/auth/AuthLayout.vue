@@ -1,6 +1,7 @@
 <script setup>
 import Header from '@/components/Header.vue'
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
+import { getImageUrl } from '@/utils/helpers';
 
 onMounted(() => {
   document.body.classList.add('auth-bg');
@@ -9,6 +10,27 @@ onMounted(() => {
 onUnmounted(() => {
   document.body.classList.remove('auth-bg');
 });
+
+const carouselItems = ref([
+  {
+    id: 1,
+    image: getImageUrl('eatly_preview.png'),
+    title: 'Откройте для себя новые вкусы',
+    description: 'С Eatly вы можете попробовать блюда из разных уголков мира, не выходя из дома. Мы доставляем только свежие и качественные продукты.'
+  },
+  {
+    id: 2,
+    image: getImageUrl('eatly_preview.png'),
+    title: 'Быстрая доставка',
+    description: 'Наши курьеры доставляют заказы максимально быстро, чтобы вы могли наслаждаться горячими блюдами в любое время.'
+  },
+  {
+    id: 3,
+    image: getImageUrl('eatly_preview.png'),
+    title: 'Удобное приложение',
+    description: 'Управляйте своими заказами, отслеживайте доставку и находите любимые блюда с помощью интуитивно понятного интерфейса Eatly.'
+  }
+])
 </script>
 
 <template>
@@ -36,7 +58,7 @@ onUnmounted(() => {
                 <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
               </div>
               <div class="carousel-inner h-100">
-                <div class="carousel-item active">
+                <!-- <div class="carousel-item active">
                   <img src="@/assets/img/eatly_preview.png" class="d-block w-100" alt="...">
                   <div class="carousel-caption d-none d-md-block">
                     <h5>Откройте для себя новые вкусы</h5>
@@ -45,25 +67,12 @@ onUnmounted(() => {
                       Мы доставляем только свежие и качественные продукты.
                     </p>
                   </div>
-                </div>
-                <div class="carousel-item">
-                  <img src="@/assets/img/eatly_preview.png" class="d-block w-100" alt="...">
+                </div> -->
+                <div v-for="(item, index) in carouselItems" :key="item.id" :class="['carousel-item', { active: index === 0 }]">
+                  <img :src="item.image" class="d-block w-100" alt="...">
                   <div class="carousel-caption d-none d-md-block">
-                    <h5>Быстрая доставка</h5>
-                    <p>
-                      Наши курьеры доставляют заказы максимально быстро, чтобы вы могли наслаждаться
-                      горячими блюдами в любое время.
-                    </p>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <img src="@/assets/img/eatly_preview.png" class="d-block w-100" alt="...">
-                  <div class="carousel-caption d-none d-md-block">
-                    <h5>Удобное приложение</h5>
-                    <p>
-                      Управляйте своими заказами, отслеживайте доставку и находите любимые блюда
-                      с помощью интуитивно понятного интерфейса Eatly.
-                    </p>
+                    <h5>{{ item.title }}</h5>
+                    <p>{{ item.description }}</p>
                   </div>
                 </div>
               </div>
