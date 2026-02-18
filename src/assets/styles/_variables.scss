@@ -68,6 +68,11 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background: #f9f9f9;
+
+  // Блокировка прокрутки при открытии модальных окон
+  &.lock {
+    overflow: hidden;
+  }
 }
 
 /* Главное занимает всю доступную высоту */

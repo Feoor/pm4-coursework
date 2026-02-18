@@ -15,11 +15,6 @@ body.auth-bg {
   background-repeat: no-repeat;
 }
 
-// Блокировка прокрутки при открытии модальных окон
-body.lock {
-  overflow: hidden;
-}
-
 main {
   padding-top: var(--header-height); // Отступ для шапки
 }

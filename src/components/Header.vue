@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref, watch } from 'vue';
 import { useAuthStore } from '@/store/authStore';
 const authStore = useAuthStore();
 
@@ -9,6 +9,32 @@ defineProps({
     default: 'full' // 'full' для полного отображения(блок аунтификации), 'lite' для отображения только логотипа
   }
 })
+
+// Открываем сайдбар меню при нажатии на кнопку
+// const headerButton = document.getElementById('headerMenuButton');
+// const sidebar = document.getElementById('sidebar');
+// const sidebarMenuNav = sidebar.querySelector(".sidebar__menu-nav")
+
+// headerButton.addEventListener('click', () => {
+//     body.classList.toggle('lock')
+//     headerButton.classList.toggle('header__menu--toggle');
+//     sidebar.classList.toggle('sidebar--show')
+//     sidebarMenuNav.classList.toggle('sidebar__menu-nav--show');
+// });
+const isMenuOpen = ref(false);
+
+const handleMenuToggle = () => {
+  isMenuOpen.value = !isMenuOpen.value;
+}
+
+// Управление блокировкой скролла через watcher
+watch(isMenuOpen, (newValue) => {
+  if (newValue) {
+    document.body.classList.add('lock');
+  } else {
+    document.body.classList.remove('lock');
+  }
+});
 </script>
 
 <template>
@@ -45,14 +71,14 @@ defineProps({
             <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
           </div>
 
-          <button id="headerMenuButton" class="header__menu">
+          <button @click="handleMenuToggle" class="header__menu" :class="isMenuOpen ? 'header__menu--toggle' : ''">
             <span></span>
           </button>
         </div>
 
         <!-- Боковое меню -->
-        <div id="sidebar" class="sidebar">
-          <div class="sidebar__menu-nav">
+        <div class="sidebar" :class="isMenuOpen ? 'sidebar--show' : ''">
+          <div class="sidebar__menu-nav" :class="isMenuOpen ? 'sidebar__menu-nav--show': ''">
             <div class="sidebar__header">
               <div class="sidebar__brand">
                 <!-- Логотип без текста -->
@@ -77,10 +103,6 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-body.lock {
-  overflow: hidden;
-}
-
 .list-reset {
   list-style: none;
   padding-left: 0;
@@ -237,7 +259,8 @@ body.lock {
 
   // Боковое меню
   .sidebar {
-    display: none;
+    display: flex;
+    visibility: hidden;
     width: 100vw;
     height: 100vh;
     position: fixed;
@@ -247,12 +270,27 @@ body.lock {
     z-index: 100;
     background-color: rgba(0, 0, 0, 0.4);
     opacity: 0;
-    transition: opacity .3s ease;
+    pointer-events: none;
+    transition: opacity .3s ease, visibility .3s ease;
+
+    &--show {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    // Чтобы родительский элемент был над кнопкой меню
+    &--with-close-btn-show {
+      z-index: 300;
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     // Меню навигации
     .sidebar__menu-nav {
       position: relative;
-      display: none;
+      display: flex;
       flex-direction: column;
       width: 95%;
       height: 100%;
@@ -263,11 +301,10 @@ body.lock {
       color: #fff;
       transform: translateX(100%);
       opacity: 0;
-      transition: transform .3s ease;
+      transition: transform .3s ease, opacity .3s ease;
       z-index: 200;
 
       &--show {
-        display: flex;
         opacity: 1;
         transform: translateX(0);
       }
@@ -370,7 +407,7 @@ body.lock {
     // Боковая корзина
     .sidebar__menu-cart {
       position: relative;
-      display: none;
+      display: flex;
       flex-direction: column;
       width: 95%;
       max-width: 550px;
@@ -382,10 +419,9 @@ body.lock {
       color: #fff;
       transform: translateX(100%);
       opacity: 0;
-      transition: transform .3s ease;
+      transition: transform .3s ease, opacity .3s ease;
 
       &--show {
-        display: flex;
         opacity: 1;
         transform: translateX(0);
       }
@@ -534,18 +570,6 @@ body.lock {
       &:hover {
         background-color: rgba(255, 255, 255, 0.15);
       }
-    }
-
-    &--show {
-      display: flex;
-      opacity: 1;
-    }
-
-    // Чтобы родительский элемент был над кнопкой меню
-    &--with-close-btn-show {
-      z-index: 300;
-      display: flex;
-      opacity: 1;
     }
   }
 }
