@@ -52,7 +52,7 @@ watch(isMenuOpen, (newValue) => {
         <div class="header__right-side">
           <div v-if="mode === 'full' && authStore.profile && authStore.isAuthInitialized" class="header__user-profile align-items-center">
             <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
-            <span class="header__user-name">{{ authStore.profile.shortName }}</span>
+            <span class="header__user-name">{{ authStore.profile.shortName }}!</span>
             <button @click="authStore.logout()" class="header__logout btn btn-primary ms-2">Выйти</button>
           </div>
 
