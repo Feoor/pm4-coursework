@@ -6,6 +6,7 @@ import RestaurantCard from '../components/RestaurantCard.vue';
 
 import { ref } from 'vue'
 import { getImageUrl } from '@/utils/helpers'
+import { useMenuFilters } from '@/composables/useMenuFilters';
 
 const handleFaqClick = (faq) => {
   faq.active = !faq.active;
@@ -17,6 +18,7 @@ const restaurants = ref([
     name: 'The Chicken King',
     image: getImageUrl('the_chicken_king.webp'),
     badge: 'Полезно',
+    categories: ['chicken', 'pizza', 'asian'],
     deliveryTime: 1440,
     rating: 4.8
   },
@@ -25,6 +27,7 @@ const restaurants = ref([
     name: 'The Fishman',
     image: getImageUrl('the_fishman.webp'),
     badge: 'Популярно',
+    categories: ['fish', 'seafood', 'european'],
     deliveryTime: 1440,
     rating: 4.8
   },
@@ -33,6 +36,7 @@ const restaurants = ref([
     name: 'The Chicken King',
     image: getImageUrl('the_chicken_king.webp'),
     badge: 'Полезно',
+    categories: ['chicken', 'pizza', 'asian'],
     deliveryTime: 1440,
     rating: 4.8
   }
@@ -45,6 +49,7 @@ const dishes = ref([
     name: 'Chicken Hell',
     image: getImageUrl('chicken_hell_dish.png'),
     badge: 'Полезно',
+    categories: ['asian', 'chicken'],
     deliveryTime: 1440,
     rating: 4.8,
     price: 1799
@@ -55,6 +60,7 @@ const dishes = ref([
     name: 'Swe Dish',
     image: getImageUrl('swe_dish.png'),
     badge: 'Популярно',
+    categories: ['asian', 'seafood'],
     deliveryTime: 2040,
     rating: 4.9,
     price: 2499
@@ -65,6 +71,7 @@ const dishes = ref([
     name: 'Fish Hell',
     image: getImageUrl('fish_hell_dish.png'),
     badge: 'Эксклюзив',
+    categories: ['seafood', 'european'],
     deliveryTime: 1440,
     rating: 4.9,
     price: 2499
@@ -75,6 +82,7 @@ const dishes = ref([
     name: 'Chicken Hell',
     image: getImageUrl('chicken_hell_dish.png'),
     badge: 'Полезно',
+    categories: ['chicken', 'asian'],
     deliveryTime: 1440,
     rating: 4.8,
     price: 1799
@@ -85,6 +93,7 @@ const dishes = ref([
     name: 'Swe Dish',
     image: getImageUrl('swe_dish.png'),
     badge: 'Популярно',
+    categories: ['seafood', 'european'],
     deliveryTime: 2040,
     rating: 4.9,
     price: 2499
@@ -123,6 +132,38 @@ const faqItems = ref([
     active: false
   }
 ])
+
+const groups = ref([
+  { id: 1, name: 'Все', value: 'all' },
+  { id: 2, name: 'Рестораны', value: 'restaurants' },
+  { id: 3, name: 'Блюда', value: 'dishes' }
+])
+const categories = ref([
+  { id: 1, name: 'Pizza', icon: getImageUrl('pizza.svg'), category: 'pizza' },
+  { id: 2, name: 'Asian', icon: getImageUrl('hotdog.svg'), category: 'asian' },
+  { id: 3, name: 'Donat', icon: getImageUrl('doughnut_ico.svg'), category: 'donat' },
+  { id: 4, name: 'Ice', icon: getImageUrl('icecream.svg'), category: 'ice' }
+])
+const sortOptions = ref([
+  { id: 1, name: 'Рекомендуемое', value: 'rating' },
+  { id: 2, name: 'Быстрая доставка', value: 'fast-delivery' },
+  { id: 3, name: 'Популярное', value: 'popular' }
+])
+
+const { 
+  // Variables
+  searchQuery, 
+  selectedCategories, 
+  selectedSortOption, 
+  maxPrice, 
+  // Computed
+  filteredDishes, 
+  filteredRestaurants, 
+  // Methods
+  toggleCategory, 
+  isCategorySelected
+ } = useMenuFilters(restaurants, dishes);
+const selectedGroup = ref('all');
 </script>
 
 <template>
@@ -150,21 +191,22 @@ const faqItems = ref([
             <div class="food-filter__search">
               <div class="form-floating">
                 <input type="text" class="food-filter__search-input form-control" placeholder="Поиск"
-                  id="foodFilterSearchInput">
-                <label for="foodFilterSearchInput">Поиск</label>
+                  v-model="searchQuery">
+                <label for="foodFilterSearchInput">Поиск...</label>
               </div>
 
               <div class="food-filter__display-filters col-12 btn-group" role="group">
+                <!-- TODO: Сделать через v-for, прийдется менять стили и отрисовку -->
                 <input type="radio" class="btn-check food-filter__display-filter" name="sortShowFilterGroup"
-                  id="sortShowAll" data-filter="all" checked>
+                  v-model="selectedGroup" value="all" :checked="selectedGroup === 'all'">
                 <label class="btn btn-outline-primary" for="sortShowAll">Все</label>
 
                 <input type="radio" class="btn-check food-filter__display-filter" name="sortShowFilterGroup"
-                  id="sortShowRestaurants" data-filter="restaurants">
+                  v-model="selectedGroup" value="restaurants" :checked="selectedGroup === 'restaurants'">
                 <label class="btn btn-outline-primary" for="sortShowRestaurants">Рестораны</label>
 
                 <input type="radio" class="btn-check food-filter__display-filter" name="sortShowFilterGroup"
-                  id="sortShowDishes" data-filter="dishes">
+                  v-model="selectedGroup" value="dishes" :checked="selectedGroup === 'dishes'">
                 <label class="btn btn-outline-primary" for="sortShowDishes">Блюда</label>
               </div>
             </div>
@@ -178,17 +220,14 @@ const faqItems = ref([
               <div class="filter-panel__category">
                 <h3 class="filter-panel__category-title">Категории</h3>
                 <div class="filter-panel__category-list row g-3" id="categoriesFilter">
-                  <div class="col-3 col-md-6 col-xl-3">
-                    <button class="filter-panel__category-item" data-category="pizza">Pizza</button>
-                  </div>
-                  <div class="col-3 col-md-6 col-xl-3">
-                    <button class="filter-panel__category-item" data-category="asian">Asian</button>
-                  </div>
-                  <div class="col-3 col-md-6 col-xl-3">
-                    <button class="filter-panel__category-item" data-category="donat">Donat</button>
-                  </div>
-                  <div class="col-3 col-md-6 col-xl-3">
-                    <button class="filter-panel__category-item" data-category="ice">Ice</button>
+                  <div class="col-3 col-md-6 col-xl-3" v-for="category in categories" :key="category.id">
+                    <button 
+                      class="filter-panel__category-item" 
+                      :class="{ 'filter-panel__category-item--active': isCategorySelected(category.category) }"
+                      @click="toggleCategory(category.category)"
+                    >
+                      {{ category.name }}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -197,20 +236,16 @@ const faqItems = ref([
               <div class="filter-panel__sort">
                 <h3 class="filter-panel__sort-title">Сортировать По</h3>
                 <div class="filter-panel__sort-list row row-cols-2 gx-5 gy-1" id="sortByFilters">
-                  <div class="filter-panel__sort-item col">
-                    <input type="radio" class="filter-panel__sort-btn" name="sortByFilter" id="sortByRecommends"
-                      data-sort="rating">
-                    <label class="btn" for="sortByRecommends">Рекомендуемое</label>
-                  </div>
-                  <div class="filter-panel__sort-item col">
-                    <input type="radio" class="filter-panel__sort-btn" name="sortByFilter" id="sortByFastDelivery"
-                      data-sort="delivery" checked>
-                    <label class="btn" for="sortByFastDelivery">Быстрая доставка</label>
-                  </div>
-                  <div class="filter-panel__sort-item col">
-                    <input type="radio" class="filter-panel__sort-btn" name="sortByFilter" id="sortByPopular"
-                      data-sort="popularity">
-                    <label class="btn" for="sortByPopular">Популярное</label>
+                  <div class="filter-panel__sort-item col" v-for="sortOption in sortOptions" :key="sortOption.id">
+                    <input 
+                      type="radio" 
+                      class="filter-panel__sort-btn" 
+                      name="sortByFilter" 
+                      :id="'sortBy' + sortOption.name"
+                      :value="sortOption.value" 
+                      v-model="selectedSortOption"
+                    >
+                    <label class="btn" :for="'sortBy' + sortOption.name">{{ sortOption.name }}</label>
                   </div>
                 </div>
               </div>
@@ -219,11 +254,11 @@ const faqItems = ref([
               <div class="filter-panel__price">
                 <h3 class="filter-panel__price-title">Цена</h3>
                 <label for="priceSlider" class="visually-hidden">Цена до</label>
-                <input type="range" class="filter-panel__price-slider" id="priceSlider" min="0" max="15000" step="500"
-                  value="15000" />
+                <input type="range" class="filter-panel__price-slider" min="0" max="15000" step="500"
+                  v-model="maxPrice" />
                 <div class="filter-panel__price-range">
                   <span>0 ₸</span>
-                  <span class="price-range__current-price">15000 ₸</span>
+                  <span class="price-range__current-price">{{ maxPrice }} ₸</span>
                 </div>
               </div>
 
@@ -245,7 +280,7 @@ const faqItems = ref([
     </section>
 
     <!-- Наши лучшие рестораны -->
-    <section class="our-restaurants">
+    <section class="our-restaurants" v-show="filteredRestaurants && filteredRestaurants.length > 0">
       <div class="container-sm">
 
         <!-- Обертка сетки -->
@@ -256,7 +291,7 @@ const faqItems = ref([
 
           <!-- Карточки ресторанов -->
           <div class="our-restaurants__restaurants-wrapper col-12 mb-2">
-            <RestaurantCard v-for="restaurant in restaurants" :key="restaurant.id" :restaurant="restaurant" />
+            <RestaurantCard v-for="restaurant in filteredRestaurants" :key="restaurant.id" :restaurant="restaurant" />
           </div>
 
         </div>
@@ -265,7 +300,7 @@ const faqItems = ref([
     </section>
 
     <!-- Наши лучшие блюда -->
-    <section class="our-dishes">
+    <section class="our-dishes" v-show="filteredDishes && filteredDishes.length > 0">
       <div class="container-sm">
         <!-- Обертка сетки -->
         <div class="our-dishes__wrapper">
@@ -273,12 +308,20 @@ const faqItems = ref([
           <h2 class="our-dishes__title col-12 text-center">Наши лучшие <span class="highlight--purple">блюда</span></h2>
           <!-- Карточки блюд -->
           <div class="our-dishes__dishes-wrapper col-12 mb-2">
-            <DishCard v-for="dish in dishes" :key="dish.id" :dish="dish" />
+            <DishCard v-for="dish in filteredDishes" :key="dish.id" :dish="dish" />
           </div>
 
         </div>
 
       </div>
+    </section>
+
+    <!-- Если не найдены рестораны или блюда -->
+    <section class="no-results mt-5 mb-5" v-show="!filteredRestaurants.length && !filteredDishes.length">
+        <div class="container-sm">
+            <h2 class="no-results__title text-center">К сожалению, ничего не найдено</h2>
+            <p class="no-results__text text-center text-muted">Попробуйте изменить фильтры или поиск.</p>
+        </div>
     </section>
 
     <!-- Часто задаваемые вопросы -->

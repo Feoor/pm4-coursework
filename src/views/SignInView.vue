@@ -30,13 +30,11 @@ const handleButtonClick = async (provider) => {
 
 const handleSubmit = async () => {
   try {
-    isLoading.value = true;
     await authStore.signIn(form.value.email, form.value.password);
     router.push('/menu'); // Перенаправляем на главную страницу после успешного входа
   } catch (error) {
     errorMessage.value = getAuthErrorMessage(error.code) || 'Произошла ошибка при входе. Пожалуйста, попробуйте снова.';
   } finally {
-    isLoading.value = false;
   }
 }
 </script>
