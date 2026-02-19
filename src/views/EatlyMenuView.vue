@@ -219,7 +219,7 @@ const selectedGroup = ref('all');
               <!-- Фильтр по категориям -->
               <div class="filter-panel__category">
                 <h3 class="filter-panel__category-title">Категории</h3>
-                <div class="filter-panel__category-list row g-3" id="categoriesFilter">
+                <div class="filter-panel__category-list row g-3">
                   <div class="col-3 col-md-6 col-xl-3" v-for="category in categories" :key="category.id">
                     <button 
                       class="filter-panel__category-item" 
@@ -262,20 +262,13 @@ const selectedGroup = ref('all');
                 </div>
               </div>
 
-              <button id="applyFiltersButton" class="filter-panel__apply-btn">Применить</button>
+              <!-- Нужды в нажатии кнопки нет -->
+              <button class="filter-panel__apply-btn">Применить</button>
             </div>
           </div>
 
         </div>
 
-      </div>
-    </section>
-
-    <!-- Если не найдены рестораны или блюда -->
-    <section class="no-results mt-5 mb-5" style="display: none;">
-      <div class="container-sm">
-        <h2 class="no-results__title text-center">К сожалению, ничего не найдено</h2>
-        <p class="no-results__text text-center text-muted">Попробуйте изменить фильтры или поиск.</p>
       </div>
     </section>
 
@@ -317,7 +310,7 @@ const selectedGroup = ref('all');
     </section>
 
     <!-- Если не найдены рестораны или блюда -->
-    <section class="no-results mt-5 mb-5" v-show="!filteredRestaurants.length && !filteredDishes.length">
+    <section class="no-results mt-6" v-show="!filteredRestaurants.length && !filteredDishes.length">
         <div class="container-sm">
             <h2 class="no-results__title text-center">К сожалению, ничего не найдено</h2>
             <p class="no-results__text text-center text-muted">Попробуйте изменить фильтры или поиск.</p>
