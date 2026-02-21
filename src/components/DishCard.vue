@@ -31,7 +31,7 @@ const handleFavoriteClick = () => {
 
       <div class="card-body">
         <span :class="`badge ${getBadgeClass(dish.badge)}`">{{ getBadgeText(dish.badge) }}</span>
-        <h5 class="dish-card__title">{{ dish.name }}</h5>
+        <h5 class="dish-card__title card-title mt-0">{{ dish.name }}</h5>
 
         <div class="dish-card__info d-flex align-items-center mb-2">
           <span class="me-1 me-xl-2">{{ formatDeliveryTime(dish.deliveryTime) }} •</span>

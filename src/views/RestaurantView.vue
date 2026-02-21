@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
