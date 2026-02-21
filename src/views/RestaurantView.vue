@@ -67,7 +67,7 @@ const addToFavorites = (dish) => {
     </section>
 
     <!-- Спиннер для индикации загрузки -->
-    <section v-if="isLoading">
+    <section v-show="isLoading">
       <div class="d-flex justify-content-center my-5">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Загружаем...</span>
@@ -76,7 +76,7 @@ const addToFavorites = (dish) => {
     </section>
 
     <!-- Популярные блюда ресторана -->
-    <section class="menu-section" v-else-if="!isLoading && popularDishes">
+    <section class="menu-section" v-show="!isLoading && popularDishes">
       <div class="container-sm">
 
         <!-- Обертка сетки -->

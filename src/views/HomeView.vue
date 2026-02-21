@@ -6,86 +6,88 @@ import DishCard from '@/components/DishCard.vue'
 import ReviewCard from '@/components/ReviewCard.vue'
 
 import { ref } from 'vue'
-import { getImageUrl } from '@/utils/helpers'
+import { getBadgeClass, getBadgeText, getImageUrl } from '@/utils/helpers'
+import { Restaurant } from '@/models/Restaurant'
+import { Dish } from '@/models/Dish'
 
 const restaurants = ref([
-  {
-    id: 1,
-    name: 'The Chicken King',
-    image: getImageUrl('the_chicken_king.webp'),
-    badge: 'Полезно',
-    deliveryTime: 1440,
-    rating: 4.8
-  },
-  {
-    id: 2,
+  new Restaurant({
+    id: 'GrBB4fljG8I7axtTP4GH',
     name: 'The Fishman',
-    image: getImageUrl('the_fishman.webp'),
-    badge: 'Популярно',
-    deliveryTime: 1440,
+    image: 'the_fishman.webp',
+    badge: 'popularity',
+    delivery_time: 1440,
     rating: 4.8
-  },
-  {
-    id: 3,
+  }),
+  new Restaurant({
+    id: 'oUslJGVthnAJ71FBgyEd',
     name: 'The Chicken King',
-    image: getImageUrl('the_chicken_king.webp'),
-    badge: 'Полезно',
-    deliveryTime: 1440,
+    image: 'the_chicken_king.webp',
+    badge: 'popularity',
+    delivery_time: 1440,
     rating: 4.8
-  }
+  }),
+  new Restaurant({
+    id: 'rH6LYpUQPGtimnQ0uiKZ',
+    name: 'Burger Prince',
+    image: 'the_chicken_king.webp',
+    badge: 'healthy',
+    delivery_time: 1440,
+    rating: 4.8
+  })
 ])
 
 const dishes = ref([
-  {
+  new Dish({
     id: 1,
-    restaurantId: 1,
+    restaurantId: 'GrBB4fljG8I7axtTP4GH',
     name: 'Chicken Hell',
-    image: getImageUrl('chicken_hell_dish.png'),
-    badge: 'Полезно',
-    deliveryTime: 1440,
+    image: 'chicken_hell_dish.png',
+    badge: 'popularity',
+    delivery_time: 1440,
     rating: 4.8,
     price: 1799
-  },
-  {
+  }),
+  new Dish({
     id: 2,
-    restaurantId: 1,
+    restaurantId: 'GrBB4fljG8I7axtTP4GH',
     name: 'Swe Dish',
-    image: getImageUrl('swe_dish.png'),
-    badge: 'Популярно',
-    deliveryTime: 2040,
+    image: 'swe_dish.png',
+    badge: 'popularity',
+    delivery_time: 2040,
     rating: 4.9,
     price: 2499
-  },
-  {
+  }),
+  new Dish({
     id: 3,
-    restaurantId: 2,
+    restaurantId: 'oUslJGVthnAJ71FBgyEd',
     name: 'Fish Hell',
-    image: getImageUrl('fish_hell_dish.png'),
-    badge: 'Эксклюзив',
-    deliveryTime: 1440,
+    image: 'fish_hell_dish.png',
+    badge: 'supreme',
+    delivery_time: 1440,
     rating: 4.9,
     price: 2499
-  },
-  {
+  }),
+  new Dish({
     id: 4,
-    restaurantId: 1,
+    restaurantId: 'rH6LYpUQPGtimnQ0uiKZ',
     name: 'Chicken Hell',
-    image: getImageUrl('chicken_hell_dish.png'),
-    badge: 'Полезно',
-    deliveryTime: 1440,
+    image: 'chicken_hell_dish.png',
+    badge: 'healthy',
+    delivery_time: 1440,
     rating: 4.8,
     price: 1799
-  },
-  {
+  }),
+  new Dish({
     id: 5,
-    restaurantId: 1,
+    restaurantId: 'rH6LYpUQPGtimnQ0uiKZ',
     name: 'Swe Dish',
-    image: getImageUrl('swe_dish.png'),
-    badge: 'Популярно',
-    deliveryTime: 2040,
+    image: 'swe_dish.png',
+    badge: 'popularity',
+    delivery_time: 2040,
     rating: 4.9,
     price: 2499
-  }
+  })
 ])
 
 const reviews = ref([

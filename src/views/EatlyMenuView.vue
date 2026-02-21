@@ -238,11 +238,20 @@ const selectedGroup = ref('all');
     </section>
 
     <!-- Если не найдены рестораны или блюда -->
-    <section class="no-results mt-6" v-show="!filteredRestaurants.length && !filteredDishes.length">
+    <section class="no-results mt-6" v-show="!filteredRestaurants.length && !filteredDishes.length && !isLoading">
         <div class="container-sm">
             <h2 class="no-results__title text-center">К сожалению, ничего не найдено</h2>
             <p class="no-results__text text-center text-muted">Попробуйте изменить фильтры или поиск.</p>
         </div>
+    </section>
+
+    <!-- Спиннер во время загрузки данных -->
+    <section v-show="isLoading">
+      <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Загружаем...</span>
+        </div>
+      </div>
     </section>
 
     <!-- Часто задаваемые вопросы -->

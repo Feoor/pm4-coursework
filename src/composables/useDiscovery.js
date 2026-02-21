@@ -22,6 +22,7 @@ export function useDiscovery() {
         limit(10)
       );
       const restSnap = await getDocs(restQuery);
+      console.log(restSnap.docs[0].data());
       restaurants.value = restSnap.docs.map(doc => (new Restaurant({ id: doc.id, ...doc.data() })));
 
       // Получаем топ 10 блюд по популярности из Firestore
@@ -31,6 +32,7 @@ export function useDiscovery() {
         limit(10)
       );
       const dishSnap = await getDocs(dishQuery);
+      console.log(dishSnap.docs[0].data());
       dishes.value = dishSnap.docs.map(doc => {
         const data = doc.data();
         const dish = new Dish({ id: doc.id, restaurantId: data.restaurant?.id || 'unknown', ...data });

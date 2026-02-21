@@ -1,8 +1,9 @@
 export const getBadgeClass = (badge) => {
   const badgeClasses = {
     'healthy': 'badge-healthy',
-    'popularity': 'badge-trending',
-    'supreme': 'badge-supreme'
+    'trending': 'badge-trending',
+    'supreme': 'badge-supreme',
+    'spicy': 'badge-spicy'
   };
 
   return badgeClasses[badge] || '';
@@ -11,8 +12,9 @@ export const getBadgeClass = (badge) => {
 export const getBadgeText = (badge) => {
   const badgeTexts = {
     'healthy': 'Полезное',
-    'popularity': 'Популярно',
-    'supreme': 'Эксклюзив'
+    'trending': 'Популярно',
+    'supreme': 'Эксклюзив',
+    'spicy': 'Острое'
   };
 
   return badgeTexts[badge] || '';
