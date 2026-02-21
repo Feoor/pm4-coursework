@@ -141,7 +141,7 @@ const reviews = ref([
 
               <div class="hero__reviews col-12 d-flex">
                 <div class="hero__review">
-                  <img class="hero__review-logo" src="@/assets/img/trustpilot_logo.svg" alt="Trustpilot logo">
+                  <img class="hero__review-logo" src="@/assets/img/trustpilot_logo.svg" alt="Trust-pilot logo">
 
                   <div class="hero__review-stars">
                       <img v-for="star in 5" :key="star" src="@/assets/icons/full_star.svg" alt="star">
@@ -337,7 +337,7 @@ const reviews = ref([
 
               <h2 class="sale__title">ПОЛУЧИТЕ 50%</h2>
 
-              <form id="promoForm" class="sale__form">
+              <form @submit.prevent="console.log('Сообщение отправлено! Проверьте вашу почту')" class="sale__form">
                 <div class="form-floating col-12 col-md-7 col-xl-5">
                   <input id="promoEmailInput" type="email" class="sale__email-input form-control" placeholder="name@example.com">
                   <label for="promoEmailInput">Введите Ваш Email Адрес</label>

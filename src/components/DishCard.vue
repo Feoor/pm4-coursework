@@ -1,10 +1,10 @@
 <script setup>
-import { getBadgeClass, formatDeliveryTime, formatPrice } from '@/utils/helpers.js'
+import { getBadgeClass, getBadgeText, formatDeliveryTime, formatPrice } from '@/utils/helpers.js'
+import { Dish } from '@/models/Dish.js'
 
 const props = defineProps({
   dish: {
-    type: Object, // В будующем стоит создать отдельный тип для блюда, так как в объекте блюда может быть много полей, которые не нужны в компоненте DishCard
-    required: true
+    type: Dish,
   },
   mode: {
     type: String,
@@ -27,10 +27,10 @@ const handleFavoriteClick = () => {
   <div class="dish-card card h-100">
     <!-- Для preview -->
     <router-link v-if="mode === 'preview'" :to="`/restaurant/${dish.restaurantId}`">
-      <img :src="dish.image" :alt="dish.name" class="dish-card__image">
+      <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image">
 
       <div class="card-body">
-        <span :class="`badge ${getBadgeClass(dish.badge)}`">{{ dish.badge }}</span>
+        <span :class="`badge ${getBadgeClass(dish.badge)}`">{{ getBadgeText(dish.badge) }}</span>
         <h5 class="dish-card__title">{{ dish.name }}</h5>
 
         <div class="dish-card__info d-flex align-items-center mb-2">
@@ -47,10 +47,10 @@ const handleFavoriteClick = () => {
     <div v-else>
       <button class="dish-card__favorite-btn" @click="handleFavoriteClick"></button>
 
-      <img :src="dish.image" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">
+      <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">
 
       <div class="card-body">
-        <span :class="`badge ${getBadgeClass(dish.badge)}`">{{ dish.badge }}</span>
+        <span :class="`badge ${getBadgeClass(dish.badge)}`">{{ getBadgeText(dish.badge) }}</span>
         <h5 class="dish-card__title card-title mt-0">{{ dish.name }}</h5>
 
         <div class="dish-card__info d-flex align-items-center mb-2">

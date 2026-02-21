@@ -1,6 +1,4 @@
 <script setup>
-import { useAuthStore } from '@/store/authStore';
-const authStore = useAuthStore();
 </script>
 
 <template>

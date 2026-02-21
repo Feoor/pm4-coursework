@@ -5,16 +5,14 @@ import { onMounted, ref } from 'vue';
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import DishCard from '@/components/DishCard.vue'
-import { getImageUrl } from '../utils/helpers';
+import { getBadgeClass, getBadgeText, formatDeliveryTime } from '@/utils/helpers';
+import { useRestaurant } from '@/composables/useRestaurant';
 
 const route = useRoute();
-const restaurantId = ref(null);
+const { restaurant, isLoading, menu, popularDishes, fetchRestaurantData } = useRestaurant();
 
-onMounted(() => {
-  restaurantId.value = route.params.id;
-
-  console.log('ID ресторана:', restaurantId.value);
-})
+// Загружаем данные ресторана при монтировании компонента (используем ID из URL)
+onMounted(() => fetchRestaurantData(route.params.id));
 
 const addToCart = (dish) => {
   console.log('Добавлено в корзину:', dish);
@@ -29,53 +27,69 @@ const addToFavorites = (dish) => {
   <Header />
 
   <main class="main">
-    <section class="restaurant-hero" data-restaurant-id="rest-1">
+    <section class="restaurant-hero mb-5">
       <div class="container-sm">
         <div class="restaurant-hero__wrapper">
-          <div class="card">
-            <img src="../img/the_chicken_king.webp" alt="The Chicken King Restaurant" class="card-img-top">
+          <div v-if="!isLoading && restaurant" class="card">
+            <img :src="restaurant.imageUrl" :alt="restaurant.name" class="card-img-top">
 
             <div
-              class="card-body d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between">
-              <span class="badge badge-healthy d-xs-block d-sm-none">Полезно</span>
-              <h1 class="card-title mt-0">The Chicken King</h1>
+              class="card-body d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between"
+            >
+              <span v-if="restaurant.badge" :class="`badge ${getBadgeClass(restaurant.badge)}`">{{ getBadgeText(restaurant.badge) }}</span>
+              <h1 class="card-title mt-0">{{ restaurant.name }}</h1>
 
               <div class="our-restaurants__restaurant-info d-flex align-items-center">
-                <span class="me-2">24min •</span>
-                <img src="../icons/purple_star.svg" alt="Purple star">
-                <span class="ms-1">4.8</span>
+                <span class="me-2">{{ formatDeliveryTime(restaurant.deliveryTime) }}</span>
+                <img src="@/assets/icons/purple_star.svg" alt="Purple star">
+                <span class="ms-1">{{ restaurant.rating }}</span>
               </div>
 
               <button class="restaurant-bookmark"></button>
             </div>
           </div>
+
+          <div v-else-if="isLoading" class="card">
+            <div class="card-img-top placeholder-glow" style="height: 378px;">
+              <div class="placeholder w-100 h-100"></div>
+            </div>
+
+            <div class="card-body">
+              <h1 class="card-title placeholder-glow row">
+                <span class="placeholder col-1"></span>
+                <span class="placeholder col-3 offset-2"></span>
+                <span class="placeholder col-3 offset-1"></span>
+              </h1>
+              </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Спиннер для индикации загрузки -->
+    <section v-if="isLoading">
+      <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Загружаем...</span>
         </div>
       </div>
     </section>
 
     <!-- Популярные блюда ресторана -->
-    <section class="menu-section">
+    <section class="menu-section" v-else-if="!isLoading && popularDishes">
       <div class="container-sm">
 
         <!-- Обертка сетки -->
         <div class="menu-section__wrapper">
           <!-- Титул -->
-          <h2 class="menu-section__title col-12">Popular 🔥</h2>
+          <h2 class="menu-section__title col-12">Популярно 🔥</h2>
 
           <!-- Карточки блюд -->
           <div class="menu-section__dishes-wrapper col-12">
             <DishCard
-              v-for="dish in [1, 2, 3, 4]"
-              :key="dish"
-              :dish="{
-                name: `Dish ${dish}`,
-                image: getImageUrl(`chicken_hell_dish.png`),
-                badge: dish % 2 === 0 ? 'Полезно' : 'Популярно',
-                deliveryTime: 20 + dish * 5,
-                rating: (4.5 + dish * 0.1).toFixed(1),
-                price: 1799 + dish * 200,
-                restaurantId: 'rest-1'
-              }"
+              v-for="dish in popularDishes"
+              :key="dish.id"
+              :dish="dish"
               :mode="'full'"
               @add-to-cart="addToCart"
               @add-to-favorites="addToFavorites"
@@ -87,63 +101,26 @@ const addToFavorites = (dish) => {
       </div>
     </section>
 
-    <!-- Курица с овощами -->
-    <section class="menu-section">
+    <!-- Секции меню -->
+    <section class="menu-section" v-for="(sectionDishes, sectionName) in menu" :key="sectionName">
       <div class="container-sm">
 
         <!-- Обертка сетки -->
         <div class="menu-section__wrapper">
           <!-- Титул -->
-          <h2 class="menu-section__title col-12">Курица с овощами</h2>
+          <h2 class="menu-section__title col-12">{{ sectionName }}</h2>
 
           <!-- Карточки блюд -->
           <div class="menu-section__dishes-wrapper col-12">
-            <div class="menu-section__dish card h-100">
-              <!-- Кнопка "Добавить в любимое" -->
-              <button class="product__favorite-btn dish-favorite"></button>
-
-              <img src="../img/chicken_hell_dish.png" alt="Chicken Hell Dish"
-                class="product__image card-img-top rounded-circle">
-
-              <div class="card-body">
-                <span class="badge badge-healthy">Полезно</span>
-                <h5 class="product__name card-title mt-0">Chicken Hell</h5>
-
-                <div class="menu-section__dish-info d-flex align-items-center mb-2">
-                  <span class="me-2">24min •</span>
-                  <img src="../icons/purple_star.svg" alt="Purple star">
-                  <span class="ms-1">4.8</span>
-                </div>
-                <h5 class="product__price menu-section__dish-price">₸1799</h5>
-
-                <!-- Кнопка "Добавить в корзину" -->
-                <button class="product__cart-btn add-to-cart"></button>
-              </div>
-            </div>
-
-            <div class="menu-section__dish card h-100">
-              <!-- Кнопка "Добавить в любимое" -->
-              <button class="product__favorite-btn dish-favorite"></button>
-
-              <img src="../img/swe_dish.png" alt="Swe Dish" class="product__image card-img-top rounded-circle">
-
-              <div class="card-body">
-                <span class="badge badge-trending">Популярно</span>
-                <h5 class="product__name card-title mt-0">Swe Dish</h5>
-
-                <div class="menu-section__dish-info d-flex align-items-center mb-2">
-                  <span class="me-2">34min •</span>
-                  <img src="../icons/purple_star.svg" alt="Purple star">
-                  <span class="ms-1">4.9</span>
-                </div>
-                <h5 class="product__price menu-section__dish-price">₸2499</h5>
-
-                <!-- Кнопка "Добавить в корзину" -->
-                <button class="product__cart-btn add-to-cart"></button>
-              </div>
-            </div>
+            <DishCard
+              v-for="dish in sectionDishes"
+              :key="dish.id"
+              :dish="dish"
+              :mode="'full'"
+              @add-to-cart="addToCart"
+              @add-to-favorites="addToFavorites"
+            />
           </div>
-
         </div>
       </div>
     </section>
@@ -333,7 +310,6 @@ const addToFavorites = (dish) => {
 
 /* Блюда ресторана */
 .menu-section__wrapper {
-  padding-top: 70px;
   padding-bottom: 70px;
 
   .menu-section__title {

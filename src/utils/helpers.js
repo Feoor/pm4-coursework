@@ -1,11 +1,21 @@
 export const getBadgeClass = (badge) => {
   const badgeClasses = {
-    'Полезно': 'badge-healthy',
-    'Популярно': 'badge-trending',
-    'Эксклюзив': 'badge-supreme'
+    'healthy': 'badge-healthy',
+    'popularity': 'badge-trending',
+    'supreme': 'badge-supreme'
   };
 
   return badgeClasses[badge] || '';
+}
+
+export const getBadgeText = (badge) => {
+  const badgeTexts = {
+    'healthy': 'Полезное',
+    'popularity': 'Популярно',
+    'supreme': 'Эксклюзив'
+  };
+
+  return badgeTexts[badge] || '';
 }
 
 export const formatDeliveryTime = (time) => {

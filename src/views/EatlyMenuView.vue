@@ -4,101 +4,10 @@ import Footer from '@/components/Footer.vue'
 import DishCard from '../components/DishCard.vue';
 import RestaurantCard from '../components/RestaurantCard.vue';
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { getImageUrl } from '@/utils/helpers'
 import { useMenuFilters } from '@/composables/useMenuFilters';
-
-const handleFaqClick = (faq) => {
-  faq.active = !faq.active;
-}
-
-const restaurants = ref([
-  {
-    id: 1,
-    name: 'The Chicken King',
-    image: getImageUrl('the_chicken_king.webp'),
-    badge: 'Полезно',
-    categories: ['chicken', 'pizza', 'asian'],
-    deliveryTime: 1440,
-    rating: 4.8
-  },
-  {
-    id: 2,
-    name: 'The Fishman',
-    image: getImageUrl('the_fishman.webp'),
-    badge: 'Популярно',
-    categories: ['fish', 'seafood', 'european'],
-    deliveryTime: 1440,
-    rating: 4.8
-  },
-  {
-    id: 3,
-    name: 'The Chicken King',
-    image: getImageUrl('the_chicken_king.webp'),
-    badge: 'Полезно',
-    categories: ['chicken', 'pizza', 'asian'],
-    deliveryTime: 1440,
-    rating: 4.8
-  }
-])
-
-const dishes = ref([
-  {
-    id: 1,
-    restaurantId: 1,
-    name: 'Chicken Hell',
-    image: getImageUrl('chicken_hell_dish.png'),
-    badge: 'Полезно',
-    categories: ['asian', 'chicken'],
-    deliveryTime: 1440,
-    rating: 4.8,
-    price: 1799
-  },
-  {
-    id: 2,
-    restaurantId: 1,
-    name: 'Swe Dish',
-    image: getImageUrl('swe_dish.png'),
-    badge: 'Популярно',
-    categories: ['asian', 'seafood'],
-    deliveryTime: 2040,
-    rating: 4.9,
-    price: 2499
-  },
-  {
-    id: 3,
-    restaurantId: 2,
-    name: 'Fish Hell',
-    image: getImageUrl('fish_hell_dish.png'),
-    badge: 'Эксклюзив',
-    categories: ['seafood', 'european'],
-    deliveryTime: 1440,
-    rating: 4.9,
-    price: 2499
-  },
-  {
-    id: 4,
-    restaurantId: 1,
-    name: 'Chicken Hell',
-    image: getImageUrl('chicken_hell_dish.png'),
-    badge: 'Полезно',
-    categories: ['chicken', 'asian'],
-    deliveryTime: 1440,
-    rating: 4.8,
-    price: 1799
-  },
-  {
-    id: 5,
-    restaurantId: 1,
-    name: 'Swe Dish',
-    image: getImageUrl('swe_dish.png'),
-    badge: 'Популярно',
-    categories: ['seafood', 'european'],
-    deliveryTime: 2040,
-    rating: 4.9,
-    price: 2499
-  }
-])
+import { useDiscovery } from '@/composables/useDiscovery';
 
 const faqItems = ref([
   {
@@ -133,6 +42,10 @@ const faqItems = ref([
   }
 ])
 
+const handleFaqClick = (faq) => {
+  faq.active = !faq.active;
+}
+
 const groups = ref([
   { id: 1, name: 'Все', value: 'all' },
   { id: 2, name: 'Рестораны', value: 'restaurants' },
@@ -149,6 +62,20 @@ const sortOptions = ref([
   { id: 2, name: 'Быстрая доставка', value: 'fast-delivery' },
   { id: 3, name: 'Популярное', value: 'popular' }
 ])
+
+const { 
+  // Variables
+  restaurants,
+  dishes,
+  isLoading, 
+  error, 
+  // Methods
+  fetchDiscoveryData
+} = useDiscovery();
+
+onMounted(() => {
+  fetchDiscoveryData();
+})
 
 const { 
   // Variables
@@ -196,6 +123,7 @@ const selectedGroup = ref('all');
               </div>
 
               <div class="food-filter__display-filters col-12 btn-group" role="group">
+                <!-- FIXME: Переключение не работает -->
                 <!-- TODO: Сделать через v-for, прийдется менять стили и отрисовку -->
                 <input type="radio" class="btn-check food-filter__display-filter" name="sortShowFilterGroup"
                   v-model="selectedGroup" value="all" :checked="selectedGroup === 'all'">

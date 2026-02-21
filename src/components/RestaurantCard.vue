@@ -1,9 +1,10 @@
 <script setup>
-import { getBadgeClass, formatDeliveryTime } from '@/utils/helpers.js'
+import { getBadgeClass, getBadgeText, formatDeliveryTime } from '@/utils/helpers.js'
+import { Restaurant } from '@/models/Restaurant.js'
 
 defineProps({
   restaurant: {
-    type: Object, // В будующем стоит создать отдельный тип для ресторана, так как в объекте ресторана может быть много полей, которые не нужны в компоненте RestaurantCard
+    type: Restaurant,
     required: true
   }
 })
@@ -13,10 +14,10 @@ defineProps({
   <div class="restaurant-card card h-100">
 
     <router-link :to="`/restaurant/${restaurant.id}`">
-      <img :src="restaurant.image" :alt="restaurant.name" class="card-img-top">
+      <img :src="restaurant.imageUrl" :alt="restaurant.name" class="card-img-top">
 
       <div class="card-body">
-        <span :class="`badge ${getBadgeClass(restaurant.badge)} mb-1`">{{ restaurant.badge }}</span>
+        <span :class="`badge ${getBadgeClass(restaurant.badge)} mb-1`">{{ getBadgeText(restaurant.badge) }}</span>
         <h5 class="card-title mb-2">{{ restaurant.name }}</h5>
 
         <div class="restaurant-card__info d-flex align-items-center">
