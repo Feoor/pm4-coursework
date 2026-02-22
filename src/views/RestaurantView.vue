@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
@@ -14,6 +14,14 @@ const { restaurant, isLoading, menu, popularDishes, fetchRestaurantData } = useR
 // Загружаем данные ресторана при монтировании компонента (используем ID из URL)
 onMounted(() => fetchRestaurantData(route.params.id));
 
+// Прототип корзины
+const cart = ref({
+  items: [],
+  itemsCount: 0,
+  totalPrice: 0,
+  isMenuOpen: false,
+});
+
 const addToCart = (dish) => {
   console.log('Добавлено в корзину:', dish);
 }
@@ -24,7 +32,7 @@ const addToFavorites = (dish) => {
 </script>
 
 <template>
-  <Header />
+  <Header :cart="cart" />
 
   <main class="main">
     <section class="restaurant-hero mb-5">
@@ -125,6 +133,7 @@ const addToFavorites = (dish) => {
       </div>
     </section>
 
+    <!-- TODO: Синхронизировать мобильную корзину с основной корзиной -->
     <section class="cart-btn-section--md-position d-flex d-lg-none position-sticky">
       <div class="container-sm">
         <button class="cart-btn btn btn-primary d-flex align-items-center mx-auto">

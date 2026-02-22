@@ -7,6 +7,10 @@ defineProps({
   mode: {
     type: String,
     default: 'full' // 'full' для полного отображения(блок аунтификации), 'lite' для отображения только логотипа
+  },
+  cart: {
+    type: Object, // Заменить на объект корзины
+    default: null
   }
 })
 
@@ -50,17 +54,25 @@ watch(isMenuOpen, (newValue) => {
         </div>
 
         <div class="header__right-side">
-          <div v-if="mode === 'full' && authStore.profile && authStore.isAuthInitialized" class="header__user-profile d-none d-sm-flex align-items-center">
+          <div v-if="mode === 'full' && authStore.profile && authStore.isAuthInitialized"
+            class="header__user-profile d-none d-sm-flex align-items-center">
             <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
             <span class="header__user-name">{{ authStore.profile.shortName }}!</span>
             <button @click="authStore.logout()" class="header__logout btn btn-primary ms-2">Выйти</button>
           </div>
 
           <!-- FIXME: Профиль пользователя и кнопки аутификации не одного размера -->
-          <div v-else-if="mode === 'full' && !authStore.profile && authStore.isAuthInitialized" class="header__auth-buttons d-none d-sm-flex">
+          <div v-else-if="mode === 'full' && !authStore.profile && authStore.isAuthInitialized"
+            class="header__auth-buttons d-none d-sm-flex">
             <router-link to="/sign-in" class="header__login me-2">Войти</router-link>
             <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
           </div>
+
+          <button v-if="mode === 'full' && cart" class="cart-btn btn btn-primary d-none d-lg-flex align-items-center">
+            <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cart.itemsCount }}</span>
+            Открыть заказ
+            <span class="cart__price ms-4">{{ cart.totalPrice }} ₸</span>
+          </button>
 
           <button @click="handleMenuToggle" class="header__menu" :class="isMenuOpen ? 'header__menu--toggle' : ''">
             <span></span>
@@ -68,8 +80,10 @@ watch(isMenuOpen, (newValue) => {
         </div>
 
         <!-- Боковое меню -->
-        <div class="sidebar" :class="isMenuOpen ? 'sidebar--show' : ''">
-          <div class="sidebar__menu-nav" :class="isMenuOpen ? 'sidebar__menu-nav--show': ''">
+        <div class="sidebar" :class="(isMenuOpen || cart?.isMenuOpen) ? 'sidebar--show' : ''">
+
+          <!-- Меню для навигации -->
+          <div class="sidebar__menu-nav" :class="isMenuOpen ? 'sidebar__menu-nav--show' : ''">
             <div class="sidebar__header">
               <div class="sidebar__brand">
                 <!-- Логотип без текста -->
@@ -84,20 +98,68 @@ watch(isMenuOpen, (newValue) => {
             </div>
             <div v-if="mode === 'full'" class="sidebar__buttons justify-content-between text-center">
 
-              <div v-if="authStore.profile && authStore.isAuthInitialized" class="sidebar__user-profile d-flex flex-column align-items-center col-12 gap-4">
+              <div v-if="authStore.profile && authStore.isAuthInitialized"
+                class="sidebar__user-profile d-flex flex-column align-items-center col-12 gap-4">
                 <div>
                   <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
                   <span class="header__user-name">{{ authStore.profile.shortName }}!</span>
                 </div>
-                
+
                 <button @click="authStore.logout()" class="header__logout btn btn-primary w-100">Выйти</button>
               </div>
 
-              <div v-else-if="!authStore.profile && authStore.isAuthInitialized" class="sidebar__auth-buttons d-flex flex-column col-12 gap-2">
+              <div v-else-if="!authStore.profile && authStore.isAuthInitialized"
+                class="sidebar__auth-buttons d-flex flex-column col-12 gap-2">
                 <router-link to="/sign-in" class="sidebar__login">Войти</router-link>
                 <router-link to="/sign-up" class="sidebar__sign-up">Зарегистрироваться</router-link>
               </div>
 
+            </div>
+          </div>
+
+          <!-- Меню корзины -->
+          <div class="sidebar__menu-cart sidebar__menu" :class="cart?.isMenuOpen ? 'sidebar__menu-cart--show' : ''">
+            <div class="sidebar__header">
+              <button id="closeCartButton" class="sidebar__close-btn"></button>
+            </div>
+
+            <div id="cartMenuContent" class="menu-cart__content">
+              <h3 class="menu-cart__title mb-3">Корзина пуста</h3>
+              <div class="menu-cart__dishes-wrapper">
+
+                  <!-- Шаблон карточек блюд -->
+                  <!-- <div class="menu-cart__dish d-flex justify-content-between align-items-center">
+                    &lt;!&ndash; Краткая информация об блюде &ndash;&gt;
+                    <div class="cart-dish__info d-flex align-items-center">
+                      <img src="../img/fish_hell_dish.png" alt="Fish Hell Dish" class="cart-dish__image">
+                      <div class="cart-dish__details">
+                        <h5 class="cart-dish__name">Fish Hell</h5>
+                        <span class="cart-dish__price">₸2499</span>
+                      </div>
+                    </div>
+
+                    &lt;!&ndash; Кнопки управления количеством &ndash;&gt;
+                    <div class="cart-dish__controls d-flex flex-column align-items-center">
+                      <div class="cart-dish__qty d-flex align-items-center">
+                        <button class="cart-dish__minus-btn"></button>
+                        <span class="cart-dish__count">1</span>
+                        <button class="cart-dish__plus-btn"></button>
+                      </div>
+                      <div class="cart-dish__total-price">
+                        <span class="cart-dish__total">₸2499</span>
+                      </div>
+                    </div>
+                  </div> -->
+              </div>
+            </div>
+
+            <div id="sidebarCartButtons" class="sidebar__buttons">
+                <!-- Шаблон кнопки перехода к оплате -->
+                <!-- <a href="#" class="sidebar__checkout-btn w-100 d-flex align-items-center">
+                  <span class="cart__count me-3 badge rounded-pill bg-danger">0</span>
+                  Перейти к оплате
+                  <span class="cart__price ms-auto">0 ₸</span>
+                </a> -->
             </div>
           </div>
         </div>
@@ -110,6 +172,10 @@ watch(isMenuOpen, (newValue) => {
 .list-reset {
   list-style: none;
   padding-left: 0;
+}
+
+.btn {
+  height: 46px;
 }
 
 .header {
