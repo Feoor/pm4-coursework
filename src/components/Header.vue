@@ -50,14 +50,14 @@ watch(isMenuOpen, (newValue) => {
         </div>
 
         <div class="header__right-side">
-          <div v-if="mode === 'full' && authStore.profile && authStore.isAuthInitialized" class="header__user-profile align-items-center">
+          <div v-if="mode === 'full' && authStore.profile && authStore.isAuthInitialized" class="header__user-profile d-none d-sm-flex align-items-center">
             <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
             <span class="header__user-name">{{ authStore.profile.shortName }}!</span>
             <button @click="authStore.logout()" class="header__logout btn btn-primary ms-2">Выйти</button>
           </div>
 
           <!-- FIXME: Профиль пользователя и кнопки аутификации не одного размера -->
-          <div v-if="mode === 'full' && !authStore.profile && authStore.isAuthInitialized" class="header__auth-buttons">
+          <div v-else-if="mode === 'full' && !authStore.profile && authStore.isAuthInitialized" class="header__auth-buttons d-none d-sm-flex">
             <router-link to="/sign-in" class="header__login me-2">Войти</router-link>
             <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
           </div>
@@ -82,9 +82,22 @@ watch(isMenuOpen, (newValue) => {
                 <li class="menu__item"><router-link to="/contacts">Контакты</router-link></li>
               </ul>
             </div>
-            <div class="sidebar__buttons d-flex flex-column justify-content-between text-center">
-              <router-link to="/sign-in" class="sidebar__login w-100">Войти</router-link>
-              <router-link to="/sign-up" class="sidebar__sign-up w-100">Зарегистрироваться</router-link>
+            <div v-if="mode === 'full'" class="sidebar__buttons justify-content-between text-center">
+
+              <div v-if="authStore.profile && authStore.isAuthInitialized" class="sidebar__user-profile d-flex flex-column align-items-center col-12 gap-4">
+                <div>
+                  <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
+                  <span class="header__user-name">{{ authStore.profile.shortName }}!</span>
+                </div>
+                
+                <button @click="authStore.logout()" class="header__logout btn btn-primary w-100">Выйти</button>
+              </div>
+
+              <div v-else-if="!authStore.profile && authStore.isAuthInitialized" class="sidebar__auth-buttons d-flex flex-column col-12 gap-2">
+                <router-link to="/sign-in" class="sidebar__login">Войти</router-link>
+                <router-link to="/sign-up" class="sidebar__sign-up">Зарегистрироваться</router-link>
+              </div>
+
             </div>
           </div>
         </div>
@@ -676,14 +689,6 @@ watch(isMenuOpen, (newValue) => {
   .header__wrapper {
     height: 77px;
     padding: 1.5rem 0;
-
-    .header__right-side {
-
-      .header__login,
-      .header__sign-up {
-        display: none;
-      }
-    }
 
     .cart-btn {
       width: 400px;
