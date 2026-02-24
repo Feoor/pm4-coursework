@@ -25,5 +25,5 @@ const handleSubmit = () => {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/styles/auth-page.scss";
+@use "@/assets/styles/auth-page.scss";
 </style>

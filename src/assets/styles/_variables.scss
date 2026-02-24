@@ -38,22 +38,22 @@
     src: url('@/assets/fonts/Quicksand/Quicksand-VariableFont_wght.ttf') format('truetype');
 }
 
+// Шрифты
+$font-family: "Manrope";
+$second-family: "Inter";
+$font3: "Public Sans", sans-serif;
+$font4: "Quicksand", sans-serif;
+$font5: "Plus Jakarta Sans", sans-serif;
+
+// Цвета
+$purple: #6c5fbc;
+$purple-hover: #5a4aa3;
+$translucent-white: rgba(197, 197, 197, 0.15);
+$main-black: #242424;
+
 :root {
   // Глобальные переменные
   --header-height: 180px;
-
-  // Шрифты
-  $font-family: "Manrope" !global;
-  $second-family: "Inter" !global;
-  $font3: "Public Sans", sans-serif !global;
-  $font4: "Quicksand", sans-serif !global;
-  $font5: "Plus Jakarta Sans", sans-serif !global;
-
-  // Цвета
-  $purple: #6c5fbc !global;
-  $purple-hover: #5a4aa3 !global;
-  $translucent-white: rgba(197, 197, 197, 0.15) !global;
-  $main-black: #242424 !global;
 }
 
 /* Базовые стили */

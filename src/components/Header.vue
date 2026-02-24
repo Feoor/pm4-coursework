@@ -1,16 +1,19 @@
 <script setup>
-import { defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useAuthStore } from '@/store/authStore';
+import { useCartStore } from '@/store/cartStore';
+
 const authStore = useAuthStore();
+const cartStore = useCartStore();
 
 defineProps({
   mode: {
     type: String,
     default: 'full' // 'full' для полного отображения(блок аунтификации), 'lite' для отображения только логотипа
   },
-  cart: {
-    type: Object, // Заменить на объект корзины
-    default: null
+  withCart: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -68,10 +71,13 @@ watch(isMenuOpen, (newValue) => {
             <router-link to="/sign-up" class="header__sign-up">Зарегистрироваться</router-link>
           </div>
 
-          <button v-if="mode === 'full' && cart" class="cart-btn btn btn-primary d-none d-lg-flex align-items-center">
-            <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cart.itemsCount }}</span>
+          <button v-if="mode === 'full' && withCart"
+            @click="cartStore.toggleMenu()"
+            class="cart-btn btn btn-primary d-none d-lg-flex align-items-center"
+           >
+            <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cartStore.totalItems() }}</span>
             Открыть заказ
-            <span class="cart__price ms-4">{{ cart.totalPrice }} ₸</span>
+            <span class="cart__price ms-4">{{ cartStore.totalPrice() }} ₸</span>
           </button>
 
           <button @click="handleMenuToggle" class="header__menu" :class="isMenuOpen ? 'header__menu--toggle' : ''">
@@ -80,7 +86,7 @@ watch(isMenuOpen, (newValue) => {
         </div>
 
         <!-- Боковое меню -->
-        <div class="sidebar" :class="(isMenuOpen || cart?.isMenuOpen) ? 'sidebar--show' : ''">
+        <div class="sidebar" :class="(isMenuOpen || cartStore.isMenuOpen) ? 'sidebar--show' : ''">
 
           <!-- Меню для навигации -->
           <div class="sidebar__menu-nav" :class="isMenuOpen ? 'sidebar__menu-nav--show' : ''">
@@ -118,9 +124,9 @@ watch(isMenuOpen, (newValue) => {
           </div>
 
           <!-- Меню корзины -->
-          <div class="sidebar__menu-cart sidebar__menu" :class="cart?.isMenuOpen ? 'sidebar__menu-cart--show' : ''">
+          <div class="sidebar__menu-cart sidebar__menu" :class="cartStore.isMenuOpen ? 'sidebar__menu-cart--show' : ''">
             <div class="sidebar__header">
-              <button id="closeCartButton" class="sidebar__close-btn"></button>
+              <button @click="cartStore.toggleMenu()" class="sidebar__close-btn"></button>
             </div>
 
             <div id="cartMenuContent" class="menu-cart__content">
@@ -490,6 +496,7 @@ watch(isMenuOpen, (newValue) => {
       transform: translateX(100%);
       opacity: 0;
       transition: transform .3s ease, opacity .3s ease;
+      z-index: 200;
 
       &--show {
         opacity: 1;
