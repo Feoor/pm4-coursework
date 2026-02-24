@@ -36,7 +36,7 @@ export function useRestaurant() {
 
       allDishes.value = dishesSnap.docs.map(doc => {
         const data = doc.data();
-        return new Dish({ id: doc.id, restaurantId: data.restaurant?.id || 'unknown', ...data });
+        return new Dish({ id: doc.id, ...data, restaurant: { id: restaurantId, name: restaurant.value.name } });
       });
     } catch (err) {
       console.error('Error fetching restaurant data:', err);

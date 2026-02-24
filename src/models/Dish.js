@@ -10,8 +10,15 @@ export class Dish {
     this.rating = dishData.rating || 0;
     this.popularity = dishData.popularity || 0;
     this.deliveryTime = dishData.delivery_time || 0;
-    this.imageUrl = dishData.image ? getImageUrl(dishData.image) : '';
-    this.restaurantId = dishData.restaurantId || '';
+    this.image = dishData?.image || '';
     this.section = dishData.section || '';  
+    this.restaurant = {
+      id: dishData.restaurant?.id || 'unknown',
+      name: dishData.restaurant?.name || 'unknown restaurant',
+    }
+  }
+
+  get imageUrl() {
+    return this.image ? getImageUrl(this.image) : 'unknown-dish.png';
   }
 }
