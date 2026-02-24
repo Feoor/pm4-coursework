@@ -26,7 +26,7 @@ const handleFavoriteClick = () => {
 <template>
   <div class="dish-card card h-100">
     <!-- Для preview -->
-    <router-link v-if="mode === 'preview'" :to="`/restaurant/${dish.restaurantId}`">
+    <router-link v-if="mode === 'preview'" :to="`/restaurant/${dish.restaurant.id}`">
       <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image">
 
       <div class="card-body">

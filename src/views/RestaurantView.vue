@@ -1,29 +1,24 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import DishCard from '@/components/DishCard.vue'
 import { getBadgeClass, getBadgeText, formatDeliveryTime } from '@/utils/helpers';
 import { useRestaurant } from '@/composables/useRestaurant';
+import { useCartStore } from '@/store/cartStore';
+import { formatPrice } from '@/utils/helpers';
 
 const route = useRoute();
 const { restaurant, isLoading, menu, popularDishes, fetchRestaurantData } = useRestaurant();
+const cartStore = useCartStore();
 
 // Загружаем данные ресторана при монтировании компонента (используем ID из URL)
 onMounted(() => fetchRestaurantData(route.params.id));
 
-// Прототип корзины
-const cart = ref({
-  items: [],
-  itemsCount: 0,
-  totalPrice: 0,
-  isMenuOpen: false,
-});
-
 const addToCart = (dish) => {
-  console.log('Добавлено в корзину:', dish);
+  cartStore.addToCart(dish);
 }
 
 const addToFavorites = (dish) => {
@@ -32,8 +27,7 @@ const addToFavorites = (dish) => {
 </script>
 
 <template>
-  <Header :cart="cart" />
-
+  <Header :withCart="true" />
   <main class="main">
     <section class="restaurant-hero mb-5">
       <div class="container-sm">
@@ -136,10 +130,10 @@ const addToFavorites = (dish) => {
     <!-- TODO: Синхронизировать мобильную корзину с основной корзиной -->
     <section class="cart-btn-section--md-position d-flex d-lg-none position-sticky">
       <div class="container-sm">
-        <button class="cart-btn btn btn-primary d-flex align-items-center mx-auto">
-          <span class="cart__count me-3 badge rounded-pill bg-danger">0</span>
+        <button @click="cartStore.toggleMenu()" class="cart-btn btn btn-primary d-flex align-items-center mx-auto">
+          <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cartStore.totalItems() }}</span>
           Открыть заказ
-          <span class="cart__price ms-auto">0 ₸</span>
+          <span class="cart__price ms-auto">{{ formatPrice(cartStore.totalPrice()) }}</span>
         </button>
       </div>
     </section>
