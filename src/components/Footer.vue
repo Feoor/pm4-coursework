@@ -26,7 +26,7 @@
 
         <div class="footer__bottom col-12 d-flex justify-content-between align-items-center">
           <div class="footer__copyright order-1 order-sm-0">
-            <p>&copy; 2025 EATLY. Все права защищены.</p>
+            <p>&copy; 2026 EATLY. Все права защищены.</p>
           </div>
 
           <div class="footer__socials">
