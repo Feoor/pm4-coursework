@@ -1,6 +1,7 @@
 <script setup>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import AvatarUploadModal from '@/components/AvatarUploadModal.vue'
 import { useAuthStore } from '@/store/authStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -10,6 +11,7 @@ const authStore = useAuthStore()
 const router = useRouter()
 
 const isEditing = ref(false)
+const isAvatarModalOpen = ref(false)
 const editForm = ref({
   displayName: '',
   phoneNumber: '',
@@ -31,6 +33,36 @@ const handleEditProfile = () => {
     address: authStore.profile?.deliveryAddress || ''
   }
   isEditing.value = true
+}
+
+const handleEditProfilePicture = () => {
+  isAvatarModalOpen.value = true
+}
+
+const handleCloseAvatarModal = () => {
+  isAvatarModalOpen.value = false
+}
+
+const handleUploadAvatar = async (file) => {
+  console.log('Uploading avatar:', file)
+  
+  try {
+    // Пример логики загрузки:
+    // 1. Загрузить файл в Firebase Storage
+    // 2. Получить URL загруженного файла
+    // 3. Обновить профиль пользователя с новым photoURL
+    // const url = await uploadAvatarToStorage(file, authStore.profile.id)
+    // await updateUserProfile(authStore.profile.id, { photoURL: url })
+    // authStore.profile.photoURL = url
+    
+    // Пока просто показываем, что файл получен
+    console.log('Avatar file received, size:', file.size)
+  } catch (error) {
+    console.error('Error uploading avatar:', error)
+    // TODO: Показать уведомление об ошибке
+  }
+  // Закрываем модальное окно смены аватара
+  isAvatarModalOpen.value = false
 }
 
 const handleSaveProfile = async () => {
@@ -78,6 +110,14 @@ const orderHistory = ref([
 </script>
 
 <template>
+  <!-- Модальное окно смены аватара -->
+  <AvatarUploadModal 
+    :is-open="isAvatarModalOpen"
+    :current-avatar="authStore.profile?.photoURL || ''"
+    @close="handleCloseAvatarModal"
+    @upload="handleUploadAvatar"
+  />
+
   <Header mode="lite" />
   
   <main class="profile-page">
@@ -100,7 +140,7 @@ const orderHistory = ref([
                   alt="Avatar"
                   class="avatar-image"
                 >
-                <button class="avatar-edit-btn" @click="handleEditProfile">
+                <button class="avatar-edit-btn" @click="handleEditProfilePicture">
                   <img src="@/assets/icons/pen_icon.svg" alt="Редактировать аватар">
                 </button>
               </div>
