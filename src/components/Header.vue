@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 import CartSidebar from '@/components/sidebar/CartSidebar.vue';
 import NavSidebar from '@/components/sidebar/NavSidebar.vue';
+import UserMiniProfile from '@/components/UserMiniProfile.vue';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
 import { formatPrice } from '@/utils/helpers';
@@ -61,10 +62,9 @@ watch(isNavMenuOpen, (newValue) => {
 
         <div class="header__right-side">
           <div v-if="mode === 'full' && authStore.profile && authStore.isAuthInitialized"
-            class="header__user-profile d-none d-sm-flex align-items-center">
-            <span class="header__user-greeting highlight--purple">Здравствуйте,&nbsp;</span>
-            <span class="header__user-name">{{ authStore.profile.shortName }}!</span>
-            <button @click="authStore.logout()" class="header__logout btn btn-primary ms-2">Выйти</button>
+            class="header__user-profile d-none d-sm-flex align-items-center"
+            >
+            <UserMiniProfile />
           </div>
 
           <!-- FIXME: Профиль пользователя и кнопки аутификации не одного размера -->
@@ -108,7 +108,7 @@ watch(isNavMenuOpen, (newValue) => {
 }
 
 .btn {
-  height: 46px;
+  height: 51px;
 }
 
 .header {
@@ -173,7 +173,7 @@ watch(isNavMenuOpen, (newValue) => {
       background-color: inherit;
       border: none;
       border-radius: 17px;
-      padding: 17px 26px;
+      padding: 12px 20px;
       cursor: pointer;
       transition: background-color .2s;
 
@@ -192,7 +192,7 @@ watch(isNavMenuOpen, (newValue) => {
       ;
       border: none;
       border-radius: 17px;
-      padding: 17px 26px;
+      padding: 12px 20px;
       cursor: pointer;
       transition: background .2s;
 

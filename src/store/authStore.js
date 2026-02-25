@@ -24,6 +24,7 @@ export const useAuthStore = defineStore("auth", () => {
     onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         if (firebaseUser) {
+          console.log("Пользователь аутентифицирован:", firebaseUser);
           profile.value = await getUserProfile(firebaseUser);
         } else {
           profile.value = null;

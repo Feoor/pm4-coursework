@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from '../views/HomeView.vue'
-import EatlyMenu from '../views/EatlyMenuView.vue'
-import ContactPage from '../views/ContactPageView.vue'
-import SignUpView from '../views/SignUpView.vue'
-import SignInView from '../views/SignInView.vue'
-import ForgotPasswordView from '../views/ForgotPasswordView.vue'
-import RestaurantView from '../views/RestaurantView.vue'
+import HomeView from '@/views/HomeView.vue'
+import EatlyMenu from '@/views/EatlyMenuView.vue'
+import ContactPage from '@/views/ContactPageView.vue'
+import SignUpView from '@/views/SignUpView.vue'
+import SignInView from '@/views/SignInView.vue'
+import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
+import RestaurantView from '@/views/RestaurantView.vue'
+import UserProfile from '@/views/UserProfileView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
@@ -16,6 +17,7 @@ const routes = [
   { path: '/sign-in', component: SignInView },
   { path: '/forgot-password', component: ForgotPasswordView },
   { path: '/restaurant/:id', name: 'restaurant', component: RestaurantView },
+  { path: '/profile', component: UserProfile },
 ]
 
 const router = createRouter({

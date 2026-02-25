@@ -28,6 +28,11 @@ export const formatPrice = (price) => {
   return `${price.toLocaleString('kz-KZ')} ₸`;
 }
 
+export const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString('ru-RU', options);
+}
+
 export const getImageUrl = (imageName) => {
   return new URL(`../assets/img/${imageName}`, import.meta.url).href;
 }

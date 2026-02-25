@@ -15,8 +15,10 @@ const COLLECTIONS = {
  */
 export const createUserProfile = async (firebaseUser, additionalData) => {
   const userDoc = {
-    displayName: additionalData.name || firebaseUser.displayName || "Пользователь",
+    displayName: additionalData.displayName || firebaseUser.displayName || "Пользователь",
     createdAt: new Date().toISOString(),
+    photoURL: additionalData.photoURL || firebaseUser.photoURL || '../assets/img/defaultProfileImage.jpg', // Используем Gravatar по умолчанию, если нет изображения
+    phoneNumber: firebaseUser.phoneNumber || additionalData.phoneNumber || null
     // Будущие другие поля
   };
 
@@ -24,6 +26,23 @@ export const createUserProfile = async (firebaseUser, additionalData) => {
   await setDoc(docRef, userDoc);
 
   return new User(firebaseUser, userDoc);
+};
+
+/**
+ * 
+ * @param {String} userId 
+ * @param {Object} updatedData - Объект с обновленными данными профиля
+ */
+export const updateUserProfile = async (userId, updatedData) => {
+  if (!userId) {
+    throw new Error('userId is required for updateUserProfile');
+  }
+  if (!updatedData || Object.keys(updatedData).length === 0) {
+    throw new Error('updatedData is required and cannot be empty');
+  }
+  
+  const docRef = doc(db, COLLECTIONS.USERS, userId);
+  await setDoc(docRef, updatedData, { merge: true });
 };
 
 /**
@@ -41,6 +60,6 @@ export const getUserProfile = async (firebaseUser) => {
   
   // Если профиль не существует, создаем его
   return createUserProfile(firebaseUser, {
-    name: firebaseUser.displayName || "Пользователь"
+    displayName: firebaseUser.displayName || "Пользователь"
   });
 };
