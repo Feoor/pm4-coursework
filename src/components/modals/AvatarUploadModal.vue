@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
+import ModalLayout from './ModalLayout.vue'
 
 const props = defineProps({
   isOpen: {
@@ -25,13 +26,6 @@ watch(() => props.isOpen, (newValue) => {
   if (newValue) {
     previewUrl.value = props.currentAvatar
     selectedFile.value = null
-  } else {
-    // Блокировка/разблокировка скролла
-    document.body.classList.remove('lock')
-  }
-  
-  if (newValue) {
-    document.body.classList.add('lock')
   }
 })
 
@@ -103,28 +97,18 @@ const handleClose = () => {
 </script>
 
 <template>
-  <transition name="modal">
-    <div v-if="isOpen" class="modal-overlay" @click.self="handleClose">
-      <div class="modal-container">
-        <!-- Заголовок -->
-        <div class="modal-header">
-          <h3>Изменить фото профиля</h3>
-          <button class="close-btn" @click="handleClose">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+  <ModalLayout
+    :isOpen="isOpen"
+    title="Изменить фото профиля"
+    @close="handleClose"
+  >
+    <template #default>
+      <!-- Превью -->
+      <div class="preview-section">
+        <div class="avatar-preview">
+          <img :src="previewUrl || 'https://via.placeholder.com/300'" alt="Preview">
         </div>
-
-        <!-- Тело модального окна -->
-        <div class="modal-body">
-          <!-- Превью -->
-          <div class="preview-section">
-            <div class="avatar-preview">
-              <img :src="previewUrl || 'https://via.placeholder.com/300'" alt="Preview">
-            </div>
-          </div>
+      </div>
 
           <!-- Зона загрузки -->
           <div 
@@ -175,96 +159,25 @@ const handleClose = () => {
               </svg>
             </button>
           </div>
-        </div>
+    </template>
 
-        <!-- Футер -->
-        <div class="modal-footer">
-          <button class="btn btn-secondary" @click="handleClose">
-            Отмена
-          </button>
-          <button 
-            class="btn btn-primary" 
-            :disabled="!selectedFile"
-            @click="handleSave"
-          >
-            Сохранить
-          </button>
-        </div>
-      </div>
-    </div>
-  </transition>
+    <template #footer>
+      <button class="btn btn-secondary" @click="handleClose">
+        Отмена
+      </button>
+      <button 
+        class="btn btn-primary" 
+        :disabled="!selectedFile"
+        @click="handleSave"
+      >
+        Сохранить
+      </button>
+    </template>
+  </ModalLayout>
 </template>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/_variables.scss';
-
-// Оверлей
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
-// Контейнер модального окна
-.modal-container {
-  background: #fff;
-  border-radius: 30px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  scrollbar-width: none;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-// Заголовок
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 30px 20px;
-  border-bottom: 1px solid #f0f0f0;
-
-  h3 {
-    font-family: $font-family, sans-serif;
-    font-weight: 700;
-    font-size: 24px;
-    color: #323142;
-    margin: 0;
-  }
-
-  .close-btn {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    border-radius: 50%;
-    color: #8e97a6;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: #f0f0f0;
-      color: #323142;
-    }
-  }
-}
-
-// Тело модального окна
-.modal-body {
-  padding: 30px;
-}
 
 // Превью
 .preview-section {
@@ -408,57 +321,18 @@ const handleClose = () => {
   }
 }
 
-// Футер
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 30px 30px;
-  border-top: 1px solid #f0f0f0;
+// Стили для кнопок в футере
+:deep(.btn) {
+  min-width: 120px;
 
-  .btn {
-    min-width: 120px;
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  }
-}
-
-// Анимация модального окна
-.modal-enter-active,
-.modal-leave-active {
-  transition: all 0.3s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-
-  .modal-container {
-    transform: scale(0.9) translateY(-20px);
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
 // Адаптивные стили
 @media screen and (max-width: 767.98px) {
-  .modal-container {
-    border-radius: 20px;
-  }
-
-  .modal-header {
-    padding: 20px 20px 16px;
-
-    h3 {
-      font-size: 20px;
-    }
-  }
-
-  .modal-body {
-    padding: 20px;
-  }
-
   .preview-section .avatar-preview {
     width: 150px;
     height: 150px;
@@ -471,27 +345,9 @@ const handleClose = () => {
       font-size: 16px;
     }
   }
-
-  .modal-footer {
-    padding: 16px 20px 20px;
-    flex-direction: column-reverse;
-
-    .btn {
-      width: 100%;
-      min-width: unset;
-    }
-  }
 }
 
 @media screen and (max-width: 566.98px) {
-  .modal-overlay {
-    padding: 10px;
-  }
-
-  .modal-header h3 {
-    font-size: 18px;
-  }
-
   .preview-section .avatar-preview {
     width: 120px;
     height: 120px;
