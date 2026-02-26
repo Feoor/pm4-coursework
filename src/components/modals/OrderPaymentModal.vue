@@ -3,7 +3,7 @@ import ModalLayout from '@/components/modals/ModalLayout.vue'
 import { ref, computed } from 'vue'
 import { useCartStore } from '@/store/cartStore'
 import { useAuthStore } from '@/store/authStore'
-import { formatPrice } from '@/utils/formatters'
+import { formatPrice , formatCardNumber, formatExpiryDate } from '@/utils/formatters'
 import { updateOrderStatus } from '@/services/orderService'
 import { ORDER_STATUS } from '@/constants/orderStatus'
 
@@ -37,22 +37,6 @@ const cardData = ref({
   cvv: ''
 })
 
-// Форматирование номера карты
-const formatCardNumber = (value) => {
-  const cleaned = value.replace(/\s/g, '')
-  const groups = cleaned.match(/.{1,4}/g) || []
-  return groups.join(' ')
-}
-
-// Форматирование срока действия
-const formatExpiry = (value) => {
-  const cleaned = value.replace(/\D/g, '')
-  if (cleaned.length >= 2) {
-    return cleaned.slice(0, 2) + '/' + cleaned.slice(2, 4)
-  }
-  return cleaned
-}
-
 // Обработчики ввода
 const handleCardNumberInput = (event) => {
   const value = event.target.value.replace(/\s/g, '')
@@ -64,7 +48,7 @@ const handleCardNumberInput = (event) => {
 const handleExpiryInput = (event) => {
   const value = event.target.value.replace(/\D/g, '')
   if (value.length <= 4) {
-    cardData.value.expiry = formatExpiry(value)
+    cardData.value.expiry = formatExpiryDate(value)
   }
 }
 
@@ -155,11 +139,15 @@ const handleClose = () => {
         </div>
         <div class="order-info__item">
           <span class="order-info__label">Дата заказа:</span>
-          <span class="order-info__value">{{ new Date(props.order.createdAt).toLocaleString() }}</span>
+          <span class="order-info__value">{{ props.order.createdAt.toDate().toLocaleString() }}</span>
         </div>
         <div class="order-info__item">
           <span class="order-info__label">Способ получения:</span>
           <span class="order-info__value">{{ props.order.deliveryMethod === 'pickup' ? 'Самовывоз' : 'Доставка' }}</span>
+        </div>
+        <div class="order-info__item">
+          <span class="order-info__label">Адрес доставки:</span>
+          <span class="order-info__value">{{ props.order.deliveryAddress || 'Не указан' }}</span>
         </div>
         <div class="order-info__item order-info__item--total">
           <span class="order-info__label">Итого к оплате:</span>

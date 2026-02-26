@@ -26,3 +26,33 @@ export const formatDate = (dateInput) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   return dateObj.toLocaleDateString('ru-RU', options);
 }
+
+export const formatPhoneNumber = (phone) => {
+  if (!phone) return '';
+  const cleaned = ('' + phone).replace(/\D/g, '');
+  const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})$/);
+  if (match) {
+    return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}-${match[5]}`;
+  }
+  return phone; // Возвращаем исходное значение, если формат не совпадает
+}
+
+export const formatCardNumber = (cardNumber) => {
+  if (!cardNumber) return '';
+  const cleaned = ('' + cardNumber).replace(/\D/g, '');
+  const match = cleaned.match(/.{1,4}/g);
+  if (match) {
+    return match.join(' ');
+  }
+  return cardNumber; // Возвращаем исходное значение, если формат не совпадает
+}
+
+export const formatExpiryDate = (expiry) => {
+  if (!expiry) return '';
+  const cleaned = ('' + expiry).replace(/\D/g, '');
+  const match = cleaned.match(/^(\d{2})(\d{2})$/);
+  if (match) {
+    return `${match[1]}/${match[2]}`;
+  }
+  return expiry; // Возвращаем исходное значение, если формат не совпадает
+}

@@ -8,6 +8,7 @@ import { useAuthStore } from '@/store/authStore'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { updateUserProfile } from '@/services/userService'
+import { formatPhoneNumber } from '@/utils/formatters'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -44,7 +45,7 @@ const handleEditProfile = () => {
   // Заполняем форму текущими данными профиля
   editForm.value = {
     displayName: authStore.profile?.displayName || '',
-    phoneNumber: authStore.profile?.phoneNumber || '',
+    phoneNumber: formatPhoneNumber(authStore.profile?.phoneNumber || ''),
     address: authStore.profile?.deliveryAddress || ''
   }
   isEditing.value = true
@@ -56,6 +57,12 @@ const handleEditProfilePicture = () => {
 
 const handleCloseAvatarModal = () => {
   isAvatarModalOpen.value = false
+}
+
+const handlePhoneNumberInput = (event) => {
+  let value = event.target.value.replace(/\D/g, '') // Удаляем все нецифровые символы
+  if (value.length > 11) value = value.slice(0, 11) // Ограничиваем до 11 цифр
+  editForm.value.phoneNumber = formatPhoneNumber(value) // Форматируем номер телефона
 }
 
 const handleUploadAvatar = async (file) => {
@@ -283,9 +290,11 @@ onMounted(async () => {
                   <input 
                     type="tel" 
                     class="form-control"
-                    v-model="editForm.phoneNumber"
+                    :value="editForm.phoneNumber"
+                    @input="handlePhoneNumberInput"
                     :disabled="!isEditing"
                     placeholder="+7 (___) ___-__-__"
+                    maxlength="18"
                   >
                 </div>
                 <div class="col-md-6">
@@ -305,6 +314,7 @@ onMounted(async () => {
                     v-model="editForm.address"
                     :disabled="!isEditing"
                     placeholder="Введите адрес доставки"
+                    maxlength="255"
                   >
                 </div>
               </div>
