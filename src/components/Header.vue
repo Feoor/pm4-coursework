@@ -28,6 +28,11 @@ const handleMenuToggle = () => {
   isNavMenuOpen.value = !isNavMenuOpen.value;
 }
 
+const handleSidebarClose = () => {
+  isNavMenuOpen.value = false;
+  cartStore.toggleMenu();
+}
+
 // Управление блокировкой скролла через watcher
 watch(isNavMenuOpen, (newValue) => {
   if (newValue) {
@@ -87,7 +92,7 @@ watch(isNavMenuOpen, (newValue) => {
         </div>
 
         <!-- Боковое меню -->
-        <div class="sidebar" :class="(isNavMenuOpen || cartStore.isMenuOpen) ? 'sidebar--show' : ''">
+        <div class="sidebar" :class="(isNavMenuOpen || cartStore.isMenuOpen) ? 'sidebar--show' : ''" @click.self="handleSidebarClose">
 
           <!-- Меню для навигации -->
           <!-- FIXME: Сломались стили -->
