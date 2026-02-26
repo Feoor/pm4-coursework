@@ -1,11 +1,7 @@
 import { db } from "@/firebase-config";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { User } from "@/models/User";
-
-// Константы
-const COLLECTIONS = {
-  USERS: "users"
-};
+import { COLLECTIONS } from "@/constants/collections";
 
 /**
  * Создает профиль пользователя в Firestore
@@ -16,7 +12,7 @@ const COLLECTIONS = {
 export const createUserProfile = async (firebaseUser, additionalData) => {
   const userDoc = {
     displayName: additionalData.displayName || firebaseUser.displayName || "Пользователь",
-    createdAt: new Date().toISOString(),
+    createdAt: serverTimestamp(),
     photoURL: additionalData.photoURL || firebaseUser.photoURL || 'src/assets/img/defaultProfileImage.jpg', // Используем Gravatar по умолчанию, если нет изображения
     phoneNumber: firebaseUser.phoneNumber || additionalData.phoneNumber || null
     // Будущие другие поля

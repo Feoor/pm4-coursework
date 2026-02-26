@@ -21,6 +21,8 @@ defineProps({
   }
 })
 
+const emit = defineEmits(['order-payment']) // Событие для перехода к оплате заказа для CartSidebar.vue
+
 // Открываем сайдбар меню при нажатии на кнопку
 const isNavMenuOpen = ref(false);
 
@@ -99,7 +101,7 @@ watch(isNavMenuOpen, (newValue) => {
           <NavSidebar :mode="mode" :isMenuOpen="isNavMenuOpen" />
 
           <!-- Меню корзины -->
-          <CartSidebar v-if="withCart" /> 
+          <CartSidebar v-if="withCart" @order-payment="emit('order-payment')" /> 
         </div>
       </div>
     </div>

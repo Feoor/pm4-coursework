@@ -6,7 +6,23 @@ export const formatPrice = (price) => {
   return `${price.toLocaleString('kz-KZ')} ₸`;
 }
 
-export const formatDate = (dateString) => {
+export const formatDate = (dateInput) => {
+  let dateObj;
+
+  // Обработка Firebase Timestamp (Proxy объект)
+  if (dateInput && typeof dateInput === 'object' && typeof dateInput.toDate === 'function') {
+    dateObj = dateInput.toDate();
+  }
+  // Обработка обычной строки или Date объекта
+  else {
+    dateObj = new Date(dateInput);
+  }
+
+  // Проверка на валидность даты
+  if (isNaN(dateObj.getTime())) {
+    return 'Неизвестно';
+  }
+
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString('ru-RU', options);
+  return dateObj.toLocaleDateString('ru-RU', options);
 }

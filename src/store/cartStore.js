@@ -2,11 +2,15 @@ import { defineStore } from "pinia";
 import { CartItem } from "@/models/CartItem";
 import { Dish } from "@/models/Dish";
 import { ref } from "vue";
+import { createOrderInFirestore } from "@/services/orderService";
 
+// TODO: Сделать сохранение корзины в Firestore для авторизованных пользователей, чтобы корзина сохранялась между устройствами и сессиями. 
+// Для неавторизованных пользователей оставить localStorage. При авторизации переносить корзину из localStorage в Firestore и очищать localStorage.
 export const useCartStore = defineStore("cart", () => {
   // State
   const cartGroups = ref({}); // { restaurantId: { restaurantName: restaurantName, items: [CartItem, CartItem, ...] }, ... }
   const isMenuOpen = ref(false);
+  const lastUpdate = ref(null); // Для отслеживания последнего обновления корзины (может быть полезно для синхронизации между вкладками)
 
   // Getters
   const totalPrice = () => {
@@ -93,9 +97,27 @@ export const useCartStore = defineStore("cart", () => {
     saveToLocalStorage();
   }
 
+  const createOrder = async (userData) => {
+    const orderData = {
+      totalAmount: totalPrice(),
+      items: Object.values(cartGroups.value).flatMap(group => group.items),
+      deliveryAddress: userData.deliveryAddress,
+      paymentMethod: userData.paymentMethod
+    };
+
+    try {
+      const res = await createOrderInFirestore(userData.id, orderData);
+      clearCart();
+      return res;
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
   // Private methods for cart storage
   const saveToLocalStorage = () => {
-    localStorage.setItem("cart", JSON.stringify(cartGroups.value));
+    lastUpdate.value = Date.now();
+    localStorage.setItem("cart", JSON.stringify({ lastUpdate: lastUpdate.value, cart: cartGroups.value }));
   }
 
   const loadFromLocalStorage = () => {
@@ -103,12 +125,12 @@ export const useCartStore = defineStore("cart", () => {
     
     if (savedCart) {
       try {
-        // cartGroups.value = JSON.parse(savedCart);
         const parsedCart = JSON.parse(savedCart);
+        lastUpdate.value = parsedCart.lastUpdate || null;
 
         // Преобразуем сохраненные данные обратно в объекты CartItem
-        for (const resId in parsedCart) {
-          const group = parsedCart[resId];
+        for (const resId in parsedCart.cart) {
+          const group = parsedCart.cart[resId];
           cartGroups.value[resId] = {
             restaurantName: group.restaurantName,
             items: group.items.map(itemData => {
@@ -146,5 +168,6 @@ export const useCartStore = defineStore("cart", () => {
     decrementQuantity,
     removeFromCart,
     clearCart,
+    createOrder,
   }
 });

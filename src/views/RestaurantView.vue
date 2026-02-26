@@ -1,18 +1,23 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import DishCard from '@/components/DishCard.vue'
+import OrderPaymentModal from '@/components/modals/OrderPaymentModal.vue';
 import { getBadgeClass, getBadgeText } from '@/utils/helpers';
 import { formatPrice, formatDeliveryTime } from '@/utils/formatters';
 import { useRestaurant } from '@/composables/useRestaurant';
+import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
 
 const route = useRoute();
 const { restaurant, isLoading, menu, popularDishes, fetchRestaurantData } = useRestaurant();
+const authStore = useAuthStore();
 const cartStore = useCartStore();
+const isOrderPaymentModalOpen = ref(false);
+const currentOrder = ref(null);
 
 // Загружаем данные ресторана при монтировании компонента (используем ID из URL)
 onMounted(() => fetchRestaurantData(route.params.id));
@@ -24,10 +29,56 @@ const addToCart = (dish) => {
 const addToFavorites = (dish) => {
   console.log('Добавлено в избранное:', dish);
 }
+
+const handleCloseOrderPaymentModal = () => {
+  isOrderPaymentModalOpen.value = false;
+  currentOrder.value = null;
+}
+const handleOpenOrderPaymentModal = () => {
+  isOrderPaymentModalOpen.value = true;
+}
+
+const handleOrderPayment = async () => {
+  if (cartStore.totalItems() === 0) {
+    alert('Ваша корзина пуста. Пожалуйста, добавьте блюда перед оформлением заказа.');
+    return;
+  } else if (!authStore.isAuthenticated()) {
+    alert('Пожалуйста, войдите в свой аккаунт, чтобы оформить заказ.');
+    return;
+  }
+
+  const res = await cartStore.createOrder({
+    id: authStore.profile?.id || 'guest', // TODO: Сделать обязательным полем при оформлении заказа
+    deliveryAddress: authStore.profile?.deliveryAddress || 'Not provided', // TODO: Сделать обязательным полем при оформлении заказа
+    paymentMethod: null
+  });
+
+  console.log('Ответ при создании заказа:', res);
+
+  if (res.success && res.order) {
+    currentOrder.value = res.order;
+    handleOpenOrderPaymentModal();
+  } else {
+    alert('Ошибка при создании заказа. Пожалуйста, попробуйте снова.');
+  }
+}
+
+const handlePaymentSuccess = (orderId) => {
+  console.log('Оплата прошла успешно для заказа:', orderId);
+}
 </script>
 
 <template>
-  <Header :withCart="true" />
+  <!--  -->
+  <OrderPaymentModal
+    v-if="currentOrder"
+    :isOpen="isOrderPaymentModalOpen"
+    :order="currentOrder"
+    @close="handleCloseOrderPaymentModal"
+    @payment-success="handlePaymentSuccess"
+  />
+
+  <Header :withCart="true" @order-payment="handleOrderPayment" />
   <main class="main">
     <section class="restaurant-hero mb-5">
       <div class="container-sm">

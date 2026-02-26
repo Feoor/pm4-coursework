@@ -20,6 +20,17 @@ export const getBadgeText = (badge) => {
   return badgeTexts[badge] || '';
 }
 
+export const getOrderStatusText = (status) => {
+  const statusTexts = {
+    'pending': 'В ожидании оплаты',
+    'paid': 'Оплачен',
+    'delivered': 'Доставлен',
+    'cancelled': 'Отменён'
+  };
+
+  return statusTexts[status] || 'Неизвестный статус';
+}
+
 export const getImageUrl = (imageName) => {
   return new URL(`../assets/img/${imageName}`, import.meta.url).href;
 }

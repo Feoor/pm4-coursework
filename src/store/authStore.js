@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { auth } from "@/firebase-config";
 import { 
   onAuthStateChanged, 
@@ -10,8 +10,8 @@ import {
   signOut 
 } from "firebase/auth";
 import { createUserProfile, getUserProfile } from "@/services/userService";
+import { getOrderById, getAllOrdersForUser } from "@/services/orderService";
 
-// Setup-стиль (современный подход в Pinia)
 export const useAuthStore = defineStore("auth", () => {
   // State
   const profile = ref(null);
@@ -41,6 +41,20 @@ export const useAuthStore = defineStore("auth", () => {
   initAuthListener();
 
   // Actions
+  const waitForInitialization = async () => {
+    if (!isAuthInitialized.value) {
+
+      return new Promise((resolve) => {
+        const unwatch = watch(() => isAuthInitialized.value, (isInitialized) => {
+          if (isInitialized) {
+            unwatch();
+            resolve();
+          }
+        });
+      });
+    }
+  };
+
   const signUp = async (email, password, additionalData) => {
     isLoading.value = true;
     error.value = null;
@@ -109,6 +123,33 @@ export const useAuthStore = defineStore("auth", () => {
   // Getters
   const isAuthenticated = () => !!profile.value;
 
+  const getUserOrderById = async (orderId) => {
+    if (!profile.value) {
+      throw new Error("User is not authenticated");
+    }
+    
+    try {
+      const order = await getOrderById(profile.value.id, orderId);
+      return order;
+    } catch (err) {
+      console.error(`Ошибка при получении заказа с ID ${orderId}:`, err);
+      throw err;
+    }
+  };
+
+  const getUserOrders = async (sortByUnpaid = false) => {
+    if (!profile.value) {
+      throw new Error("User is not authenticated");
+    }
+    
+    try {
+      return await getAllOrdersForUser(profile.value.id, sortByUnpaid);
+    } catch (err) {
+      console.error("Ошибка при получении заказов пользователя:", err);
+      throw err;
+    }
+  };
+
   return {
     // State
     profile,
@@ -117,12 +158,15 @@ export const useAuthStore = defineStore("auth", () => {
     error,
     
     // Actions
+    waitForInitialization,
     signUp,
     signIn,
     signInWithGoogle,
     logout,
     
     // Getters
-    isAuthenticated
+    isAuthenticated,
+    getUserOrderById,
+    getUserOrders
   };
 });

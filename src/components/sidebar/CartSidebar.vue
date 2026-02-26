@@ -3,6 +3,24 @@ import { useCartStore } from '@/store/cartStore';
 import { formatPrice } from '@/utils/formatters';
 
 const cartStore = useCartStore();
+
+const emit = defineEmits(['order-payment']);
+
+const handleClose = () => {
+  cartStore.toggleMenu();
+}
+
+const handleIncrement = (dish) => {
+  cartStore.incrementQuantity(dish);
+}
+const handleDecrement = (dish) => {
+  cartStore.decrementQuantity(dish);
+}
+
+const handleOrderPayment = () => {
+  cartStore.toggleMenu();
+  emit('order-payment');
+}
 </script>
 
 <template>
@@ -11,7 +29,7 @@ const cartStore = useCartStore();
       <h3 class="menu-cart__title pt-4 px-4">
         {{ cartStore.isEmpty() ? 'Корзина пуста' : `Ваш заказ` }}
       </h3>
-      <button @click="cartStore.toggleMenu()" class="sidebar__close-btn"></button>
+      <button @click="handleClose" class="sidebar__close-btn"></button>
     </div>
 
     <div class="menu-cart__content">
@@ -35,9 +53,9 @@ const cartStore = useCartStore();
             <!-- Кнопки управления количеством -->
             <div class="cart-dish__controls d-flex flex-column align-items-center">
               <div class="cart-dish__qty d-flex align-items-center">
-                <button @click="cartStore.decrementQuantity(item.dish)" class="cart-dish__minus-btn"></button>
+                <button @click="handleDecrement(item.dish)" class="cart-dish__minus-btn"></button>
                 <span class="cart-dish__count">{{ item.quantity }}</span>
-                <button @click="cartStore.incrementQuantity(item.dish)" class="cart-dish__plus-btn"></button>
+                <button @click="handleIncrement(item.dish)" class="cart-dish__plus-btn"></button>
               </div>
               <div class="cart-dish__total-price">
                 <span class="cart-dish__total">{{ formatPrice(item.cost) }}</span>
@@ -49,11 +67,11 @@ const cartStore = useCartStore();
     </div>
 
     <div v-show="!cartStore.isEmpty()" class="sidebar__buttons">
-      <a href="#" class="sidebar__checkout-btn w-100 d-flex align-items-center">
+      <button @click="handleOrderPayment()" class="sidebar__checkout-btn w-100 d-flex align-items-center">
         <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cartStore.totalItems() }}</span>
         Перейти к оплате
         <span class="cart__price ms-auto">{{ formatPrice(cartStore.totalPrice()) }}</span>
-      </a>
+      </button>
     </div>
   </div>
 </template>
