@@ -17,7 +17,7 @@ export const createUserProfile = async (firebaseUser, additionalData) => {
   const userDoc = {
     displayName: additionalData.displayName || firebaseUser.displayName || "Пользователь",
     createdAt: new Date().toISOString(),
-    photoURL: additionalData.photoURL || firebaseUser.photoURL || '../assets/img/defaultProfileImage.jpg', // Используем Gravatar по умолчанию, если нет изображения
+    photoURL: additionalData.photoURL || firebaseUser.photoURL || 'src/assets/img/defaultProfileImage.jpg', // Используем Gravatar по умолчанию, если нет изображения
     phoneNumber: firebaseUser.phoneNumber || additionalData.phoneNumber || null
     // Будущие другие поля
   };

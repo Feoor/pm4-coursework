@@ -5,10 +5,10 @@ import { onMounted } from 'vue';
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import DishCard from '@/components/DishCard.vue'
-import { getBadgeClass, getBadgeText, formatDeliveryTime } from '@/utils/helpers';
+import { getBadgeClass, getBadgeText } from '@/utils/helpers';
+import { formatPrice, formatDeliveryTime } from '@/utils/formatters';
 import { useRestaurant } from '@/composables/useRestaurant';
 import { useCartStore } from '@/store/cartStore';
-import { formatPrice } from '@/utils/helpers';
 
 const route = useRoute();
 const { restaurant, isLoading, menu, popularDishes, fetchRestaurantData } = useRestaurant();

@@ -1,5 +1,6 @@
 <script setup>
-import { getBadgeClass, getBadgeText, formatDeliveryTime } from '@/utils/helpers.js'
+import { getBadgeClass, getBadgeText } from '@/utils/helpers.js'
+import { formatDeliveryTime } from '@/utils/formatters.js'
 import { Restaurant } from '@/models/Restaurant.js'
 
 defineProps({

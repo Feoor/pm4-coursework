@@ -1,6 +1,6 @@
 <script setup>
 import { useCartStore } from '@/store/cartStore';
-import { formatPrice } from '@/utils/helpers';
+import { formatPrice } from '@/utils/formatters';
 
 const cartStore = useCartStore();
 </script>

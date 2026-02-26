@@ -6,7 +6,7 @@ import DishCard from '@/components/DishCard.vue'
 import ReviewCard from '@/components/ReviewCard.vue'
 
 import { ref } from 'vue'
-import { getBadgeClass, getBadgeText, getImageUrl } from '@/utils/helpers'
+import { getImageUrl } from '@/utils/helpers'
 import { Restaurant } from '@/models/Restaurant'
 import { Dish } from '@/models/Dish'
 

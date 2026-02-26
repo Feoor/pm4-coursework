@@ -5,7 +5,7 @@ import NavSidebar from '@/components/sidebar/NavSidebar.vue';
 import UserMiniProfile from '@/components/UserMiniProfile.vue';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
-import { formatPrice } from '@/utils/helpers';
+import { formatPrice } from '@/utils/formatters';
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();

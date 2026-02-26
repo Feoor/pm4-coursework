@@ -1,10 +1,10 @@
-import { formatDate } from "@/utils/helpers";
+import { formatDate } from "@/utils/formatters";
 export class User {
   constructor(authData, profileData = {}) {
     this.id = authData.uid;
     this.email = authData.email;
     this.displayName = profileData.displayName || authData.displayName || "Пользователь";
-    this.photoURL = profileData.photoURL || authData.photoURL || '../assets/img/defaultProfileImage.jpg'; // Используем Gravatar по умолчанию, если нет изображения
+    this.photoURL = profileData.photoURL || authData.photoURL || "src/assets/img/defaultProfileImage.jpg"; // Используем Gravatar по умолчанию, если нет изображения
     this.phoneNumber = profileData.phoneNumber || authData.phoneNumber || null;
     this.createdAt = profileData.createdAt || authData.metadata?.createdAt || 'Неизвестно';
     this.deliveryAddress = profileData.deliveryAddress || null;

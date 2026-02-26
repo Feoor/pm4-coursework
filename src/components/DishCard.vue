@@ -1,5 +1,6 @@
 <script setup>
-import { getBadgeClass, getBadgeText, formatDeliveryTime, formatPrice } from '@/utils/helpers.js'
+import { getBadgeClass, getBadgeText } from '@/utils/helpers'
+import { formatDeliveryTime, formatPrice } from '@/utils/formatters'
 import { Dish } from '@/models/Dish.js'
 
 const props = defineProps({

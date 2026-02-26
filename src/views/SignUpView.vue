@@ -31,7 +31,7 @@ const handleButtonClick = async (provider) => {
 
 const handleSubmit = async () => {
   try {
-    await authStore.signUp(form.value.email, form.value.password, { name: form.value.name });
+    await authStore.signUp(form.value.email, form.value.password, { displayName: form.value.name });
     router.push('/menu'); // Перенаправляем на главную страницу после успешной регистрации
   } catch (error) {
     errorMessage.value = getAuthErrorMessage(error.code) || 'Произошла ошибка при регистрации. Пожалуйста, попробуйте снова.';
