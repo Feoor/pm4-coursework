@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import ModalLayout from './ModalLayout.vue'
+import ModalLayout from '@/components/modals/ModalLayout.vue'
 
 const props = defineProps({
   isOpen: {
@@ -150,7 +150,7 @@ const handleClose = () => {
             </div>
             <div class="file-info__details">
               <div class="file-name">{{ selectedFile.name }}</div>
-              <div class="file-size">{{ (selectedFile.size / 1024).toFixed(2) }} KB</div>
+              <div class="file-size">{{ (selectedFile.size / 1024).toFixed(2) }} KB</div> 
             </div>
             <button class="file-info__remove" @click="handleRemovePhoto">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
