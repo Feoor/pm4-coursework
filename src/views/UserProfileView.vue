@@ -2,8 +2,10 @@
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import AvatarUploadModal from '@/components/modals/AvatarUploadModal.vue'
+import OrderPaymentModal from '@/components/modals/OrderPaymentModal.vue'
+import OrderInfoCard from '@/components/OrderInfoCard.vue'
 import { useAuthStore } from '@/store/authStore'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { updateUserProfile } from '@/services/userService'
 
@@ -18,10 +20,23 @@ const editForm = ref({
   address: ''
 })
 
-// Проверяем аутентификацию при загрузке страницы
-const onMounted = () => {
-  if (!authStore.isAuthenticated) {
+const orderHistory = ref([])
+const isPaymentModalOpen = ref(false)
+const selectedOrder = ref(null)
+
+// Проверяем аутентификацию при загрузке страницы и загружаем историю заказов
+const checkAuthentication = () => {
+  if (!authStore.isLoading && !authStore.isAuthenticated()) {
     router.push('/sign-in')
+  }
+}
+
+const loadUserOrders = async () => {
+  try {
+    const orders = await authStore.getUserOrders(true) // Получаем заказы, сортируя по неоплаченным в начале
+    orderHistory.value = orders
+  } catch (error) {
+    console.error("Error loading user orders:", error)
   }
 }
 
@@ -100,13 +115,48 @@ const handleCancelEdit = () => {
 }
 
 const handleLogout = () => {
-  authStore.logout()
-  router.push('/sign-in')
+  authStore.logout();
+  router.push('/sign-in');
 }
 
-const orderHistory = ref([
-  // TODO: Загрузка истории заказов
-])
+// Оплата заказа (будет вызываться из OrderInfoCard)
+const handlePayOrder = (orderId) => {
+  selectedOrder.value = orderHistory.value.find(order => order.id === orderId)
+  if (selectedOrder.value) {
+    isPaymentModalOpen.value = true
+  } else {
+    console.error('Order not found:', orderId)
+  }
+}
+
+const handleCloseOrderPaymentModal = () => {
+  isPaymentModalOpen.value = false
+  selectedOrder.value = null
+}
+
+const handlePaymentSuccess = (orderId) => {
+  console.log('Payment successful for order:', orderId)
+
+  // Обновляем статус заказа в истории
+  const order = orderHistory.value.find(o => o.id === orderId)
+  if (order) {
+    order.status = 'paid'
+  } else {
+    console.error('Order not found in history after payment:', orderId)
+  }
+}
+
+onMounted(async () => {
+  await authStore.waitForInitialization()
+
+  if (!authStore.isAuthenticated()) {
+    router.push('/sign-in');
+    return;
+  }
+
+  checkAuthentication()
+  loadUserOrders()
+})
 </script>
 
 <template>
@@ -116,6 +166,14 @@ const orderHistory = ref([
     :current-avatar="authStore.profile?.photoURL || ''"
     @close="handleCloseAvatarModal"
     @upload="handleUploadAvatar"
+  />
+
+  <OrderPaymentModal 
+    v-if="selectedOrder" 
+    :is-open="isPaymentModalOpen"
+    :order="selectedOrder" 
+    @close="handleCloseOrderPaymentModal"
+    @payment-success="handlePaymentSuccess"
   />
 
   <Header mode="lite" />
@@ -272,24 +330,14 @@ const orderHistory = ref([
                 </router-link>
               </div>
 
-              <!-- Список заказов (для будущей логики) -->
+              <!-- TODO: Сделать пагинацию. Разбить по 5 заказов на страницу -->
               <div v-else class="orders-list">
-                <!-- TODO: Добавить логику отображения заказов -->
-                <div class="order-item" v-for="order in orderHistory" :key="order.id">
-                  <div class="order-item__header">
-                    <div class="order-number">Заказ #{{ order.id }}</div>
-                    <div class="order-date">{{ order.date }}</div>
-                  </div>
-                  <div class="order-item__body">
-                    <div class="order-details">{{ order.details }}</div>
-                    <div class="order-price">{{ order.price }} ₽</div>
-                  </div>
-                  <div class="order-item__footer">
-                    <span class="order-status" :class="`order-status--${order.status}`">
-                      {{ order.statusText }}
-                    </span>
-                  </div>
-                </div>
+                <OrderInfoCard 
+                  v-for="order in orderHistory" 
+                  :key="order.id" 
+                  :order="order"
+                  @pay="handlePayOrder"
+                />                
               </div>
             </div>
           </div>
@@ -302,8 +350,6 @@ const orderHistory = ref([
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/_variables.scss';
-
 .profile-page {
   padding: 40px 0 80px;
   min-height: calc(100vh - var(--header-height) - 200px);
@@ -494,91 +540,6 @@ const orderHistory = ref([
     font-size: 16px;
     color: #8e97a6;
     margin-bottom: 0;
-  }
-}
-
-// Список заказов (для будущей логики)
-.orders-list {
-  .order-item {
-    border: 1px solid #f0f0f0;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
-    transition: .3s all;
-
-    &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    &__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-
-      .order-number {
-        font-family: $font-family, sans-serif;
-        font-weight: 700;
-        font-size: 16px;
-        color: #323142;
-      }
-
-      .order-date {
-        font-family: $second-family, sans-serif;
-        font-size: 14px;
-        color: #8e97a6;
-      }
-    }
-
-    &__body {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-
-      .order-details {
-        font-family: $second-family, sans-serif;
-        font-size: 14px;
-        color: #666;
-      }
-
-      .order-price {
-        font-family: $font-family, sans-serif;
-        font-weight: 700;
-        font-size: 18px;
-        color: #323142;
-      }
-    }
-
-    &__footer {
-      .order-status {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-family: $font-family, sans-serif;
-        font-weight: 600;
-        font-size: 12px;
-
-        &--pending {
-          background: #fff3cd;
-          color: #856404;
-        }
-
-        &--completed {
-          background: #d4edda;
-          color: #155724;
-        }
-
-        &--cancelled {
-          background: #f8d7da;
-          color: #721c24;
-        }
-      }
-    }
   }
 }
 
@@ -774,30 +735,6 @@ const orderHistory = ref([
     &__body .form-control {
       padding: 10px 14px;
       font-size: 14px;
-    }
-  }
-
-  .orders-list .order-item {
-    padding: 16px;
-
-    &__header {
-      .order-number {
-        font-size: 14px;
-      }
-
-      .order-date {
-        font-size: 12px;
-      }
-    }
-
-    &__body {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-
-      .order-price {
-        font-size: 16px;
-      }
     }
   }
 
