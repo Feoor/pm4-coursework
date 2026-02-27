@@ -86,8 +86,6 @@ const handleClose = () => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/_variables.scss';
-
 // Оверлей
 .modal-overlay {
   position: fixed;

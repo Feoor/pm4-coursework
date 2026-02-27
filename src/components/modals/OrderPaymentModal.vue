@@ -348,8 +348,6 @@ const handleClose = () => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/_variables.scss';
-
 .payment-modal {
   padding: 0;
 }

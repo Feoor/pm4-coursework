@@ -177,8 +177,6 @@ const handleClose = () => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/_variables.scss';
-
 // Превью
 .preview-section {
   display: flex;
