@@ -1,3 +1,5 @@
+import { Dish } from "@/models/Dish";
+
 export class CartItem {
   constructor(dish, quantity = 1) {
     this.dish = dish;
@@ -35,5 +37,18 @@ export class CartItem {
 
   set quantity(value) {
     this._quantity = value;
+  }
+
+  /** Преобразует CartItem в простой объект для Firestore / localStorage */
+  toPlainObject() {
+    return {
+      dish: this.dish.toPlainObject(),
+      quantity: this.quantity,
+    };
+  }
+
+  /** Восстанавливает CartItem из простого объекта */
+  static fromPlainObject(data) {
+    return new CartItem(Dish.fromPlainObject(data.dish), data.quantity);
   }
 }

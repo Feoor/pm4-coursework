@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 import { useCartStore } from '@/store/cartStore'
 import { useAuthStore } from '@/store/authStore'
 import { formatPrice , formatCardNumber, formatExpiryDate } from '@/utils/formatters'
-import { updateOrderStatus } from '@/services/orderService'
+import { orderService } from '@/services/orderService'
 import { ORDER_STATUS } from '@/constants/orderStatus'
 
 const props = defineProps({
@@ -82,10 +82,10 @@ const handlePayment = async () => {
   
   try {
     // Симуляция обработки платежа
-    await new Promise((resolve, reject) => setTimeout(() => resolve(), 3000))
+    await new Promise(resolve => setTimeout(() => resolve(), 3000))
     
     // Обновляем статус заказа на "оплачен"
-    await updateOrderStatus(authStore.profile?.id, props.order.id, ORDER_STATUS.PAID, { paymentMethod: paymentMethod.value })
+    await orderService.updateOrderStatus(authStore.profile?.id, props.order.id, ORDER_STATUS.PAID, { paymentMethod: paymentMethod.value })
     
     paymentStatus.value = 'success'
     

@@ -25,7 +25,7 @@ export const getOrderStatusText = (status) => {
     'pending': 'В ожидании оплаты',
     'paid': 'Оплачен',
     'delivered': 'Доставлен',
-    'cancelled': 'Отменён'
+    'canceled': 'Отменён'
   };
 
   return statusTexts[status] || 'Неизвестный статус';

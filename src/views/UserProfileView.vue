@@ -4,11 +4,11 @@ import Footer from '@/components/Footer.vue'
 import AvatarUploadModal from '@/components/modals/AvatarUploadModal.vue'
 import OrderPaymentModal from '@/components/modals/OrderPaymentModal.vue'
 import OrderInfoCard from '@/components/OrderInfoCard.vue'
-import { useAuthStore } from '@/store/authStore'
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { updateUserProfile } from '@/services/userService'
-import { formatPhoneNumber } from '@/utils/formatters'
+import {useAuthStore} from '@/store/authStore'
+import {onMounted, ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {userService} from '@/services/userService'
+import {formatPhoneNumber} from '@/utils/formatters'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -34,8 +34,8 @@ const checkAuthentication = () => {
 
 const loadUserOrders = async () => {
   try {
-    const orders = await authStore.getUserOrders(true) // Получаем заказы, сортируя по неоплаченным в начале
-    orderHistory.value = orders
+     // Получаем заказы, сортируя по неоплаченным в начале
+    orderHistory.value = await authStore.getUserOrders(true)
   } catch (error) {
     console.error("Error loading user orders:", error)
   }
@@ -60,7 +60,7 @@ const handleCloseAvatarModal = () => {
 }
 
 const handlePhoneNumberInput = (event) => {
-  let value = event.target.value.replace(/\D/g, '') // Удаляем все нецифровые символы
+  let value = event.target.value.replace(/\D/g, '') // Удаляем все не цифровые символы
   if (value.length > 11) value = value.slice(0, 11) // Ограничиваем до 11 цифр
   editForm.value.phoneNumber = formatPhoneNumber(value) // Форматируем номер телефона
 }
@@ -74,7 +74,7 @@ const handleUploadAvatar = async (file) => {
     // 2. Получить URL загруженного файла
     // 3. Обновить профиль пользователя с новым photoURL
     // const url = await uploadAvatarToStorage(file, authStore.profile.id)
-    // await updateUserProfile(authStore.profile.id, { photoURL: url })
+    // await userService.updateUserProfile(authStore.profile.id, { photoURL: url })
     // authStore.profile.photoURL = url
     
     // Пока просто показываем, что файл получен
@@ -94,7 +94,7 @@ const handleSaveProfile = async () => {
   }
   
   try {
-    await updateUserProfile(authStore.profile.id, {
+    await userService.updateUserProfile(authStore.profile.id, {
       displayName: editForm.value.displayName,
       phoneNumber: editForm.value.phoneNumber,
       deliveryAddress: editForm.value.address
@@ -224,7 +224,7 @@ onMounted(async () => {
             <!-- Статистика -->
             <div class="profile-card__stats">
               <div class="stat-item">
-                <div class="stat-value">0</div>
+                <div class="stat-value">{{ orderHistory ? orderHistory.length : 0 }}</div>
                 <div class="stat-label">Заказов</div>
               </div>
               <div class="stat-divider"></div>

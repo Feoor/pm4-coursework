@@ -1,16 +1,16 @@
-import { defineStore } from "pinia";
-import { ref, watch } from "vue";
-import { auth } from "@/firebase-config";
-import { 
-  onAuthStateChanged, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  signOut 
+import {defineStore} from "pinia";
+import {ref, watch} from "vue";
+import {auth} from "@/firebase-config";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut
 } from "firebase/auth";
-import { createUserProfile, getUserProfile } from "@/services/userService";
-import { getOrderById, getAllOrdersForUser } from "@/services/orderService";
+import { userService } from "@/services/userService";
+import { orderService } from "@/services/orderService";
 
 export const useAuthStore = defineStore("auth", () => {
   // State
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore("auth", () => {
     onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         if (firebaseUser) {
-          profile.value = await getUserProfile(firebaseUser);
+          profile.value = await userService.getUserProfile(firebaseUser);
         } else {
           profile.value = null;
         }
@@ -61,7 +61,7 @@ export const useAuthStore = defineStore("auth", () => {
     
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      profile.value = await createUserProfile(userCredential.user, additionalData);
+      profile.value = await userService.createUserProfile(userCredential.user, additionalData);
     } catch (err) {
       console.error("Ошибка при регистрации:", err);
       error.value = err;
@@ -77,7 +77,7 @@ export const useAuthStore = defineStore("auth", () => {
     
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      profile.value = await getUserProfile(userCredential.user);
+      profile.value = await userService.getUserProfile(userCredential.user);
     } catch (err) {
       console.error("Ошибка при входе:", err);
       error.value = err;
@@ -94,7 +94,7 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
-      profile.value = await getUserProfile(userCredential.user);
+      profile.value = await userService.getUserProfile(userCredential.user);
     } catch (err) {
       console.error("Ошибка при входе через Google:", err);
       error.value = err;
@@ -129,8 +129,7 @@ export const useAuthStore = defineStore("auth", () => {
     }
     
     try {
-      const order = await getOrderById(profile.value.id, orderId);
-      return order;
+      return await orderService.getOrderById(profile.value.id, orderId);
     } catch (err) {
       console.error(`Ошибка при получении заказа с ID ${orderId}:`, err);
       throw err;
@@ -143,7 +142,7 @@ export const useAuthStore = defineStore("auth", () => {
     }
     
     try {
-      return await getAllOrdersForUser(profile.value.id, sortByUnpaid);
+      return await orderService.getAllOrdersForUser(profile.value.id, sortByUnpaid);
     } catch (err) {
       console.error("Ошибка при получении заказов пользователя:", err);
       throw err;
