@@ -3,6 +3,7 @@ export class User {
   constructor(authData, profileData = {}) {
     this.id = authData.uid;
     this.email = authData.email;
+    this.role = profileData.role || 'user'; // Роль по умолчанию - "user"
     this.displayName = profileData.displayName || authData.displayName || "Пользователь";
     this.photoURL = profileData.photoURL || authData.photoURL || "src/assets/img/defaultProfileImage.jpg"; // Используем Gravatar по умолчанию, если нет изображения
     this.phoneNumber = profileData.phoneNumber || authData.phoneNumber || null;

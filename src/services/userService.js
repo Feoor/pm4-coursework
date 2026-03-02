@@ -17,6 +17,7 @@ export const userService = {
       createdAt: serverTimestamp(),
       photoURL: additionalData.photoURL || firebaseUser.photoURL || 'src/assets/img/defaultProfileImage.jpg', // Используем Gravatar по умолчанию, если нет изображения
       phoneNumber: firebaseUser.phoneNumber || additionalData.phoneNumber || null,
+      role: 'user', // По умолчанию роль "user"
     };
 
     const docRef = doc(db, COLLECTIONS.USERS, firebaseUser.uid);

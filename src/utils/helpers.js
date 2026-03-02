@@ -6,7 +6,7 @@ export const getBadgeClass = (badge) => {
     'spicy': 'badge-spicy'
   };
 
-  return badgeClasses[badge] || '';
+  return badgeClasses[badge] || 'badge-default';
 }
 
 export const getBadgeText = (badge) => {
@@ -17,7 +17,7 @@ export const getBadgeText = (badge) => {
     'spicy': 'Острое'
   };
 
-  return badgeTexts[badge] || '';
+  return badgeTexts[badge] || 'Без бейджа';
 }
 
 export const getOrderStatusText = (status) => {

@@ -3,7 +3,7 @@ import ModalLayout from '@/components/modals/ModalLayout.vue'
 import { ref, computed } from 'vue'
 import { useCartStore } from '@/store/cartStore'
 import { useAuthStore } from '@/store/authStore'
-import { formatPrice , formatCardNumber, formatExpiryDate } from '@/utils/formatters'
+import { formatPrice , formatCardNumber, formatExpiryDate, formatDate } from '@/utils/formatters'
 import { orderService } from '@/services/orderService'
 import { ORDER_STATUS } from '@/constants/orderStatus'
 
@@ -139,7 +139,7 @@ const handleClose = () => {
         </div>
         <div class="order-info__item">
           <span class="order-info__label">Дата заказа:</span>
-          <span class="order-info__value">{{ props.order.createdAt.toDate().toLocaleString() }}</span>
+          <span class="order-info__value">{{ formatDate(props.order.createdAt) }}</span>
         </div>
         <div class="order-info__item">
           <span class="order-info__label">Способ получения:</span>

@@ -1,5 +1,5 @@
 export const formatDeliveryTime = (time) => {
-  return `${(time / 60).toFixed(1)} min`;
+  return `${(time / 60).toFixed(1)} мин`;
 }
 
 export const formatPrice = (price) => {
