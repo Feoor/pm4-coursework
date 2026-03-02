@@ -126,7 +126,7 @@ const handlePayOrder = () => {
         color: #155724;
       }
 
-      &--cancelled {
+      &--canceled {
         background: #f8d7da;
         color: #721c24;
       }

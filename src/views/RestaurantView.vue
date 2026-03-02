@@ -53,8 +53,6 @@ const handleOrderPayment = async () => {
     paymentMethod: null
   });
 
-  console.log('Ответ при создании заказа:', res);
-
   if (res.success && res.order) {
     currentOrder.value = res.order;
     handleOpenOrderPaymentModal();
