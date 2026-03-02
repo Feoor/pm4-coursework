@@ -1,8 +1,20 @@
 <script setup>
+import ConfirmModal from '@/components/modals/ConfirmModal.vue'
+import { useConfirmModal } from '@/composables/useConfirmModal'
+
+const { modalProps, onConfirm, onClose, isOpen } = useConfirmModal()
 </script>
 
 <template>
   <router-view />
+
+  <!-- Глобальное модальное окно подтверждения -->
+  <ConfirmModal
+    v-bind="modalProps"
+    :isOpen="isOpen"
+    @confirm="onConfirm"
+    @close="onClose"
+  />
 </template>
 
 <style lang="scss">
