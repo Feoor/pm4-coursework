@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { db } from '@/firebase-config';
-import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, limit, getDocs, doc } from 'firebase/firestore';
 import { Restaurant } from '@/models/Restaurant';
 import { Dish } from '@/models/Dish';
 
@@ -10,32 +10,49 @@ export function useDiscovery() {
   const isLoading = ref(false);
   const error = ref(null);
 
-  const fetchDiscoveryData = async () => {
-    isLoading.value = true;
-    error.value = null;
-
+  // Функция для получения топ-10 ресторанов по популярности
+  const fetchRestaurants = async () => {
     try {
-      // Получаем топ 10 ресторанов по популярности из Firestore
       const restQuery = query(
-        collection(db, 'restaurants'), 
-        orderBy('popularity', 'desc'), 
+        collection(db, 'restaurants'),
+        orderBy('popularity', 'desc'),
         limit(10)
       );
       const restSnap = await getDocs(restQuery);
       restaurants.value = restSnap.docs.map(doc => (new Restaurant({ id: doc.id, ...doc.data() })));
+    } catch (err) {
+      error.value = err.message;
+      console.error('Error fetching restaurants:', err);
+    }
+  }
 
-      // Получаем топ 10 блюд по популярности из Firestore
+  // Функция для получения топ-10 блюд по популярности
+  const fetchDishes = async () => {
+    try {
       const dishQuery = query(
-        collection(db, 'dishes'), 
-        orderBy('popularity', 'desc'), 
+        collection(db, 'dishes'),
+        orderBy('popularity', 'desc'),
         limit(10)
       );
       const dishSnap = await getDocs(dishQuery);
       dishes.value = dishSnap.docs.map(doc => {
         const data = doc.data();
-        const dish = new Dish({ id: doc.id, restaurantId: data.restaurant?.id || 'unknown', ...data });
-        return dish;
+        return new Dish({ id: doc.id, restaurantId: data.restaurant?.id || 'unknown', ...data });
       });
+    } catch (err) {
+      error.value = err.message;
+      console.error('Error fetching dishes:', err);
+    }
+  }
+
+  const fetchDiscoveryData = async () => {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      await fetchRestaurants();
+
+      await fetchDishes();
     } catch (err) {
       error.value = err.message;
       console.error('Error fetching discovery data:', err);
@@ -49,6 +66,8 @@ export function useDiscovery() {
     dishes,
     isLoading,
     error,
-    fetchDiscoveryData
+    fetchRestaurants,
+    fetchDishes,
+    fetchDiscoveryData,
   };
 }
