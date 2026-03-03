@@ -13,6 +13,7 @@ export const userService = {
    */
   async createUserProfile(firebaseUser, additionalData) {
     const userDoc = {
+      email: firebaseUser.email || null,
       displayName: additionalData.displayName || firebaseUser.displayName || "Пользователь",
       createdAt: serverTimestamp(),
       photoURL: additionalData.photoURL || firebaseUser.photoURL || 'src/assets/img/defaultProfileImage.jpg', // Используем Gravatar по умолчанию, если нет изображения
