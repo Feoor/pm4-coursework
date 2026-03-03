@@ -1,7 +1,8 @@
 import {db} from '@/firebase-config.js';
-import {addDoc, deleteDoc, collection, doc, getDocs, query, where, orderBy, limit} from 'firebase/firestore';
+import {addDoc, deleteDoc, updateDoc, collection, doc, getDocs, query, or, where, orderBy, limit} from 'firebase/firestore';
 import {Restaurant} from "@/models/Restaurant.js";
 import {Dish} from "@/models/Dish.js";
+import {User} from "@/models/User.js";
 
 const normalizeCategories = (str) => {
   return str.split(',').map(cat => cat.trim()).filter(cat => cat.length > 0);
@@ -102,7 +103,17 @@ export const adminService = {
     }
   },
 
-  // Methods for getting restaurants and dishes can be added here if needed for admin management
+  async updateUserRole(userId, newRole) {
+    try {
+      const userRef = doc(db, 'users', userId);
+      await updateDoc(userRef, { role: newRole });
+      console.log(`User with ID ${userId} role updated to ${newRole}.`);
+    } catch (error) {
+      console.error('Error updating user role:', error);
+    }
+  },
+
+  // Methods for getting restaurants, dishes and users can be added here if needed for admin management
   async getRestaurants(restaurantsLimit = 10) {
     try {
       const restQuery = query(
@@ -149,5 +160,47 @@ export const adminService = {
     } catch (err) {
       console.error('Error getting dishes for restaurant:', err);
     }
-  }
+  },
+
+  async getUsers(usersLimit = 10) {
+    try {
+      const usersQuery = query(
+        collection(db, 'users'),
+        orderBy('createdAt', 'desc'),
+        limit(usersLimit),
+      );
+      const usersSnap = await getDocs(usersQuery);
+      return usersSnap.docs.map(doc => {
+        const authData = {
+          uid: doc.id,
+          email: doc.data()?.email || 'unknown',
+        }
+        return new User(authData, doc.data());
+      });
+    } catch (err) {
+      console.error('Error getting users:', err);
+    }
+  },
+
+  async getUserBySearchTerm(searchTerm) {
+    try {
+      const usersQuery = query(
+        collection(db, 'users'),
+        or(
+          where('email', '==', searchTerm),
+          where('displayName', '==', searchTerm)
+        )
+      );
+      const usersSnap = await getDocs(usersQuery);
+      return usersSnap.docs.map(doc => {
+        const authData = {
+          uid: doc.id,
+          email: doc.data()?.email || 'unknown',
+        }
+        return new User(authData, doc.data());
+      });
+    } catch (err) {
+      console.error('Error searching users:', err);
+    }
+  },
 }
