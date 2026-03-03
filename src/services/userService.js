@@ -1,5 +1,6 @@
-import { db } from "@/firebase-config";
+import {auth, db} from "@/firebase-config";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { User } from "@/models/User";
 import { COLLECTIONS } from "@/constants/collections";
 
@@ -62,4 +63,13 @@ export const userService = {
       displayName: firebaseUser.displayName || "Пользователь"
     });
   },
+
+  /**
+   * Отправляет запрос на сброс пароля пользователю по email
+   * @param email
+   * @returns {Promise<void>}
+   */
+  async resetUserPassword(email) {
+    return await sendPasswordResetEmail(auth, email);
+  }
 }
