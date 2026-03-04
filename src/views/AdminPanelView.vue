@@ -194,7 +194,7 @@ const handleSelectUser = async (user) => {
   // Получаем заказы пользователя.
   // TODO: Сделать пагинацию, если заказов будет много. Также стоит добавить возможность фильтрации заказов по статусу.
   const sortByUnpair = true
-  userOrders.value = await orderService.getAllOrdersForUser(user.id, sortByUnpair);
+  userOrders.value = await orderService.getUserOrders(user.id, sortByUnpair);
 }
 
 const handleDeselectUser = () => {

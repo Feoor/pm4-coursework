@@ -142,7 +142,7 @@ export const useAuthStore = defineStore("auth", () => {
     }
     
     try {
-      return await orderService.getAllOrdersForUser(profile.value.id, sortByUnpaid);
+      return await orderService.getUserOrders(profile.value.id, sortByUnpaid);
     } catch (err) {
       console.error("Ошибка при получении заказов пользователя:", err);
       throw err;

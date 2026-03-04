@@ -8,7 +8,9 @@ import {
   serverTimestamp,
   query,
   orderBy,
-  getDoc
+  getDoc,
+  startAfter,
+  limit
 } from 'firebase/firestore';
 import { ORDER_STATUS } from '@/constants/orderStatus';
 import { COLLECTIONS } from '@/constants/collections';
@@ -92,15 +94,31 @@ export const orderService = {
   },
 
   /**
-   *
+   * Retrieves all orders for a given user, sorted by creation date (newest first).
+   * If sortByUnpaid is true, unpaid orders will be sorted before paid ones.
+   * Supports pagination using Firestore document snapshots (lastVisible) and batch size.
    * @param {string} userId - ID of the user who owns the orders
    * @param {boolean} sortByUnpaid - If true, unpaid orders will be sorted before paid ones
+   * @param {QueryDocumentSnapshot} lastVisible - Optional Firestore document snapshot to start pagination from (for infinite scrolling)
+   * @param {number} batchSize - Optional number of orders to retrieve per batch (default is 10)
    * @returns {array} Array of order objects sorted by creation date (newest first)
    * @throws {Error} If there was an error retrieving the orders from Firestore
    */
-  async getAllOrdersForUser(userId, sortByUnpaid = false) {
-    const ordersCol = collection(db, `${COLLECTIONS.USERS}/${userId}/${COLLECTIONS.ORDERS}`);
-    const ordersQuery = query(ordersCol, orderBy('createdAt', 'desc'));
+  async getUserOrders(userId, sortByUnpaid = false, { lastVisible = null, batchSize = 10 } = {}) {
+    const ordersCol = collection(
+      db,
+      `${COLLECTIONS.USERS}/${userId}/${COLLECTIONS.ORDERS}`
+    );
+    let ordersQuery = query(
+      ordersCol,
+      orderBy('createdAt', 'desc'),
+      limit(batchSize)
+    );
+
+    if (lastVisible) {
+      ordersQuery = query(ordersQuery, startAfter(lastVisible));
+    }
+
     const ordersSnap = await getDocs(ordersQuery);
 
     const orders = [];
@@ -120,7 +138,25 @@ export const orderService = {
       });
     }
 
-    return orders;
+    return {
+      items: orders,
+      lastVisible: ordersSnap.docs.length > 0 ? ordersSnap.docs[ordersSnap.docs.length - 1] : null
+    };
+  },
+
+  /**
+   * Returns the total count of orders for a given user.
+   * This can be used for pagination purposes to determine how many pages of orders there are.
+   * @param userId
+   * @returns {Promise<number>}
+   */
+  async getOrdersCountForUser(userId) {
+    const ordersCol = collection(
+      db,
+      `${COLLECTIONS.USERS}/${userId}/${COLLECTIONS.ORDERS}`
+    );
+    const snapshot = await getDocs(ordersCol);
+    return snapshot.size;
   },
 
   /**

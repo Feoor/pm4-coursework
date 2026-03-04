@@ -4,15 +4,19 @@ import Footer from '@/components/Footer.vue'
 import AvatarUploadModal from '@/components/modals/AvatarUploadModal.vue'
 import OrderPaymentModal from '@/components/modals/OrderPaymentModal.vue'
 import OrderInfoCard from '@/components/OrderInfoCard.vue'
+import PaginationControls from '@/components/PaginationControls.vue'
 import {useAuthStore} from '@/store/authStore'
 import {onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router'
 import {userService} from '@/services/userService'
 import {formatPhoneNumber} from '@/utils/formatters'
+import {usePagination} from "@/composables/usePagination.js";
+import {orderService} from "@/services/orderService.js";
 
 const authStore = useAuthStore()
 const router = useRouter()
 
+// Редактирование профиля
 const isEditing = ref(false)
 const isAvatarModalOpen = ref(false)
 const editForm = ref({
@@ -20,26 +24,6 @@ const editForm = ref({
   phoneNumber: '',
   address: ''
 })
-
-const orderHistory = ref([])
-const isPaymentModalOpen = ref(false)
-const selectedOrder = ref(null)
-
-// Проверяем аутентификацию при загрузке страницы и загружаем историю заказов
-const checkAuthentication = () => {
-  if (!authStore.isLoading && !authStore.isAuthenticated()) {
-    router.push('/sign-in')
-  }
-}
-
-const loadUserOrders = async () => {
-  try {
-     // Получаем заказы, сортируя по неоплаченным в начале
-    orderHistory.value = await authStore.getUserOrders(true)
-  } catch (error) {
-    console.error("Error loading user orders:", error)
-  }
-}
 
 const handleEditProfile = () => {
   // Заполняем форму текущими данными профиля
@@ -126,9 +110,23 @@ const handleLogout = () => {
   router.push('/sign-in');
 }
 
+// История заказов
+const isPaymentModalOpen = ref(false)
+const selectedOrder = ref(null)
+const ordersPageSize = 5
+
+let fetchOrders = (params) => orderService.getUserOrders(authStore.profile.id, true, params);
+let countOrders = () => orderService.getOrdersCountForUser(authStore.profile.id);
+
+const { displayedItems, nextPage, prevPage, goToPage, totalCount, currentPage } = usePagination(
+  fetchOrders,
+  countOrders,
+  ordersPageSize
+)
+
 // Оплата заказа (будет вызываться из OrderInfoCard)
 const handlePayOrder = (orderId) => {
-  selectedOrder.value = orderHistory.value.find(order => order.id === orderId)
+  selectedOrder.value = displayedItems.value.find(order => order.id === orderId)
   if (selectedOrder.value) {
     isPaymentModalOpen.value = true
   } else {
@@ -145,7 +143,7 @@ const handlePaymentSuccess = (orderId) => {
   console.log('Payment successful for order:', orderId)
 
   // Обновляем статус заказа в истории
-  const order = orderHistory.value.find(o => o.id === orderId)
+  const order = displayedItems.value.find(o => o.id === orderId)
   if (order) {
     order.status = 'paid'
   } else {
@@ -156,13 +154,7 @@ const handlePaymentSuccess = (orderId) => {
 onMounted(async () => {
   await authStore.waitForInitialization()
 
-  if (!authStore.isAuthenticated()) {
-    router.push('/sign-in');
-    return;
-  }
-
-  checkAuthentication()
-  loadUserOrders()
+  await nextPage(); // Загружаем первую страницу заказов при загрузке профиля
 })
 </script>
 
@@ -224,7 +216,7 @@ onMounted(async () => {
             <!-- Статистика -->
             <div class="profile-card__stats">
               <div class="stat-item">
-                <div class="stat-value">{{ orderHistory ? orderHistory.length : 0 }}</div>
+                <div class="stat-value">{{ totalCount || 0 }}</div>
                 <div class="stat-label">Заказов</div>
               </div>
               <div class="stat-divider"></div>
@@ -300,7 +292,7 @@ onMounted(async () => {
                 <div class="col-md-6">
                   <label class="form-label">Дата регистрации</label>
                   <input 
-                    type="text" 
+                    type="text"
                     class="form-control"
                     :value="authStore.profile?.formattedCreatedAt || 'Не указано'"
                     disabled
@@ -329,7 +321,7 @@ onMounted(async () => {
 
             <div class="info-card__body">
               <!-- Пустое состояние -->
-              <div v-if="orderHistory.length === 0" class="empty-state">
+              <div v-if="displayedItems.length === 0" class="empty-state">
                 <div class="empty-state__icon">
                   <img src="@/assets/icons/empty-state_icon.svg" alt="Пустое состояние">
                 </div>
@@ -340,14 +332,31 @@ onMounted(async () => {
                 </router-link>
               </div>
 
-              <!-- TODO: Сделать пагинацию. Разбить по 5 заказов на страницу -->
               <div v-else class="orders-list">
+                <PaginationControls
+                  :current-page="currentPage"
+                  :total-items="totalCount"
+                  :page-size="ordersPageSize"
+                  @update:currentPage="goToPage"
+                  @next-page="nextPage"
+                  @prev-page="prevPage"
+                />
+
                 <OrderInfoCard 
-                  v-for="order in orderHistory" 
+                  v-for="order in displayedItems"
                   :key="order.id" 
                   :order="order"
                   @pay="handlePayOrder"
-                />                
+                />
+
+                <PaginationControls
+                  :current-page="currentPage"
+                  :total-items="totalCount"
+                  :page-size="ordersPageSize"
+                  @update:currentPage="goToPage"
+                  @next-page="nextPage"
+                  @prev-page="prevPage"
+                />
               </div>
             </div>
           </div>
