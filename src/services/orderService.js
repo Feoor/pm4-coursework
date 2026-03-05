@@ -10,7 +10,8 @@ import {
   orderBy,
   getDoc,
   startAfter,
-  limit
+  limit,
+  getCountFromServer
 } from 'firebase/firestore';
 import { ORDER_STATUS } from '@/constants/orderStatus';
 import { COLLECTIONS } from '@/constants/collections';
@@ -155,8 +156,8 @@ export const orderService = {
       db,
       `${COLLECTIONS.USERS}/${userId}/${COLLECTIONS.ORDERS}`
     );
-    const snapshot = await getDocs(ordersCol);
-    return snapshot.size;
+    const snapshot = await getCountFromServer(ordersCol);
+    return snapshot.data().count;
   },
 
   /**

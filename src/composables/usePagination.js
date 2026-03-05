@@ -1,15 +1,18 @@
 import { ref, computed } from 'vue';
 
-export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = 10) {
+export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = pageSize * 2) {
+  let _fetchFn = fetchFn;
+  let _countFn = countFn;
+
   const items = ref([]); // Локальный кэш
-  const currentPage = ref(1);
+  const currentPage = ref(0);
   const lastDoc = ref(null); // Курсор для Firestore
   const totalCount = ref(0);
   const isLoading = ref(false);
 
   // Получаем общее количество документов в коллекции
   const fetchTotalCount = async () => {
-    totalCount.value = await countFn();
+    totalCount.value = await _countFn();
   };
 
   // Подгрузка следующей пачки данных
@@ -18,7 +21,7 @@ export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = 10) {
     isLoading.value = true;
 
     try {
-      const result = await fetchFn({
+      const result = await _fetchFn({
         lastVisible: lastDoc.value,
         nextBatchSize,
        });
@@ -53,7 +56,6 @@ export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = 10) {
     // Если данных для следующей страницы недостаточно, подгружаем следующую пачку
     const nextItemsNeeded = currentPage.value * pageSize;
     if (items.value.length < nextItemsNeeded + pageSize && items.value.length < totalCount.value) {
-      console.log('Loading next batch of data...');
       await loadNextBatch();
     }
   }
@@ -75,13 +77,21 @@ export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = 10) {
     const itemsNeeded = currentPage.value * pageSize;
     const itemsToLoad = itemsNeeded - items.value.length;
     if (itemsToLoad > 0 && items.value.length < totalCount.value) {
-      console.log('Loading next batch of data...');
       await loadNextBatch(Math.max(itemsToLoad, batchSize));
     }
   }
 
-  // Инициализация: получаем общее количество документов при первом вызове
-  fetchTotalCount().catch(console.error);
+  // Сброс состояния (при смене пользователя/контекста) с опциональной заменой функций
+  const reset = async (newFetchFn, newCountFn) => {
+    if (newFetchFn) _fetchFn = newFetchFn;
+    if (newCountFn) _countFn = newCountFn;
 
-  return { displayedItems, nextPage, prevPage, goToPage, totalCount, currentPage, isLoading };
+    items.value = [];
+    currentPage.value = 1;
+    lastDoc.value = null;
+    totalCount.value = 0;
+    await fetchTotalCount();
+  };
+
+  return { displayedItems, nextPage, prevPage, goToPage, totalCount, currentPage, isLoading, reset, fetchTotalCount };
 }

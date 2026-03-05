@@ -41,6 +41,7 @@ const nextPage = () => {
 </script>
 
 <template>
+  <!-- TODO: Переделать компонент чтобы можно было использовать через <slot></slot> -->
   <nav v-if="totalPages > 1" class="pagination-controls" aria-label="Пагинация">
     <!-- Кнопка для возврата на предыдущую страницу -->
     <button

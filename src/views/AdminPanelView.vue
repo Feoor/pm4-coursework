@@ -2,12 +2,14 @@
 import { ref, onMounted } from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import PaginationControls from "@/components/PaginationControls.vue";
 import { formatPrice, formatDeliveryTime, formatDate } from "@/utils/formatters.js";
 import { getBadgeClass, getBadgeText, getOrderStatusText} from "@/utils/helpers.js";
 import { adminService } from "@/services/adminService.js";
 import { orderService } from "@/services/orderService.js";
-import { useConfirmModal } from "@/composables/useConfirmModal.js";
 import { ORDER_STATUS } from "@/constants/orderStatus.js";
+import { useConfirmModal } from "@/composables/useConfirmModal.js";
+import { usePagination } from "@/composables/usePagination.js";
 
 const { confirm } = useConfirmModal();
 
@@ -18,7 +20,8 @@ const handleTabChange = async (tab) => {
   switch (tab) {
     case 'restaurants':
       activeTab.value = 'restaurants';
-      restaurants.value = await adminService.getRestaurants(10);
+      await fetchRestaurantsTotalCount()
+      await nextRestaurantsPage();
       break;
     case 'menu':
       activeTab.value = 'menu';
@@ -31,7 +34,26 @@ const handleTabChange = async (tab) => {
 }
 
 // --- Рестораны ---
-const restaurants = ref([])
+const restaurantsPerPageSize = 10; // Кол-во ресторанов на странице (для пагинации)
+
+// Функции для пагинации ресторанов
+const fetchRestaurants = (params) => adminService.getRestaurants(params);
+const countRestaurants = () => adminService.getRestaurantsCount();
+
+// Пагинация ресторанов
+const {
+  displayedItems: displayedRestaurants,
+  nextPage: nextRestaurantsPage,
+  prevPage: prevRestaurantsPage,
+  goToPage: goToRestaurantsPage,
+  totalCount: restaurantsTotalCount,
+  currentPage: restaurantsCurrentPage,
+  fetchTotalCount: fetchRestaurantsTotalCount,
+} = usePagination(
+    fetchRestaurants,
+    countRestaurants,
+    restaurantsPerPageSize
+)
 
 const restaurantForm = ref({
   name: '',
@@ -66,7 +88,7 @@ const handleAddRestaurant = async () => {
     badge: '',
     categories: '',
   }
-  restaurants.value.push(restaurantDoc);
+  displayedRestaurants.value.push(restaurantDoc);
 }
 
 const handleDeleteRestaurant = async (id) => {
@@ -82,7 +104,7 @@ const handleDeleteRestaurant = async (id) => {
   if (!ok) return;
 
   await adminService.deleteRestaurant(id)
-  restaurants.value.filter(restaurant => restaurant.id !== id)
+  displayedRestaurants.value.filter(restaurant => restaurant.id !== id)
 }
 
 // --- Меню ---
@@ -97,7 +119,21 @@ const sections = ref([
     name: 'Суши'
   }
 ]) // Секции выбранного ресторана
-const dishes = ref([]) // Блюда выбранного ресторана
+const dishesPerPageSize = 10; // Кол-во блюд на странице (для пагинации)
+
+const {
+  displayedItems: displayedDishes,
+  nextPage: nextDishesPage,
+  prevPage: prevDishesPage,
+  goToPage: goToDishesPage,
+  totalCount: dishesTotalCount,
+  currentPage: dishesCurrentPage,
+  reset: resetDishesPagination,
+} = usePagination(
+    null, // fetchDishes будет устанавливаться динамически при выборе ресторана
+    null,
+    dishesPerPageSize
+)
 
 const sectionForm = ref({
   name: ''
@@ -117,9 +153,14 @@ const dishForm = ref({
 })
 
 const handleSelectRestaurant = async () => {
-  // TODO: загрузить секции и блюда для выбранного ресторана
   console.log('Selected restaurant:', selectedRestaurantId.value)
-  dishes.value = await adminService.getDishesByRestaurant(selectedRestaurantId.value)
+
+  const fetchOrders = (params) => adminService.getDishesByRestaurant(selectedRestaurantId.value, params);
+  const countOrders = () => adminService.getDishesCountByRestaurant(selectedRestaurantId.value);
+
+  // Сбрасываем пагинацию на первую страницу при выборе нового пользователя
+  // и обновляем функции для получения заказов и их количества
+  await resetDishesPagination(fetchOrders, countOrders);
 }
 
 const handleAddSection = () => {
@@ -147,7 +188,11 @@ const handleAddDish = async () => {
     deliveryTime: '',
     categories: '',
   }
-  dishes.value.push(dishDoc);
+
+  // FIXME: По хорошему надо заново запросить список блюд,
+  //  так как там может быть пагинация и новое блюдо может не попасть на текущую страницу.
+  //  Но для простоты сейчас просто добавляем его в начало списка
+  displayedDishes.value.push(dishDoc);
 }
 
 const handleDeleteDish = async (id) => {
@@ -163,14 +208,28 @@ const handleDeleteDish = async (id) => {
   if (!ok) return;
 
   await adminService.deleteDish(id)
-  dishes.value.filter(dish => dish.id !== id);
+  displayedDishes.value.filter(dish => dish.id !== id);
 }
 
 // --- Пользователи ---
 const users = ref([])
 const selectedUser = ref(null) // Выбранный пользователь для просмотра заказов
-const userOrders = ref([]) // Заказы выбранного пользователя
-const userSearchQuery = ref('') // Поиск по имени / email
+const userOrdersPerPage = 5 // Кол-во заказов на странице (для пагинации)
+const userSearchQuery = ref('') // Поиск по имени
+
+const {
+  displayedItems: selectedUserOrders,
+  nextPage: selectedUserNextOrdersPage,
+  prevPage: selectedUserPrevOrdersPage,
+  goToPage: selectedUserGoToOrdersPage,
+  totalCount: selectedUserOrdersCount,
+  currentPage: selectedUserOrdersCurrentPage,
+  reset: resetSelectedUserOrdersPagination,
+} = usePagination(
+    null,
+    null,
+    userOrdersPerPage
+)
 
 const orderStatusOptions = [
   { value: ORDER_STATUS.PENDING, label: 'В ожидании оплаты' },
@@ -191,15 +250,18 @@ const handleSearchUsers = async () => {
 const handleSelectUser = async (user) => {
   selectedUser.value = user
 
-  // Получаем заказы пользователя.
-  // TODO: Сделать пагинацию, если заказов будет много. Также стоит добавить возможность фильтрации заказов по статусу.
-  const sortByUnpair = true
-  userOrders.value = await orderService.getUserOrders(user.id, sortByUnpair);
+  const sortByUnpair = true;
+  const fetchOrders = (params) => orderService.getUserOrders(selectedUser.value?.id, sortByUnpair, params);
+  const countOrders = () => orderService.getOrdersCountForUser(selectedUser.value?.id);
+
+  // Сбрасываем пагинацию на первую страницу при выборе нового пользователя
+  // и обновляем функции для получения заказов и их количества
+  await resetSelectedUserOrdersPagination(fetchOrders, countOrders);
 }
 
 const handleDeselectUser = () => {
   selectedUser.value = null
-  userOrders.value = []
+  selectedUserOrders.value = []
 }
 
 const handleToggleAdmin = async (user) => {
@@ -390,11 +452,11 @@ const getOrderStatusClass = (status) => {
             <div class="admin-card">
               <div class="admin-card__header">
                 <h4>Список ресторанов</h4>
-                <span class="admin-card__counter">{{ restaurants.length }}</span>
+                <span class="admin-card__counter">{{ restaurantsTotalCount }}</span>
               </div>
               <div class="admin-card__body">
                 <!-- Пустое состояние -->
-                <div v-if="restaurants.length === 0" class="admin-empty">
+                <div v-if="restaurantsTotalCount === 0" class="admin-empty">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 21V7L12 3L21 7V21H3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
                     <path d="M9 21V13H15V21" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
@@ -403,11 +465,19 @@ const getOrderStatusClass = (status) => {
                 </div>
 
                 <!-- Список -->
-                <!-- TODO: добавить пагинацию, если ресторанов будет много -->
                 <div v-else class="admin-list">
+                  <PaginationControls
+                    :current-page="restaurantsCurrentPage"
+                    :total-items="restaurantsTotalCount"
+                    :page-size="restaurantsPerPageSize"
+                    @update:restaurantCurrentPage="goToRestaurantsPage"
+                    @next-page="nextRestaurantsPage"
+                    @prev-page="prevRestaurantsPage"
+                  />
+
                   <!-- TODO: Возможно стоит вынести в отдельный компонент -->
                   <div
-                    v-for="rest in restaurants"
+                    v-for="rest in displayedRestaurants"
                     :key="rest.id"
                     class="admin-list__item"
                   >
@@ -433,6 +503,15 @@ const getOrderStatusClass = (status) => {
                       </svg>
                     </button>
                   </div>
+
+                  <PaginationControls
+                    :current-page="restaurantsCurrentPage"
+                    :total-items="restaurantsTotalCount"
+                    :page-size="restaurantsPerPageSize"
+                    @update:restaurantCurrentPage="goToRestaurantsPage"
+                    @next-page="nextRestaurantsPage"
+                    @prev-page="prevRestaurantsPage"
+                  />
                 </div>
               </div>
             </div>
@@ -454,13 +533,13 @@ const getOrderStatusClass = (status) => {
               @change="handleSelectRestaurant"
             >
               <option value="" disabled>— Выберите ресторан —</option>
-              <option v-for="rest in restaurants" :key="rest.id" :value="rest.id">
+              <option v-for="rest in displayedRestaurants" :key="rest.id" :value="rest.id">
                 {{ rest.name }}
               </option>
             </select>
 
             <!-- Подсказка, если ресторанов нет -->
-            <div v-if="restaurants.length === 0" class="admin-hint mt-3">
+            <div v-if="restaurantsTotalCount === 0" class="admin-hint mt-3">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                 <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -651,14 +730,13 @@ const getOrderStatusClass = (status) => {
               </div>
 
               <!-- Список блюд -->
-              <!-- TODO: Сделать пагинацию, если блюд слишком много -->
               <div class="admin-card">
                 <div class="admin-card__header">
                   <h4>Блюда ресторана</h4>
-                  <span class="admin-card__counter">{{ dishes.length }}</span>
+                  <span class="admin-card__counter">{{ dishesTotalCount }}</span>
                 </div>
                 <div class="admin-card__body">
-                  <div v-if="dishes.length === 0" class="admin-empty">
+                  <div v-if="dishesTotalCount === 0" class="admin-empty">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
                       <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -666,10 +744,19 @@ const getOrderStatusClass = (status) => {
                     <p>Блюд пока нет</p>
                   </div>
 
-                  <!-- TODO: Возможно стоит вынести в отдельный компонент -->
                   <div v-else class="admin-dishes-list">
+                    <PaginationControls
+                      :current-page="dishesCurrentPage"
+                      :total-items="dishesTotalCount"
+                      :page-size="dishesPerPageSize"
+                      @update:dishesCurrentPage="goToDishesPage"
+                      @next-page="nextDishesPage"
+                      @prev-page="prevDishesPage"
+                    />
+
+                    <!-- TODO: Возможно стоит вынести в отдельный компонент -->
                     <div
-                      v-for="dish in dishes"
+                      v-for="dish in displayedDishes"
                       :key="dish.id"
                       class="admin-dishes-list__item"
                     >
@@ -695,6 +782,15 @@ const getOrderStatusClass = (status) => {
                         </svg>
                       </button>
                     </div>
+
+                    <PaginationControls
+                      :current-page="dishesCurrentPage"
+                      :total-items="dishesTotalCount"
+                      :page-size="dishesPerPageSize"
+                      @update:dishesCurrentPage="goToDishesPage"
+                      @next-page="nextDishesPage"
+                      @prev-page="prevDishesPage"
+                    />
                   </div>
                 </div>
               </div>
@@ -788,7 +884,7 @@ const getOrderStatusClass = (status) => {
                   </template>
                 </h4>
                 <div v-if="selectedUser" style="display: flex; align-items: center; gap: 8px;">
-                  <span class="admin-card__counter">{{ userOrders.length }}</span>
+                  <span class="admin-card__counter">{{ selectedUserOrdersCount }}</span>
                   <button class="admin-users__back-btn" @click="handleDeselectUser" title="Вернуться к списку">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -833,14 +929,24 @@ const getOrderStatusClass = (status) => {
                   </div>
 
                   <!-- Пустые заказы -->
-                  <div v-if="userOrders.length === 0" class="admin-empty admin-empty--sm">
+                  <div v-if="selectedUserOrdersCount === 0" class="admin-empty admin-empty--sm">
                     <p>У пользователя нет заказов</p>
                   </div>
 
                   <!-- Список заказов -->
                   <div v-else class="admin-orders-list">
+                    <PaginationControls
+                        :current-page="selectedUserOrdersCurrentPage"
+                        :total-items="selectedUserOrdersCount"
+                        :page-size="userOrdersPerPage"
+                        @update:selectedUserOrdersCurrentPage="selectedUserGoToOrdersPage"
+                        @next-page="selectedUserNextOrdersPage"
+                        @prev-page="selectedUserPrevOrdersPage"
+                    />
+
+                    <!-- TODO: Возможно стоит вынести в отдельный компонент -->
                     <div
-                      v-for="order in userOrders"
+                      v-for="order in selectedUserOrders"
                       :key="order.id"
                       class="admin-orders-list__item"
                     >
@@ -890,6 +996,15 @@ const getOrderStatusClass = (status) => {
                         </div>
                       </div>
                     </div>
+
+                    <PaginationControls
+                        :current-page="selectedUserOrdersCurrentPage"
+                        :total-items="selectedUserOrdersCount"
+                        :page-size="userOrdersPerPage"
+                        @update:selectedUserOrdersCurrentPage="selectedUserGoToOrdersPage"
+                        @next-page="selectedUserNextOrdersPage"
+                        @prev-page="selectedUserPrevOrdersPage"
+                    />
                   </div>
                 </div>
               </div>

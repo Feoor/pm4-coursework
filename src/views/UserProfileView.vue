@@ -115,10 +115,18 @@ const isPaymentModalOpen = ref(false)
 const selectedOrder = ref(null)
 const ordersPageSize = 5
 
-let fetchOrders = (params) => orderService.getUserOrders(authStore.profile.id, true, params);
-let countOrders = () => orderService.getOrdersCountForUser(authStore.profile.id);
+const fetchOrders = (params) => orderService.getUserOrders(authStore.profile.id, true, params);
+const countOrders = () => orderService.getOrdersCountForUser(authStore.profile.id);
 
-const { displayedItems, nextPage, prevPage, goToPage, totalCount, currentPage } = usePagination(
+const {
+  displayedItems,
+  nextPage,
+  prevPage,
+  goToPage,
+  totalCount,
+  currentPage,
+  fetchTotalCount
+} = usePagination(
   fetchOrders,
   countOrders,
   ordersPageSize
@@ -154,6 +162,7 @@ const handlePaymentSuccess = (orderId) => {
 onMounted(async () => {
   await authStore.waitForInitialization()
 
+  await fetchTotalCount()
   await nextPage(); // Загружаем первую страницу заказов при загрузке профиля
 })
 </script>
@@ -332,6 +341,8 @@ onMounted(async () => {
                 </router-link>
               </div>
 
+              <!-- Список заказов -->
+              <!-- TODO: Стоит вынести в отдельный компонент -->
               <div v-else class="orders-list">
                 <PaginationControls
                   :current-page="currentPage"

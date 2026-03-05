@@ -1,5 +1,18 @@
 import {db} from '@/firebase-config.js';
-import {addDoc, deleteDoc, updateDoc, collection, doc, getDocs, query, or, where, orderBy, limit} from 'firebase/firestore';
+import {
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  or,
+  where,
+  orderBy,
+  limit,
+  startAfter, getCountFromServer
+} from 'firebase/firestore';
 import {Restaurant} from "@/models/Restaurant.js";
 import {Dish} from "@/models/Dish.js";
 import {User} from "@/models/User.js";
@@ -114,26 +127,45 @@ export const adminService = {
   },
 
   // Methods for getting restaurants, dishes and users can be added here if needed for admin management
-  async getRestaurants(restaurantsLimit = 10) {
+  async getRestaurants({ lastVisible = null, batchSize = 10 } = {}) {
     try {
-      const restQuery = query(
+      let restQuery = query(
         collection(db, 'restaurants'),
         orderBy('popularity', 'desc'),
-        limit(restaurantsLimit),
+        limit(batchSize),
       );
+
+      if (lastVisible) {
+        restQuery = query(restQuery, startAfter(lastVisible));
+      }
+
       const restSnap = await getDocs(restQuery);
-      return restSnap.docs.map(doc => (new Restaurant({id: doc.id, ...doc.data()})));
+      const restaurants = restSnap.docs.map(doc => (new Restaurant({id: doc.id, ...doc.data()})));
+      return {
+        items: restaurants,
+        lastVisible: restSnap.docs.length > 0 ? restSnap.docs[restSnap.docs.length - 1] : null,
+      }
     } catch (err) {
       console.error('Error getting restaurants:', err);
     }
   },
 
-  async getDishes(dishesLimit = 10) {
+  async getRestaurantsCount() {
+    try {
+      const restSnap = await getCountFromServer(collection(db, 'restaurants'));
+      return restSnap.data().count;
+    } catch (err) {
+      console.error('Error getting restaurants count:', err);
+      return 0;
+    }
+  },
+
+  async getDishes(batchSize = 10) {
     try {
       const dishQuery = query(
         collection(db, 'dishes'),
         orderBy('popularity', 'desc'),
-        limit(dishesLimit),
+        limit(batchSize),
       );
       const dishSnap = await getDocs(dishQuery);
       return dishSnap.docs.map(doc => {
@@ -145,20 +177,45 @@ export const adminService = {
     }
   },
 
-  async getDishesByRestaurant(restaurantId) {
+  async getDishesByRestaurant(restaurantId, { lastVisible = null, batchSize = 10 } = {}) {
+    try {
+      const restaurantRef = doc(db, 'restaurants', restaurantId);
+      let dishQuery = query(
+        collection(db, 'dishes'),
+        where('restaurant', '==', restaurantRef),
+        limit(batchSize),
+      );
+
+      if (lastVisible) {
+        dishQuery = query(dishQuery, startAfter(lastVisible));
+      }
+
+      const dishSnap = await getDocs(dishQuery);
+      const dishes = dishSnap.docs.map(doc => {
+        const data = doc.data();
+        return new Dish({id: doc.id, restaurantId: data.restaurant?.id || 'unknown', ...data});
+      });
+      return {
+        items: dishes,
+        lastVisible: dishSnap.docs.length > 0 ? dishSnap.docs[dishSnap.docs.length - 1] : null,
+      }
+    } catch (err) {
+      console.error('Error getting dishes for restaurant:', err);
+    }
+  },
+
+  async getDishesCountByRestaurant(restaurantId) {
     try {
       const restaurantRef = doc(db, 'restaurants', restaurantId);
       const dishQuery = query(
         collection(db, 'dishes'),
-        where('restaurant', '==', restaurantRef)
+        where('restaurant', '==', restaurantRef),
       );
-      const dishSnap = await getDocs(dishQuery);
-      return dishSnap.docs.map(doc => {
-        const data = doc.data();
-        return new Dish({id: doc.id, restaurantId: data.restaurant?.id || 'unknown', ...data});
-      });
+      const dishSnap = await getCountFromServer(dishQuery);
+      return dishSnap.data().count;
     } catch (err) {
-      console.error('Error getting dishes for restaurant:', err);
+      console.error('Error getting dishes count for restaurant:', err);
+      return 0;
     }
   },
 
