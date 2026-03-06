@@ -88,6 +88,7 @@ export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = pageSi
     lastDoc.value = null;
     totalCount.value = 0;
     await fetchTotalCount();
+    await loadNextBatch(); // Загружаем первую пачку данных для новой коллекции
   };
 
   // Функция для обновления кэша при получении новых данных (например, при изменении статуса заказа)
