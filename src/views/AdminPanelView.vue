@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, watch, onUnmounted} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import PaginationControls from "@/components/PaginationControls.vue";
@@ -218,18 +218,47 @@ const userOrdersPerPage = 5 // Кол-во заказов на странице 
 const userSearchQuery = ref('') // Поиск по имени
 
 const {
-  displayedItems: selectedUserOrders,
+  items: selectedUserOrders,
+  displayedItems: selectedUserDisplayedOrders,
   nextPage: selectedUserNextOrdersPage,
   prevPage: selectedUserPrevOrdersPage,
   goToPage: selectedUserGoToOrdersPage,
   totalCount: selectedUserOrdersCount,
   currentPage: selectedUserOrdersCurrentPage,
   reset: resetSelectedUserOrdersPagination,
+  updateItems: updateSelectedUserOrders,
 } = usePagination(
     null,
     null,
     userOrdersPerPage
 )
+
+// Слушатель заказов для получения обновлений в реальном времени
+let unsubscribeOrdersListener = null
+
+const startLiveUpdates = (userId, ordersLimit) => {
+  if (unsubscribeOrdersListener) unsubscribeOrdersListener();
+
+  if (!userId) {
+    console.warn('User ID is required to start live updates for orders');
+    return;
+  }
+
+  unsubscribeOrdersListener = orderService.subscribeToUserOrders(userId, (updatedOrders) => {
+    console.log('Received real-time orders update:', updatedOrders)
+
+    const pushAtStart = true // Добавляем новые заказы в начало списка, так как они самые свежие
+    const isInitial = true // Мы получаем каждый раз полный список заказов, поэтому всегда обновляем весь список
+    updateSelectedUserOrders(updatedOrders, pushAtStart, isInitial) // Обновляем список заказов при получении новых данных
+  }, ordersLimit);
+}
+
+watch(() => selectedUserOrders.value.length, (newLength) => {
+  if (newLength > 0 && selectedUser.value) {
+    const ordersLimit = selectedUserOrders.value.length > 0 ? selectedUserOrders.value.length : userOrdersPerPage; // Если заказы уже загружены, используем их количество, иначе используем лимит на странице
+    startLiveUpdates(selectedUser.value.id, ordersLimit) // Запускаем слушатель заказов при выборе пользователя
+  }
+})
 
 const orderStatusOptions = [
   { value: ORDER_STATUS.PENDING, label: 'В ожидании оплаты' },
@@ -260,8 +289,13 @@ const handleSelectUser = async (user) => {
 }
 
 const handleDeselectUser = () => {
-  selectedUser.value = null
-  selectedUserOrders.value = []
+  selectedUser.value = null;
+  selectedUserDisplayedOrders.value = [];
+
+  if (unsubscribeOrdersListener) {
+    unsubscribeOrdersListener(); // Останавливаем слушатель заказов при отмене выбора пользователя
+    unsubscribeOrdersListener = null;
+  }
 }
 
 const handleToggleAdmin = async (user) => {
@@ -296,6 +330,12 @@ const getOrderStatusClass = (status) => {
   }
   return classes[status] || ''
 }
+
+onUnmounted(() => {
+  // При уходе со страницы админ-панели обязательно отписываемся от слушателя заказов,
+  // чтобы не получать обновления в реальном времени, когда админ-панель уже не отображается
+  if (unsubscribeOrdersListener) unsubscribeOrdersListener()
+})
 </script>
 
 <template>
@@ -946,7 +986,7 @@ const getOrderStatusClass = (status) => {
 
                     <!-- TODO: Возможно стоит вынести в отдельный компонент -->
                     <div
-                      v-for="order in selectedUserOrders"
+                      v-for="order in selectedUserDisplayedOrders"
                       :key="order.id"
                       class="admin-orders-list__item"
                     >
