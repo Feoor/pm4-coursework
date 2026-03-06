@@ -6,7 +6,7 @@ import OrderPaymentModal from '@/components/modals/OrderPaymentModal.vue'
 import OrderInfoCard from '@/components/OrderInfoCard.vue'
 import PaginationControls from '@/components/PaginationControls.vue'
 import {useAuthStore} from '@/store/authStore'
-import {onMounted, ref} from 'vue'
+import {onMounted, onUnmounted, ref, watch} from 'vue'
 import {useRouter} from 'vue-router'
 import {userService} from '@/services/userService'
 import {formatPhoneNumber} from '@/utils/formatters'
@@ -115,26 +115,52 @@ const isPaymentModalOpen = ref(false)
 const selectedOrder = ref(null)
 const ordersPageSize = 5
 
+// Функции для пагинации заказов
 const fetchOrders = (params) => orderService.getUserOrders(authStore.profile.id, true, params);
 const countOrders = () => orderService.getOrdersCountForUser(authStore.profile.id);
 
 const {
-  displayedItems,
-  nextPage,
-  prevPage,
-  goToPage,
-  totalCount,
-  currentPage,
-  fetchTotalCount
+  // Variables
+  items: orders,
+  displayedItems: displayedOrders,
+  totalCount: ordersTotalCount,
+  currentPage: ordersCurrentPage,
+
+  // Methods
+  nextPage, prevPage, goToPage,
+  fetchTotalCount,
+  updateItems
 } = usePagination(
   fetchOrders,
   countOrders,
   ordersPageSize
 )
 
+// Слушатель заказов для получения обновлений в реальном времени
+let unsubscribeOrdersListener = null
+
+const startLiveUpdates = () => {
+  if (unsubscribeOrdersListener) unsubscribeOrdersListener();
+
+  const ordersLimit = orders.value.length > 0 ? orders.value.length : ordersPageSize;
+  unsubscribeOrdersListener = orderService.subscribeToUserOrders(authStore.profile.id, (updatedOrders) => {
+    console.log('Received real-time orders update:', updatedOrders)
+
+    const pushAtStart = true // Добавляем новые заказы в начало списка, так как они самые свежие
+    const isInitial = true // Мы получаем каждый раз полный список заказов, поэтому всегда обновляем весь список
+    updateItems(updatedOrders, pushAtStart, isInitial) // Обновляем список заказов при получении новых данных
+  }, ordersLimit);
+}
+
+watch(() => orders.value.length, (newLength) => {
+  if (newLength > 0) {
+    startLiveUpdates() // Запускаем слушатель заказов при загрузке первой страницы
+  }
+})
+
 // Оплата заказа (будет вызываться из OrderInfoCard)
 const handlePayOrder = (orderId) => {
-  selectedOrder.value = displayedItems.value.find(order => order.id === orderId)
+  selectedOrder.value = orders.value.find(order => order.id === orderId)
   if (selectedOrder.value) {
     isPaymentModalOpen.value = true
   } else {
@@ -151,7 +177,7 @@ const handlePaymentSuccess = (orderId) => {
   console.log('Payment successful for order:', orderId)
 
   // Обновляем статус заказа в истории
-  const order = displayedItems.value.find(o => o.id === orderId)
+  const order = orders.value.find(o => o.id === orderId)
   if (order) {
     order.status = 'paid'
   } else {
@@ -162,8 +188,16 @@ const handlePaymentSuccess = (orderId) => {
 onMounted(async () => {
   await authStore.waitForInitialization()
 
-  await fetchTotalCount()
+  // Пагинация заказов
+  await fetchTotalCount();
   await nextPage(); // Загружаем первую страницу заказов при загрузке профиля
+});
+
+onUnmounted(() => {
+  if (unsubscribeOrdersListener) {
+    console.log('Unsubscribing from orders listener')
+    unsubscribeOrdersListener();
+  }
 })
 </script>
 
@@ -225,7 +259,7 @@ onMounted(async () => {
             <!-- Статистика -->
             <div class="profile-card__stats">
               <div class="stat-item">
-                <div class="stat-value">{{ totalCount || 0 }}</div>
+                <div class="stat-value">{{ ordersTotalCount || 0 }}</div>
                 <div class="stat-label">Заказов</div>
               </div>
               <div class="stat-divider"></div>
@@ -330,7 +364,7 @@ onMounted(async () => {
 
             <div class="info-card__body">
               <!-- Пустое состояние -->
-              <div v-if="displayedItems.length === 0" class="empty-state">
+              <div v-if="ordersTotalCount === 0" class="empty-state">
                 <div class="empty-state__icon">
                   <img src="@/assets/icons/empty-state_icon.svg" alt="Пустое состояние">
                 </div>
@@ -345,26 +379,26 @@ onMounted(async () => {
               <!-- TODO: Стоит вынести в отдельный компонент -->
               <div v-else class="orders-list">
                 <PaginationControls
-                  :current-page="currentPage"
-                  :total-items="totalCount"
+                  :current-page="ordersCurrentPage"
+                  :total-items="ordersTotalCount"
                   :page-size="ordersPageSize"
-                  @update:currentPage="goToPage"
+                  @update:ordersCurrentPage="goToPage"
                   @next-page="nextPage"
                   @prev-page="prevPage"
                 />
 
                 <OrderInfoCard 
-                  v-for="order in displayedItems"
+                  v-for="order in displayedOrders"
                   :key="order.id" 
                   :order="order"
                   @pay="handlePayOrder"
                 />
 
                 <PaginationControls
-                  :current-page="currentPage"
-                  :total-items="totalCount"
+                  :current-page="ordersCurrentPage"
+                  :total-items="ordersTotalCount"
                   :page-size="ordersPageSize"
-                  @update:currentPage="goToPage"
+                  @update:ordersCurrentPage="goToPage"
                   @next-page="nextPage"
                   @prev-page="prevPage"
                 />

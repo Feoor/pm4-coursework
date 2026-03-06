@@ -90,5 +90,40 @@ export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = pageSi
     await fetchTotalCount();
   };
 
-  return { displayedItems, nextPage, prevPage, goToPage, totalCount, currentPage, isLoading, reset, fetchTotalCount };
+  // Функция для обновления кэша при получении новых данных (например, при изменении статуса заказа)
+  const updateItems = (newBatch, pushAtStart = false, isInitial = false) => {
+    if (isInitial) {
+      items.value = newBatch;
+      return;
+    }
+
+    // Обновляем только существующие элементы в кэше, не перезаписывая весь массив
+    newBatch.forEach(newItem => {
+      const index = items.value.findIndex(item => item.id === newItem.id);
+      if (index !== -1) {
+        items.value[index] = newItem; // Обновляем существующий элемент
+      } else {
+        if (pushAtStart) {
+          items.value.unshift(newItem); // Добавляем новый элемент в начало, если его нет в кэше
+        } else {
+          items.value.push(newItem); // Добавляем новый элемент, если его нет в кэше
+        }
+      }
+    });
+  }
+
+  return {
+    // Variables
+    items,
+    displayedItems,
+    totalCount: totalCount,
+    currentPage,
+    isLoading,
+
+    // Methods
+    nextPage, prevPage, goToPage,
+    reset,
+    fetchTotalCount,
+    updateItems
+  };
 }

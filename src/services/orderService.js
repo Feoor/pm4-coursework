@@ -1,20 +1,22 @@
-import { db } from '@/firebase-config';
+import {db} from '@/firebase-config';
 import {
-  collection,
   addDoc,
-  updateDoc,
-  getDocs,
+  collection,
   doc,
-  serverTimestamp,
-  query,
-  orderBy,
+  getCountFromServer,
   getDoc,
-  startAfter,
+  getDocs,
   limit,
-  getCountFromServer
+  orderBy,
+  query,
+  serverTimestamp,
+  startAfter,
+  updateDoc,
+  where,
+  onSnapshot
 } from 'firebase/firestore';
-import { ORDER_STATUS } from '@/constants/orderStatus';
-import { COLLECTIONS } from '@/constants/collections';
+import {ORDER_STATUS} from '@/constants/orderStatus';
+import {COLLECTIONS} from '@/constants/collections';
 
 export const orderService = {
   /**
@@ -178,4 +180,35 @@ export const orderService = {
     await updateDoc(orderRef, orderDoc);
     return { success: true };
   },
+
+  /**
+   * Subscribes to real-time updates for a user's orders.
+   * The callback will be called with the updated list of orders whenever there is a change.
+   * @param userId
+   * @param callback
+   * @param limitCount
+   * @returns {Unsubscribe}
+   */
+  subscribeToUserOrders(userId, callback, limitCount = 10) {
+    const ordersCol = collection(
+      db,
+      `${COLLECTIONS.USERS}/${userId}/${COLLECTIONS.ORDERS}`
+    );
+    const ordersQuery = query(
+      ordersCol,
+      orderBy('createdAt', 'desc'),
+      limit(limitCount)
+    );
+
+    // Возвращаем функцию для отписки от слушателя
+    return onSnapshot(ordersQuery, (snapshot) => {
+      const orders = [];
+      snapshot.forEach(doc => {
+        orders.push({id: doc.id, ...doc.data()});
+      });
+      callback(orders);
+    }, (error) => {
+      console.error("Error subscribing to user orders:", error);
+    });
+  }
 }
