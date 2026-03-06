@@ -1,6 +1,8 @@
 import { ref, computed } from 'vue';
 
 export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = pageSize * 2) {
+  // fetchFn - функция для получения данных с сервера, должна принимать объект { lastVisible, nextBatchSize } и возвращать { items: [], lastVisible }
+  // countFn - функция для получения общего количества документов в коллекции
   let _fetchFn = fetchFn;
   let _countFn = countFn;
 
@@ -37,11 +39,6 @@ export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = pageSi
   const displayedItems = computed(() => {
     const startIndex = (currentPage.value - 1) * pageSize;
     const endIndex = currentPage.value * pageSize;
-
-    // Если данных для текущей страницы недостаточно, подгружаем следующую пачку
-    if (endIndex > items.value.length && items.value.length < totalCount.value) {
-      loadNextBatch();
-    }
 
     return items.value.slice(startIndex, endIndex);
   });
