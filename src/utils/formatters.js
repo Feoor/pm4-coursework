@@ -6,6 +6,27 @@ export const formatPrice = (price) => {
   return `${price.toLocaleString('kz-KZ')} ₸`;
 }
 
+export const formatCategories = (categories) => {
+  if (!categories || categories.length === 0) return 'Без категории';
+
+  const categoryTexts = {
+    'pizza': 'Пицца',
+    'sushi': 'Суши',
+    'burger': 'Бургеры',
+    'chicken': 'Курица',
+    'salads': 'Салаты',
+    'desserts': 'Десерты',
+    'drinks': 'Напитки',
+    'asian': 'Азиатская кухня',
+    'italian': 'Итальянская кухня',
+    'mexican': 'Мексиканская кухня',
+    'vegan': 'Веганская кухня',
+    'european': 'Европейская кухня',
+  };
+
+  return categories.map(cat => categoryTexts[cat] || 'Неизвестная категория').join(', ');
+}
+
 export const formatDate = (dateInput) => {
   let dateObj;
 
