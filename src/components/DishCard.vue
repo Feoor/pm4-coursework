@@ -13,7 +13,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['add-to-cart', 'add-to-favorites'])
+const emit = defineEmits(['add-to-cart', 'add-to-favorites', 'show-details'])
 
 const handleAddToCart = () => {
   emit('add-to-cart', props.dish)
@@ -21,6 +21,10 @@ const handleAddToCart = () => {
 
 const handleFavoriteClick = () => {
   emit('add-to-favorites', props.dish)
+}
+
+const handleShowDetails = () => {
+  emit('show-details', props.dish)
 }
 </script>
 
@@ -45,8 +49,8 @@ const handleFavoriteClick = () => {
     </router-link>
 
     <!-- Для full -->
-    <div v-else>
-      <button class="dish-card__favorite-btn" @click="handleFavoriteClick"></button>
+    <div v-else @click="handleShowDetails">
+      <button class="dish-card__favorite-btn" @click.stop="handleFavoriteClick"></button>
 
       <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">
 
@@ -62,7 +66,7 @@ const handleFavoriteClick = () => {
         <h5 class="dish-card__price menu-section__dish-price">{{ formatPrice(dish.price) }}</h5>
 
         <!-- Кнопка "Добавить в корзину" -->
-        <button class="dish-card__cart-btn add-to-cart" @click="handleAddToCart"></button>
+        <button class="dish-card__cart-btn add-to-cart" @click.stop="handleAddToCart"></button>
       </div>
     </div>
   </div>

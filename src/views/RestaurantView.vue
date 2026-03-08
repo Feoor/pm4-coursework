@@ -6,6 +6,7 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import DishCard from '@/components/DishCard.vue'
 import OrderPaymentModal from '@/components/modals/OrderPaymentModal.vue';
+import DishDetailsModal from '@/components/modals/DishDetailsModal.vue';
 import { getBadgeClass, getBadgeText } from '@/utils/helpers';
 import { formatPrice, formatDeliveryTime } from '@/utils/formatters';
 import { useRestaurant } from '@/composables/useRestaurant';
@@ -18,6 +19,8 @@ const authStore = useAuthStore();
 const cartStore = useCartStore();
 const isOrderPaymentModalOpen = ref(false);
 const currentOrder = ref(null);
+const isDishDetailsModalOpen = ref(false);
+const selectedDish = ref(null);
 
 // Загружаем данные ресторана при монтировании компонента (используем ID из URL)
 onMounted(() => fetchRestaurantData(route.params.id));
@@ -64,9 +67,32 @@ const handleOrderPayment = async () => {
 const handlePaymentSuccess = (orderId) => {
   console.log('Оплата прошла успешно для заказа:', orderId);
 }
+
+const showDishDetails = (dish) => {
+  selectedDish.value = dish;
+  isDishDetailsModalOpen.value = true;
+}
+
+const handleCloseDishDetailsModal = () => {
+  isDishDetailsModalOpen.value = false;
+  selectedDish.value = null;
+}
+
+const addToCartFromModal = (dish) => {
+  cartStore.addToCart(dish);
+  handleCloseDishDetailsModal();
+}
 </script>
 
 <template>
+  <!-- Модалка деталей блюда -->
+  <DishDetailsModal
+    :isOpen="isDishDetailsModalOpen"
+    :dish="selectedDish"
+    @close="handleCloseDishDetailsModal"
+    @add-to-cart="addToCartFromModal"
+  />
+
   <!--  -->
   <OrderPaymentModal
     v-if="currentOrder"
@@ -144,6 +170,7 @@ const handlePaymentSuccess = (orderId) => {
               :mode="'full'"
               @add-to-cart="addToCart"
               @add-to-favorites="addToFavorites"
+              @show-details="showDishDetails"
             />
           </div>
 
@@ -170,6 +197,7 @@ const handlePaymentSuccess = (orderId) => {
               :mode="'full'"
               @add-to-cart="addToCart"
               @add-to-favorites="addToFavorites"
+              @show-details="showDishDetails"
             />
           </div>
         </div>
