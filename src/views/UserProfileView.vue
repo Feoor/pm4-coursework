@@ -12,6 +12,7 @@ import {userService} from '@/services/userService'
 import {formatPhoneNumber} from '@/utils/formatters'
 import {usePagination} from "@/composables/usePagination.js";
 import {orderService} from "@/services/orderService.js";
+import OrderDetailsModal from '@/components/modals/OrderDetailsModal.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -113,6 +114,8 @@ const handleLogout = () => {
 // История заказов
 const isPaymentModalOpen = ref(false)
 const selectedOrder = ref(null)
+const isOrderDetailsModalOpen = ref(false)
+const detailsOrder = ref(null)
 const ordersPageSize = 5
 
 // Функции для пагинации заказов
@@ -157,6 +160,32 @@ watch(() => orders.value.length, (newLength) => {
     startLiveUpdates() // Запускаем слушатель заказов при загрузке первой страницы
   }
 })
+
+// Открытие модалки деталей заказа
+const handleShowOrderDetails = (order) => {
+  detailsOrder.value = order
+  isOrderDetailsModalOpen.value = true
+}
+
+const handleCloseOrderDetailsModal = () => {
+  isOrderDetailsModalOpen.value = false
+  detailsOrder.value = null
+}
+
+// Переход от деталей заказа к оплате
+const handlePayFromDetails = (orderId) => {
+  // Закрываем модалку деталей
+  handleCloseOrderDetailsModal()
+
+  // Находим заказ и открываем модалку оплаты
+  const order = orders.value.find(o => o.id === orderId)
+  if (order) {
+    selectedOrder.value = order
+    isPaymentModalOpen.value = true
+  } else {
+    console.error('Order not found:', orderId)
+  }
+}
 
 // Оплата заказа (будет вызываться из OrderInfoCard)
 const handlePayOrder = (orderId) => {
@@ -208,6 +237,14 @@ onUnmounted(() => {
     :current-avatar="authStore.profile?.photoURL || ''"
     @close="handleCloseAvatarModal"
     @upload="handleUploadAvatar"
+  />
+
+  <!-- Модальное окно деталей заказа -->
+  <OrderDetailsModal
+    :isOpen="isOrderDetailsModalOpen"
+    :order="detailsOrder"
+    @close="handleCloseOrderDetailsModal"
+    @pay="handlePayFromDetails"
   />
 
   <OrderPaymentModal 
@@ -377,7 +414,7 @@ onUnmounted(() => {
 
               <!-- Список заказов -->
               <!-- TODO: Стоит вынести в отдельный компонент -->
-              <div v-else class="orders-list">
+              <div v-else class="orders-list row g-3">
                 <PaginationControls
                   :current-page="ordersCurrentPage"
                   :total-items="ordersTotalCount"
@@ -392,6 +429,7 @@ onUnmounted(() => {
                   :key="order.id" 
                   :order="order"
                   @pay="handlePayOrder"
+                  @show-details="handleShowOrderDetails"
                 />
 
                 <PaginationControls
