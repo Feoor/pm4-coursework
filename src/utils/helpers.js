@@ -31,6 +31,17 @@ export const getOrderStatusText = (status) => {
   return statusTexts[status] || 'Неизвестный статус';
 }
 
+export const getOrderStatusClass = (status) => {
+  const statusClasses = {
+    'pending': 'status-pending',
+    'paid': 'status-paid',
+    'delivered': 'status-delivered',
+    'canceled': 'status-canceled'
+  };
+
+  return statusClasses[status] || 'status-unknown';
+}
+
 export const getImageUrl = (imageName) => {
   return new URL(`../assets/img/${imageName}`, import.meta.url).href;
 }
