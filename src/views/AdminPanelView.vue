@@ -3,13 +3,15 @@ import {ref, onMounted, watch, onUnmounted} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import PaginationControls from "@/components/PaginationControls.vue";
-import { formatPrice, formatDeliveryTime, formatDate } from "@/utils/formatters.js";
-import { getBadgeClass, getBadgeText, getOrderStatusText} from "@/utils/helpers.js";
+import AdminRestaurantCard from "@/components/admin/AdminRestaurantCard.vue";
+import { formatPrice, formatDate } from "@/utils/formatters.js";
+import { getBadgeText, getOrderStatusText} from "@/utils/helpers.js";
 import { adminService } from "@/services/adminService.js";
 import { orderService } from "@/services/orderService.js";
 import { ORDER_STATUS } from "@/constants/orderStatus.js";
 import { useConfirmModal } from "@/composables/useConfirmModal.js";
 import { usePagination } from "@/composables/usePagination.js";
+import { Dish } from "@/models/Dish.js";
 
 const { confirm } = useConfirmModal();
 
@@ -129,6 +131,7 @@ const {
   totalCount: dishesTotalCount,
   currentPage: dishesCurrentPage,
   reset: resetDishesPagination,
+  updateItems: updateDishes,
 } = usePagination(
     null, // fetchDishes будет устанавливаться динамически при выборе ресторана
     null,
@@ -176,6 +179,10 @@ const handleDeleteSection = (id) => {
 const handleAddDish = async () => {
   dishForm.value.restaurantId = selectedRestaurantId.value
   const dishDoc = await adminService.addDish(dishForm.value);
+  const newDish = new Dish({
+    id: dishDoc.id,
+    ...dishForm.value
+  })
 
   // После успешного добавления блюда, очищаем форму и добавляем новое блюдо в список
   dishForm.value = {
@@ -189,10 +196,7 @@ const handleAddDish = async () => {
     categories: '',
   }
 
-  // FIXME: По хорошему надо заново запросить список блюд,
-  //  так как там может быть пагинация и новое блюдо может не попасть на текущую страницу.
-  //  Но для простоты сейчас просто добавляем его в начало списка
-  displayedDishes.value.push(dishDoc);
+  updateDishes([newDish], true) // Добавляем новое блюдо в начало списка, так как оно самое свежее
 }
 
 const handleDeleteDish = async (id) => {
@@ -516,33 +520,12 @@ onUnmounted(() => {
                   />
 
                   <!-- TODO: Возможно стоит вынести в отдельный компонент -->
-                  <div
+                  <AdminRestaurantCard
                     v-for="rest in displayedRestaurants"
                     :key="rest.id"
-                    class="admin-list__item"
-                  >
-                    <div class="admin-list__item-image">
-                      <img :src="rest.imageUrl" :alt="rest.name">
-                    </div>
-                    <div class="admin-list__item-info">
-                      <div class="admin-list__item-name">{{ rest.name }}</div>
-                      <div class="admin-list__item-meta">
-                        <span v-if="rest.badge" :class="`badge ${getBadgeClass(rest.badge)}`">{{ getBadgeText(rest.badge) }}</span>
-                        <span class="admin-list__item-rating">⭐ {{ rest.rating }}</span>
-                        <span class="admin-list__item-delivery">{{ formatDeliveryTime(rest.deliveryTime) }}</span>
-                      </div>
-                    </div>
-                    <button class="admin-list__item-delete" @click="handleDeleteRestaurant(rest.id)" title="Удалить">
-                      <!-- Иконка корзины для удаления -->
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8 6V4C8 3.44772 8.44772 3 9 3H15C15.5523 3 16 3.44772 16 4V6" stroke="currentColor" stroke-width="2"/>
-                        <path d="M5 6L6 20C6 20.5523 6.44772 21 7 21H17C17.5523 21 18 20.5523 18 20L19 6" stroke="currentColor" stroke-width="2"/>
-                        <path d="M10 10V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M14 10V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                      </svg>
-                    </button>
-                  </div>
+                    :rest="rest"
+                    @delete-restaurant="handleDeleteRestaurant"
+                  />
 
                   <PaginationControls
                     :current-page="restaurantsCurrentPage"
@@ -1356,84 +1339,6 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 12px;
-
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 14px;
-    background: #f9f9f9;
-    border-radius: 16px;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: #f4f2ff;
-    }
-
-    &-image {
-      width: 64px;
-      height: 50px;
-      border-radius: 10px;
-      overflow: hidden;
-      flex-shrink: 0;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    &-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    &-name {
-      font-family: $font-family, sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      color: #323142;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 4px;
-    }
-
-    &-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: $second-family, sans-serif;
-      font-size: 13px;
-      color: #8e97a6;
-    }
-
-    &-rating,
-    &-delivery {
-      white-space: nowrap;
-    }
-
-    &-delete {
-      width: 40px;
-      height: 40px;
-      min-width: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(229, 73, 43, 0.08);
-      border: none;
-      border-radius: 10px;
-      color: #e5492b;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: rgba(229, 73, 43, 0.15);
-        transform: scale(1.05);
-      }
-    }
-  }
 }
 
 // Список секций
@@ -1984,26 +1889,6 @@ onUnmounted(() => {
       width: 44px;
       height: 44px;
       min-width: 44px;
-    }
-  }
-
-  .admin-list__item {
-    padding: 12px;
-    gap: 12px;
-
-    &-image {
-      width: 52px;
-      height: 40px;
-    }
-
-    &-name {
-      font-size: 15px;
-    }
-
-    &-delete {
-      width: 36px;
-      height: 36px;
-      min-width: 36px;
     }
   }
 
