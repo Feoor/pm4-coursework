@@ -159,12 +159,12 @@ const dishForm = ref({
 const handleSelectRestaurant = async () => {
   console.log('Selected restaurant:', selectedRestaurantId.value)
 
-  const fetchOrders = (params) => adminService.getDishesByRestaurant(selectedRestaurantId.value, params);
-  const countOrders = () => adminService.getDishesCountByRestaurant(selectedRestaurantId.value);
+  const fetchDishes = (params) => adminService.getDishesByRestaurant(selectedRestaurantId.value, params);
+  const countDishes = () => adminService.getDishesCountByRestaurant(selectedRestaurantId.value);
 
   // Сбрасываем пагинацию на первую страницу при выборе нового пользователя
   // и обновляем функции для получения заказов и их количества
-  await resetDishesPagination(fetchOrders, countOrders);
+  await resetDishesPagination(fetchDishes, countDishes);
 }
 
 const handleAddSection = () => {
