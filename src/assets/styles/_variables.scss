@@ -216,6 +216,35 @@ h2 {
   background-color: rgba(229, 73, 43, 0.2);
 }
 
+.order-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: $font-family, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+
+  &--pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  &--paid {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+
+  &--delivered {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  &--canceled {
+    background: #f8d7da;
+    color: #721c24;
+  }
+}
+
 /* Разновидности классов кнопок */
 .btn {
   border-radius: 12px;
