@@ -17,6 +17,8 @@ import {
 } from 'firebase/firestore';
 import {ORDER_STATUS} from '@/constants/orderStatus';
 import {COLLECTIONS} from '@/constants/collections';
+import {Dish} from "@/models/Dish.js";
+import {Order} from "@/models/Order.js";
 
 export const orderService = {
   /**
@@ -126,7 +128,7 @@ export const orderService = {
 
     const orders = [];
     ordersSnap.forEach(doc => {
-      orders.push({id: doc.id, ...doc.data()});
+      orders.push(new Order({id: doc.id, ...doc.data()}));
     });
 
     if (sortByUnpaid) {
@@ -204,7 +206,7 @@ export const orderService = {
     return onSnapshot(ordersQuery, (snapshot) => {
       const orders = [];
       snapshot.forEach(doc => {
-        orders.push({id: doc.id, ...doc.data()});
+        orders.push(new Order({id: doc.id, ...doc.data()}));
       });
       callback(orders);
     }, (error) => {
