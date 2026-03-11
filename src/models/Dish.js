@@ -18,6 +18,10 @@ export class Dish {
     }
   }
 
+  // TODO: вынести форматирование цены в отдельную функцию, чтобы не дублировать код в других местах
+  get formattedPrice() {
+    return `${this.price.toLocaleString('kz-KZ')} ₸`;
+  }
   get imageUrl() {
     return this.image ? getImageUrl(this.image) : 'unknown-dish.png';
   }
