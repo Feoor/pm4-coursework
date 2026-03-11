@@ -1,6 +1,6 @@
 <script setup>
 import { getBadgeClass, getBadgeText } from '@/utils/helpers'
-import { formatDeliveryTime, formatCategories } from '@/utils/formatters'
+import { formatCategories } from '@/utils/formatters'
 import ModalLayout from "@/components/modals/ModalLayout.vue";
 import {Dish} from "@/models/Dish.js";
 
@@ -74,7 +74,7 @@ const handleAddToCart = () => {
               <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
               <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>{{ formatDeliveryTime(dish.deliveryTime) }}</span>
+            <span>{{ dish.formattedDeliveryTime }}</span>
           </div>
           <div v-if="dish.categories && dish.categories.length" class="dish-details__meta-item">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

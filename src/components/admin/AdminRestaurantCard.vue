@@ -1,6 +1,4 @@
 <script setup>
-import {getBadgeClass, getBadgeText} from "@/utils/helpers.js";
-import {formatDeliveryTime} from "@/utils/formatters.js";
 import {Restaurant} from "@/models/Restaurant.js";
 
 const props = defineProps({
@@ -25,9 +23,9 @@ const handleDeleteRestaurant = (id) => {
     <div class="admin-list__item-info">
       <div class="admin-list__item-name">{{ props.rest.name }}</div>
       <div class="admin-list__item-meta">
-        <span v-if="props.rest.badge" :class="`badge ${getBadgeClass(props.rest.badge)}`">{{ getBadgeText(props.rest.badge) }}</span>
+        <span v-if="props.rest.badge" :class="`badge ${props.rest.badgeClass}`">{{ props.rest.badgeText }}</span>
         <span class="admin-list__item-rating">⭐ {{ props.rest.rating }}</span>
-        <span class="admin-list__item-delivery">{{ formatDeliveryTime(props.rest.deliveryTime) }}</span>
+        <span class="admin-list__item-delivery">{{ props.rest.formattedDeliveryTime }}</span>
       </div>
     </div>
     <button class="admin-list__item-delete" @click="handleDeleteRestaurant(props.rest.id)" title="Удалить">

@@ -8,7 +8,6 @@ import DishCard from '@/components/DishCard.vue'
 import OrderPaymentModal from '@/components/modals/OrderPaymentModal.vue';
 import DishDetailsModal from '@/components/modals/DishDetailsModal.vue';
 import { getBadgeClass, getBadgeText } from '@/utils/helpers';
-import { formatDeliveryTime } from '@/utils/formatters';
 import { useRestaurant } from '@/composables/useRestaurant';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
@@ -117,7 +116,7 @@ const addToCartFromModal = (dish) => {
               <h1 class="card-title mt-0">{{ restaurant.name }}</h1>
 
               <div class="our-restaurants__restaurant-info d-flex align-items-center">
-                <span class="me-2">{{ formatDeliveryTime(restaurant.deliveryTime) }}</span>
+                <span class="me-2">{{ restaurant.formattedDeliveryTime }}</span>
                 <img src="@/assets/icons/purple_star.svg" alt="Purple star">
                 <span class="ms-1">{{ restaurant.rating }}</span>
               </div>

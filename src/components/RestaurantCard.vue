@@ -1,6 +1,5 @@
 <script setup>
 import { getBadgeClass, getBadgeText } from '@/utils/helpers.js'
-import { formatDeliveryTime } from '@/utils/formatters.js'
 import { Restaurant } from '@/models/Restaurant.js'
 
 defineProps({
@@ -22,7 +21,7 @@ defineProps({
         <h5 class="card-title mb-2">{{ restaurant.name }}</h5>
 
         <div class="restaurant-card__info d-flex align-items-center">
-          <span class="me-1 me-xl-2">{{ formatDeliveryTime(restaurant.deliveryTime) }} •</span>
+          <span class="me-1 me-xl-2">{{ restaurant.formattedDeliveryTime }} •</span>
           <img src="@/assets/icons/purple_star.svg" alt="Purple star">
           <span class="ms-1">{{ restaurant.rating }}</span>
         </div>

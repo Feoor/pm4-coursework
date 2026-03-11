@@ -1,6 +1,5 @@
 <script setup>
 import { getBadgeClass, getBadgeText } from '@/utils/helpers'
-import { formatDeliveryTime } from '@/utils/formatters'
 import { Dish } from '@/models/Dish.js'
 
 const props = defineProps({
@@ -40,7 +39,7 @@ const handleShowDetails = () => {
         <h5 class="dish-card__title card-title mt-0">{{ dish.name }}</h5>
 
         <div class="dish-card__info d-flex align-items-center mb-2">
-          <span class="me-1 me-xl-2">{{ formatDeliveryTime(dish.deliveryTime) }} •</span>
+          <span class="me-1 me-xl-2">{{ dish.formattedDeliveryTime }} •</span>
           <img src="@/assets/icons/purple_star.svg" alt="Purple star">
           <span class="ms-1">{{ dish.rating }}</span>
         </div>
@@ -60,7 +59,7 @@ const handleShowDetails = () => {
         <h5 class="dish-card__title card-title mt-0">{{ dish.name }}</h5>
 
         <div class="dish-card__info d-flex align-items-center mb-2">
-          <span class="me-2">{{ formatDeliveryTime(dish.deliveryTime) }} •</span>
+          <span class="me-2">{{ dish.formattedDeliveryTime }} •</span>
           <img src="@/assets/icons/purple_star.svg" alt="Purple star">
           <span class="ms-1">{{ dish.rating }}</span>
         </div>
