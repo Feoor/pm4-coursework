@@ -68,8 +68,6 @@ const handleCancel = () => {
 </template>
 
 <style scoped lang="scss">
-@import '@/assets/styles/_variables.scss';
-
 .confirm-message {
   font-family: $second-family, sans-serif;
   font-size: 16px;
