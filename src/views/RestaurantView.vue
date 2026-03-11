@@ -8,7 +8,7 @@ import DishCard from '@/components/DishCard.vue'
 import OrderPaymentModal from '@/components/modals/OrderPaymentModal.vue';
 import DishDetailsModal from '@/components/modals/DishDetailsModal.vue';
 import { getBadgeClass, getBadgeText } from '@/utils/helpers';
-import { formatPrice, formatDeliveryTime } from '@/utils/formatters';
+import { formatDeliveryTime } from '@/utils/formatters';
 import { useRestaurant } from '@/composables/useRestaurant';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
@@ -210,7 +210,7 @@ const addToCartFromModal = (dish) => {
         <button @click="cartStore.toggleMenu()" class="cart-btn btn btn-primary d-flex align-items-center mx-auto">
           <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cartStore.totalItems() }}</span>
           Открыть заказ
-          <span class="cart__price ms-auto">{{ formatPrice(cartStore.totalPrice()) }}</span>
+          <span class="cart__price ms-auto">{{ cartStore.formattedTotalPrice() }}</span>
         </button>
       </div>
     </section>

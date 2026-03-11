@@ -1,4 +1,4 @@
-import {getOrderStatusClass, getOrderStatusText} from "@/utils/helpers.js";
+import {getOrderStatusText} from "@/utils/helpers.js";
 
 export class Order {
   constructor(orderData) {
@@ -8,6 +8,7 @@ export class Order {
     this.status = orderData.status || 'pending';
     this.createdAt = orderData.createdAt.toDate() || new Date();
     this.deliveryAddress = orderData.deliveryAddress || '';
+    this.deliveryMethod = orderData.deliveryMethod || 'delivery'; // 'delivery' или 'pickup'
     this.paymentMethod = orderData.paymentMethod || null;
     this.paymentId = orderData.paymentId || null;
   }
@@ -28,7 +29,7 @@ export class Order {
     return getOrderStatusText(this.status);
   }
   get statusClass() {
-    return getOrderStatusClass(this.status);
+    return `order-status--${this.status}`;
   }
   get formattedTotalPrice() {
     return `${this.totalPrice.toLocaleString('kz-KZ')} ₸`;

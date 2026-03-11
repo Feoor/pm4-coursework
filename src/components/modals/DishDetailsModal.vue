@@ -1,7 +1,8 @@
 <script setup>
 import { getBadgeClass, getBadgeText } from '@/utils/helpers'
-import { formatDeliveryTime, formatPrice, formatCategories } from '@/utils/formatters'
+import { formatDeliveryTime, formatCategories } from '@/utils/formatters'
 import ModalLayout from "@/components/modals/ModalLayout.vue";
+import {Dish} from "@/models/Dish.js";
 
 const props = defineProps({
   isOpen: {
@@ -9,7 +10,7 @@ const props = defineProps({
     required: true
   },
   dish: {
-    type: Object,
+    type: Dish,
     default: null
   }
 })
@@ -98,7 +99,7 @@ const handleAddToCart = () => {
         <div class="dish-details__footer">
           <div class="dish-details__price">
             <span class="dish-details__price-label">Цена</span>
-            <span class="dish-details__price-value">{{ formatPrice(dish.price) }}</span>
+            <span class="dish-details__price-value">{{ dish.formattedPrice }}</span>
           </div>
           <button class="btn btn-primary dish-details__cart-btn" @click="handleAddToCart">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

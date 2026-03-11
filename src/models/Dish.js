@@ -22,6 +22,9 @@ export class Dish {
   get formattedPrice() {
     return `${this.price.toLocaleString('kz-KZ')} ₸`;
   }
+  get formattedDeliveryTime() {
+    return `${(this.deliveryTime / 60).toFixed(1)} мин`;
+  }
   get imageUrl() {
     return this.image ? getImageUrl(this.image) : 'unknown-dish.png';
   }

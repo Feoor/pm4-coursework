@@ -72,7 +72,7 @@ export const orderService = {
 
     try {
       const docRef = await addDoc(collection(db, `${COLLECTIONS.USERS}/${userId}/${COLLECTIONS.ORDERS}`), orderDoc);
-      return {success: true, order: {id: docRef.id, ...orderDoc, createdAt: new Date()}};
+      return {success: true, order: new Order({id: docRef.id, ...orderDoc, createdAt: new Date()})};
     } catch (error) {
       console.error("Error creating order:", error);
       throw error;

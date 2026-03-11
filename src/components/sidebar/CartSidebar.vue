@@ -70,7 +70,7 @@ const handleOrderPayment = () => {
       <button @click="handleOrderPayment()" class="sidebar__checkout-btn w-100 d-flex align-items-center">
         <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cartStore.totalItems() }}</span>
         Перейти к оплате
-        <span class="cart__price ms-auto">{{ formatPrice(cartStore.totalPrice()) }}</span>
+        <span class="cart__price ms-auto">{{ cartStore.formattedTotalPrice() }}</span>
       </button>
     </div>
   </div>

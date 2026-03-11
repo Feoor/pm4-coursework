@@ -62,7 +62,6 @@ export const useCartStore = defineStore("cart", () => {
   );
 
   //  Getters
-
   const totalPrice = () => {
     return Object.values(cartGroups.value).reduce(
       (total, group) => total + group.items.reduce((sum, item) => sum + item.cost, 0),
@@ -80,7 +79,6 @@ export const useCartStore = defineStore("cart", () => {
   const isEmpty = () => Object.keys(cartGroups.value).length === 0;
 
   //  Helpers
-
   const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value;
   };
@@ -90,8 +88,11 @@ export const useCartStore = defineStore("cart", () => {
     cartSyncService.saveCartDebounced(authStore.profile?.id ?? null, cartGroups.value);
   };
 
-  //  Actions
+  const formattedTotalPrice = () => {
+    return `${totalPrice().toLocaleString('kz-KZ')} ₸`;
+  }
 
+  //  Actions
   const addToCart = (dish) => {
     const resId = dish.restaurant.id;
 
@@ -177,14 +178,20 @@ export const useCartStore = defineStore("cart", () => {
   //  Return
 
   return {
+    // State
     cartGroups,
     isMenuOpen,
 
+    // Getters
     totalPrice,
     totalItems,
     isEmpty,
 
+    // Helpers
     toggleMenu,
+    formattedTotalPrice,
+
+    // Actions
     addToCart,
     incrementQuantity,
     decrementQuantity,

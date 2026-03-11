@@ -322,7 +322,7 @@ const handleChangeOrderStatus = async (order, newStatus) => {
 onUnmounted(() => {
   // При уходе со страницы админ-панели обязательно отписываемся от слушателя заказов,
   // чтобы не получать обновления в реальном времени, когда админ-панель уже не отображается
-  if (unsubscribeOrdersListener) unsubscribeOrdersListener()
+  if (unsubscribeOrdersListener) unsubscribeOrdersListener();
 })
 </script>
 
@@ -1479,29 +1479,6 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-// Стили статусов
-.status {
-  &--pending {
-    background: rgba(245, 166, 35, 0.12);
-    color: #e6930a;
-  }
-
-  &--paid {
-    background: rgba(108, 95, 188, 0.12);
-    color: $purple;
-  }
-
-  &--delivered {
-    background: rgba(46, 184, 92, 0.12);
-    color: #1e9d4f;
-  }
-
-  &--canceled {
-    background: rgba(229, 73, 43, 0.1);
-    color: #e5492b;
-  }
 }
 
 // Анимации

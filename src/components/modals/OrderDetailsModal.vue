@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { formatDate, formatPrice } from '@/utils/formatters'
-import { getOrderStatusText } from '@/utils/helpers'
+import { formatPrice } from '@/utils/formatters'
 import { ORDER_STATUS } from '@/constants/orderStatus'
 import ModalLayout from "@/components/modals/ModalLayout.vue"
+import {Order} from "@/models/Order.js";
 
 const props = defineProps({
   isOpen: {
@@ -11,7 +11,7 @@ const props = defineProps({
     required: true
   },
   order: {
-    type: Object,
+    type: Order,
     default: null
   }
 })
@@ -29,17 +29,6 @@ const handlePay = () => {
 const canPay = computed(() => {
   return props.order?.status === ORDER_STATUS.PENDING
 })
-
-const statusClass = computed(() => {
-  if (!props.order) return ''
-  const classes = {
-    [ORDER_STATUS.PENDING]: 'order-details__status--pending',
-    [ORDER_STATUS.PAID]: 'order-details__status--paid',
-    [ORDER_STATUS.DELIVERED]: 'order-details__status--delivered',
-    [ORDER_STATUS.CANCELED]: 'order-details__status--canceled',
-  }
-  return classes[props.order.status] || ''
-})
 </script>
 
 <template>
@@ -54,11 +43,11 @@ const statusClass = computed(() => {
       <!-- Шапка заказа -->
       <div class="order-details__header">
         <div class="order-details__header-left">
-          <div class="order-details__id">#{{ order.id.slice(0, 8).toUpperCase() }}</div>
-          <div class="order-details__date">{{ formatDate(order.createdAt) }}</div>
+          <div class="order-details__id">#{{ order.shortId.toUpperCase() }}</div>
+          <div class="order-details__date">{{ order.createdAtFormatted }}</div>
         </div>
-        <span class="order-details__status" :class="statusClass">
-          {{ getOrderStatusText(order.status) }}
+        <span class="order-details__status" :class="order.statusClass">
+          {{ order.statusText }}
         </span>
       </div>
 
@@ -140,7 +129,7 @@ const statusClass = computed(() => {
       <div class="order-details__footer">
         <div class="order-details__total">
           <span class="order-details__total-label">Итого</span>
-          <span class="order-details__total-value">{{ formatPrice(order.totalAmount) }}</span>
+          <span class="order-details__total-value">{{ order.formattedTotalPrice }}</span>
         </div>
 
         <div class="order-details__actions">

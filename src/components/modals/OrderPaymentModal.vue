@@ -3,9 +3,10 @@ import ModalLayout from '@/components/modals/ModalLayout.vue'
 import { ref, computed } from 'vue'
 import { useCartStore } from '@/store/cartStore'
 import { useAuthStore } from '@/store/authStore'
-import { formatPrice , formatCardNumber, formatExpiryDate, formatDate } from '@/utils/formatters'
+import { formatCardNumber, formatExpiryDate } from '@/utils/formatters'
 import { orderService } from '@/services/orderService'
 import { ORDER_STATUS } from '@/constants/orderStatus'
+import {Order} from "@/models/Order.js";
 
 const props = defineProps({
   isOpen: {
@@ -13,7 +14,7 @@ const props = defineProps({
     required: true
   },
   order: {
-    type: Object,
+    type: Order,
     required: true
   }
 })
@@ -125,7 +126,7 @@ const handleClose = () => {
       <div class="order-info">
         <div class="order-info__item">
           <span class="order-info__label">Номер заказа:</span>
-          <span class="order-info__value">#{{ props.order.id.slice(0, 8).toUpperCase() }}</span>
+          <span class="order-info__value">#{{ props.order.shortId.toUpperCase() }}</span>
         </div>
         <div class="order-info__item align-items-start">
           <span class="order-info__label">Состав заказа:</span>
@@ -139,7 +140,7 @@ const handleClose = () => {
         </div>
         <div class="order-info__item">
           <span class="order-info__label">Дата заказа:</span>
-          <span class="order-info__value">{{ formatDate(props.order.createdAt) }}</span>
+          <span class="order-info__value">{{ props.order.createdAtFormatted }}</span>
         </div>
         <div class="order-info__item">
           <span class="order-info__label">Способ получения:</span>
@@ -151,7 +152,7 @@ const handleClose = () => {
         </div>
         <div class="order-info__item order-info__item--total">
           <span class="order-info__label">Итого к оплате:</span>
-          <span class="order-info__value order-info__value--amount">{{ formatPrice(props.order.totalAmount) }}</span>
+          <span class="order-info__value order-info__value--amount">{{ props.order.formattedTotalPrice }}</span>
         </div>
       </div>
 

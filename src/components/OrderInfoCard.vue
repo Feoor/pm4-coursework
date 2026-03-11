@@ -1,12 +1,11 @@
 <script setup>
-import { getOrderStatusText } from '@/utils/helpers'
-import { formatPrice, formatDate } from '@/utils/formatters'
+import {Order} from "@/models/Order.js";
 
 const emit = defineEmits(['pay', 'show-details'])
 
 const props = defineProps({
   order: {
-    type: Object,
+    type: Order,
     required: true
   }
 })
@@ -25,17 +24,17 @@ const handleShowDetails = () => {
   <div class="order-item">
     <div class="order-item__header">
       <div class="order-number">Заказ #{{ props.order.id }}</div>
-      <div class="order-date">{{ formatDate(props.order.createdAt) }}</div>
+      <div class="order-date">{{ props.order.createdAtFormatted }}</div>
     </div>
     <div class="order-item__body">
       <div class="order-details">
-        {{ props.order.items.length }} блюд, {{ props.order.deliveryMethod === 'pickup' ? 'Самовывоз' : 'Доставка' }}
+        {{ props.order.items.length }} блюд, {{ props.order.paymentMethod === 'pickup' ? 'Самовывоз' : 'Доставка' }}
       </div>
-      <div class="order-price">{{ formatPrice(props.order.totalAmount) }}</div>
+      <div class="order-price">{{ props.order.formattedTotalPrice }}</div>
     </div>
     <div class="order-item__footer">
-      <span class="order-status" :class="`order-status--${props.order.status}`">
-        {{ getOrderStatusText(props.order.status) }}
+      <span class="order-status" :class="props.order.statusClass">
+        {{ props.order.statusText }}
       </span>
       <button v-if="props.order.status === 'pending'"
        class="btn btn-primary btn-sm"
@@ -112,35 +111,6 @@ const handleShowDetails = () => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-
-      .order-status {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-family: $font-family, sans-serif;
-        font-weight: 600;
-        font-size: 12px;
-
-        &--pending {
-          background: #fff3cd;
-          color: #856404;
-        }
-
-        &--paid {
-          background: #d1ecf1;
-          color: #0c5460;
-        }
-
-        &--delivered {
-          background: #d4edda;
-          color: #155724;
-        }
-
-        &--canceled {
-          background: #f8d7da;
-          color: #721c24;
-        }
-      }
     }
   }
 }

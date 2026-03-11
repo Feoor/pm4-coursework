@@ -1,6 +1,5 @@
 <script setup>
-import {formatDate, formatPrice} from "@/utils/formatters.js";
-import {getOrderStatusText, getOrderStatusClass} from "@/utils/helpers.js";
+import {formatPrice} from "@/utils/formatters.js";
 import {ORDER_STATUS} from "@/constants/orderStatus.js";
 import {Order} from "@/models/Order.js";
 

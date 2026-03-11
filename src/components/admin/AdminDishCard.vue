@@ -1,5 +1,4 @@
 <script setup>
-import {formatPrice} from "@/utils/formatters.js";
 import {Dish} from "@/models/Dish.js";
 
 const props = defineProps({
@@ -25,7 +24,7 @@ const handleDeleteDish = (dishId) => {
       <div class="admin-dishes-list__item-name">{{ props.dish.name }}</div>
       <div class="admin-dishes-list__item-meta">
         <span class="admin-dishes-list__item-section">{{ props.dish.section }}</span>
-        <span class="admin-dishes-list__item-price">{{ formatPrice(props.dish.price) }}</span>
+        <span class="admin-dishes-list__item-price">{{ props.dish.formattedPrice }}</span>
       </div>
     </div>
 

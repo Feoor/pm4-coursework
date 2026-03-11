@@ -1,11 +1,12 @@
 <script setup>
 import { getBadgeClass, getBadgeText } from '@/utils/helpers'
-import { formatDeliveryTime, formatPrice } from '@/utils/formatters'
+import { formatDeliveryTime } from '@/utils/formatters'
 import { Dish } from '@/models/Dish.js'
 
 const props = defineProps({
   dish: {
     type: Dish,
+    required: true,
   },
   mode: {
     type: String,
@@ -44,7 +45,7 @@ const handleShowDetails = () => {
           <span class="ms-1">{{ dish.rating }}</span>
         </div>
 
-        <h5 class="dish-card__price">{{ formatPrice(dish.price) }}</h5>
+        <h5 class="dish-card__price">{{ dish.formattedPrice }}</h5>
       </div>
     </router-link>
 
@@ -63,7 +64,7 @@ const handleShowDetails = () => {
           <img src="@/assets/icons/purple_star.svg" alt="Purple star">
           <span class="ms-1">{{ dish.rating }}</span>
         </div>
-        <h5 class="dish-card__price menu-section__dish-price">{{ formatPrice(dish.price) }}</h5>
+        <h5 class="dish-card__price menu-section__dish-price">{{ dish.formattedPrice }}</h5>
 
         <!-- Кнопка "Добавить в корзину" -->
         <button class="dish-card__cart-btn add-to-cart" @click.stop="handleAddToCart"></button>

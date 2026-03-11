@@ -5,7 +5,6 @@ import NavSidebar from '@/components/sidebar/NavSidebar.vue';
 import UserMiniProfile from '@/components/UserMiniProfile.vue';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
-import { formatPrice } from '@/utils/formatters';
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();
@@ -85,7 +84,7 @@ watch(isNavMenuOpen, (newValue) => {
             class="cart-btn btn btn-primary d-none d-lg-flex align-items-center">
             <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cartStore.totalItems() }}</span>
             Открыть заказ
-            <span class="cart__price ms-4">{{ formatPrice(cartStore.totalPrice()) }}</span>
+            <span class="cart__price ms-4">{{ cartStore.formattedTotalPrice() }}</span>
           </button>
 
           <button @click="handleMenuToggle" class="header__menu" :class="isNavMenuOpen ? 'header__menu--toggle' : ''">
