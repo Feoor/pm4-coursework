@@ -314,9 +314,8 @@ const handleToggleAdmin = async (user) => {
   user.role = newRole; // Локально обновляем роль пользователя, чтобы не перезагружать весь список
 }
 
-const handleChangeOrderStatus = async (order, newStatus) => {
-  await orderService.updateOrderStatus(selectedUser.value.id, order.id, newStatus)
-  order.status = newStatus; // Локально обновляем статус заказа, чтобы не перезагружать весь список
+const handleChangeOrderStatus = async (orderData) => {
+  await orderService.updateOrderStatus(selectedUser.value.id, orderData.orderId, orderData.newStatus)
 }
 
 onUnmounted(() => {

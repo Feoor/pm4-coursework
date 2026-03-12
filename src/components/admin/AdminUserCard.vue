@@ -20,7 +20,8 @@ const orderStatusOptions = [
 const emit = defineEmits(['change-order-status']);
 
 const handleChangeOrderStatus = (order, newStatus) => {
-  emit('change-order-status', { orderId: order.id, newStatus });
+  emit('change-order-status', { orderId: order.id, newStatus: newStatus });
+  order.status = newStatus; // Локально обновляем статус чтобы не обновлять весь список заказов после изменения статуса
 }
 </script>
 
