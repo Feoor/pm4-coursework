@@ -117,7 +117,7 @@ export function usePagination(fetchFn, countFn, pageSize = 5, batchSize = pageSi
     // Variables
     items,
     displayedItems,
-    totalCount: totalCount,
+    totalCount,
     currentPage,
     isLoading,
 

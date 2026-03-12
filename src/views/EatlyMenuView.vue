@@ -123,7 +123,7 @@ const {
               </div>
 
               <div class="food-filter__display-filters col-12 btn-group" role="group">
-                <!-- TODO: Сделать через v-for, прийдется менять стили и отрисовку -->
+                <!-- TODO: Сделать через v-for, придется менять стили и отрисовку -->
                 <input type="radio" id="groupsShowAll" class="btn-check food-filter__display-filter"
                   v-model="selectedGroup" value="all" :checked="selectedGroup === 'all'">
                 <label class="btn btn-outline-primary" for="groupsShowAll">Все</label>
