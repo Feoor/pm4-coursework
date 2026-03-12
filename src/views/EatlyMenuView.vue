@@ -81,7 +81,8 @@ const {
   // Variables
   searchQuery, 
   selectedCategories, 
-  selectedSortOption, 
+  selectedSortOption,
+  selectedGroup,
   maxPrice, 
   // Computed
   filteredDishes, 
@@ -90,7 +91,6 @@ const {
   toggleCategory, 
   isCategorySelected
  } = useMenuFilters(restaurants, dishes);
-const selectedGroup = ref('all');
 </script>
 
 <template>
@@ -123,19 +123,18 @@ const selectedGroup = ref('all');
               </div>
 
               <div class="food-filter__display-filters col-12 btn-group" role="group">
-                <!-- FIXME: Переключение не работает -->
                 <!-- TODO: Сделать через v-for, прийдется менять стили и отрисовку -->
-                <input type="radio" class="btn-check food-filter__display-filter" name="sortShowFilterGroup"
+                <input type="radio" id="groupsShowAll" class="btn-check food-filter__display-filter"
                   v-model="selectedGroup" value="all" :checked="selectedGroup === 'all'">
-                <label class="btn btn-outline-primary" for="sortShowAll">Все</label>
+                <label class="btn btn-outline-primary" for="groupsShowAll">Все</label>
 
-                <input type="radio" class="btn-check food-filter__display-filter" name="sortShowFilterGroup"
+                <input type="radio" id="groupsShowRestaurants" class="btn-check food-filter__display-filter"
                   v-model="selectedGroup" value="restaurants" :checked="selectedGroup === 'restaurants'">
-                <label class="btn btn-outline-primary" for="sortShowRestaurants">Рестораны</label>
+                <label class="btn btn-outline-primary" for="groupsShowRestaurants">Рестораны</label>
 
-                <input type="radio" class="btn-check food-filter__display-filter" name="sortShowFilterGroup"
+                <input type="radio" id="groupsShowDishes" class="btn-check food-filter__display-filter" name="sortShowFilterGroup"
                   v-model="selectedGroup" value="dishes" :checked="selectedGroup === 'dishes'">
-                <label class="btn btn-outline-primary" for="sortShowDishes">Блюда</label>
+                <label class="btn btn-outline-primary" for="groupsShowDishes">Блюда</label>
               </div>
             </div>
           </div>
