@@ -1,4 +1,4 @@
-import {getOrderStatusText} from "@/utils/helpers.js";
+import {getDateObj} from "@/utils/helpers.js";
 
 export class Order {
   constructor(orderData) {
@@ -6,7 +6,7 @@ export class Order {
     this.items = orderData.items || []; // [dish: {id, name, price, quantity, restaurantId, restaurantName}]
     this.totalPrice = orderData.totalAmount || 0;
     this.status = orderData.status || 'pending';
-    this.createdAt = orderData.createdAt.toDate() || new Date();
+    this.createdAt = getDateObj(orderData.createdAt) || new Date();
     this.deliveryAddress = orderData.deliveryAddress || '';
     this.deliveryMethod = orderData.deliveryMethod || 'delivery'; // 'delivery' или 'pickup'
     this.paymentMethod = orderData.paymentMethod || null;
@@ -26,10 +26,24 @@ export class Order {
     });
   }
   get statusText() {
-    return getOrderStatusText(this.status);
+    const statusTexts = {
+      'pending': 'В ожидании оплаты',
+      'paid': 'Оплачен',
+      'delivered': 'Доставлен',
+      'canceled': 'Отменён'
+    };
+
+    return statusTexts[this.status] || 'Неизвестно'
   }
   get statusClass() {
-    return `order-status--${this.status}`;
+    const statusClasses = {
+      'pending': 'order-status--pending',
+      'paid': 'order-status--paid',
+      'delivered': 'order-status--delivered',
+      'canceled': 'order-status--canceled'
+    };
+
+    return statusClasses[this.status] || 'order-status--unknown';
   }
   get formattedTotalPrice() {
     return `${this.totalPrice.toLocaleString('kz-KZ')} ₸`;

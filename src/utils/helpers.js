@@ -45,3 +45,13 @@ export const getOrderStatusClass = (status) => {
 export const getImageUrl = (imageName) => {
   return new URL(`../assets/img/${imageName}`, import.meta.url).href;
 }
+
+export const getDateObj = (date) => {
+  // Обработка Firebase Timestamp (Proxy объект)
+  if (date && typeof date === 'object' && typeof date.toDate === 'function') {
+    return date.toDate();
+  }
+
+  // Обработка обычной строки или Date объекта
+  return new Date(date);
+}
