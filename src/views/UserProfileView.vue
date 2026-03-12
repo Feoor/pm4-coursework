@@ -63,10 +63,10 @@ const handleUploadAvatar = async (file) => {
     // authStore.profile.photoURL = url
     
     // Пока просто показываем, что файл получен
-    console.log('Avatar file received, size:', file.size)
+    console.log('Avatar file received, size:', file.size);
   } catch (error) {
-    console.error('Error uploading avatar:', error)
-    // TODO: Показать уведомление об ошибке
+    console.error('Error uploading avatar:', error);
+    alert('Error uploading avatar');
   }
   // Закрываем модальное окно смены аватара
   isAvatarModalOpen.value = false
@@ -93,7 +93,7 @@ const handleSaveProfile = async () => {
     isEditing.value = false
   } catch (error) {
     console.error('Error saving profile:', error);
-    // TODO: Показать уведомление пользователю об ошибке
+    alert('Error saving profile');
   }
 }
 
@@ -271,8 +271,7 @@ onUnmounted(() => {
             <!-- Аватар -->
             <div class="profile-card__avatar">
               <div class="avatar-wrapper">
-                <!-- TODO: Добавить логику загрузки аватара -->
-                <img 
+                <img
                   :src="authStore.profile?.photoURL || 'https://via.placeholder.com/150'" 
                   alt="Avatar"
                   class="avatar-image"
@@ -413,7 +412,6 @@ onUnmounted(() => {
               </div>
 
               <!-- Список заказов -->
-              <!-- TODO: Стоит вынести в отдельный компонент -->
               <div v-else class="orders-list row g-3">
                 <PaginationControls
                   :current-page="ordersCurrentPage"

@@ -47,11 +47,14 @@ const handleOrderPayment = async () => {
   } else if (!authStore.isAuthenticated()) {
     alert('Пожалуйста, войдите в свой аккаунт, чтобы оформить заказ.');
     return;
+  } else if (!authStore.profile?.deliveryAddress) {
+    alert('Пожалуйста, укажите адрес доставки в своем профиле перед оформлением заказа.');
+    return;
   }
 
   const res = await cartStore.createOrder({
-    id: authStore.profile?.id || 'guest', // TODO: Сделать обязательным полем при оформлении заказа
-    deliveryAddress: authStore.profile?.deliveryAddress || 'Not provided', // TODO: Сделать обязательным полем при оформлении заказа
+    id: authStore.profile?.id,
+    deliveryAddress: authStore.profile?.deliveryAddress,
     paymentMethod: null
   });
 
@@ -203,7 +206,6 @@ const addToCartFromModal = (dish) => {
       </div>
     </section>
 
-    <!-- TODO: Синхронизировать мобильную корзину с основной корзиной -->
     <section class="cart-btn-section--md-position d-flex d-lg-none position-sticky">
       <div class="container-sm">
         <button @click="cartStore.toggleMenu()" class="cart-btn btn btn-primary d-flex align-items-center mx-auto">
