@@ -16,7 +16,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['next-page', 'prev-page', 'update:currentPage'])
+const emit = defineEmits(['next-page', 'prev-page', 'go-to-page'])
 
 const totalPages = computed(() => {
   return Math.max(1, Math.ceil(props.totalItems / props.pageSize))
@@ -27,7 +27,7 @@ const isLastPage = computed(() => props.currentPage >= totalPages.value)
 
 const goToPage = (page) => {
   if (page >= 1 && page <= totalPages.value) {
-    emit('update:currentPage', page)
+    emit('go-to-page', page)
   }
 }
 

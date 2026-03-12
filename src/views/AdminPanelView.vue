@@ -497,7 +497,7 @@ onUnmounted(() => {
                     :current-page="restaurantsCurrentPage"
                     :total-items="restaurantsTotalCount"
                     :page-size="restaurantsPerPageSize"
-                    @update:restaurantCurrentPage="goToRestaurantsPage"
+                    @go-to-page="goToRestaurantsPage"
                     @next-page="nextRestaurantsPage"
                     @prev-page="prevRestaurantsPage"
                   />
@@ -513,7 +513,7 @@ onUnmounted(() => {
                     :current-page="restaurantsCurrentPage"
                     :total-items="restaurantsTotalCount"
                     :page-size="restaurantsPerPageSize"
-                    @update:restaurantCurrentPage="goToRestaurantsPage"
+                    @go-to-page="goToRestaurantsPage"
                     @next-page="nextRestaurantsPage"
                     @prev-page="prevRestaurantsPage"
                   />
@@ -754,7 +754,7 @@ onUnmounted(() => {
                       :current-page="dishesCurrentPage"
                       :total-items="dishesTotalCount"
                       :page-size="dishesPerPageSize"
-                      @update:dishesCurrentPage="goToDishesPage"
+                      @go-to-page="goToDishesPage"
                       @next-page="nextDishesPage"
                       @prev-page="prevDishesPage"
                     />
@@ -770,7 +770,7 @@ onUnmounted(() => {
                       :current-page="dishesCurrentPage"
                       :total-items="dishesTotalCount"
                       :page-size="dishesPerPageSize"
-                      @update:dishesCurrentPage="goToDishesPage"
+                      @go-to-page="goToDishesPage"
                       @next-page="nextDishesPage"
                       @prev-page="prevDishesPage"
                     />
@@ -922,7 +922,7 @@ onUnmounted(() => {
                         :current-page="selectedUserOrdersCurrentPage"
                         :total-items="selectedUserOrdersCount"
                         :page-size="userOrdersPerPage"
-                        @update:selectedUserOrdersCurrentPage="selectedUserGoToOrdersPage"
+                        @go-to-page="selectedUserGoToOrdersPage"
                         @next-page="selectedUserNextOrdersPage"
                         @prev-page="selectedUserPrevOrdersPage"
                     />
@@ -938,7 +938,7 @@ onUnmounted(() => {
                         :current-page="selectedUserOrdersCurrentPage"
                         :total-items="selectedUserOrdersCount"
                         :page-size="userOrdersPerPage"
-                        @update:selectedUserOrdersCurrentPage="selectedUserGoToOrdersPage"
+                        @go-to-page="selectedUserGoToOrdersPage"
                         @next-page="selectedUserNextOrdersPage"
                         @prev-page="selectedUserPrevOrdersPage"
                     />

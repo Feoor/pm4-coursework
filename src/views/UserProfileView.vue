@@ -417,7 +417,7 @@ onUnmounted(() => {
                   :current-page="ordersCurrentPage"
                   :total-items="ordersTotalCount"
                   :page-size="ordersPageSize"
-                  @update:ordersCurrentPage="goToPage"
+                  @go-to-page="goToPage"
                   @next-page="nextPage"
                   @prev-page="prevPage"
                 />
@@ -434,7 +434,7 @@ onUnmounted(() => {
                   :current-page="ordersCurrentPage"
                   :total-items="ordersTotalCount"
                   :page-size="ordersPageSize"
-                  @update:ordersCurrentPage="goToPage"
+                  @go-to-page="goToPage"
                   @next-page="nextPage"
                   @prev-page="prevPage"
                 />
