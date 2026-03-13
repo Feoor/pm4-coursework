@@ -15,7 +15,7 @@ const restaurants = ref([
     id: 'GrBB4fljG8I7axtTP4GH',
     name: 'The Fishman',
     image: 'the_fishman.webp',
-    badge: 'popularity',
+    badge_type: 'trending',
     delivery_time: 1440,
     rating: 4.8
   }),
@@ -23,7 +23,7 @@ const restaurants = ref([
     id: 'oUslJGVthnAJ71FBgyEd',
     name: 'The Chicken King',
     image: 'the_chicken_king.webp',
-    badge: 'popularity',
+    badge_type: 'trending',
     delivery_time: 1440,
     rating: 4.8
   }),
@@ -31,7 +31,7 @@ const restaurants = ref([
     id: 'rH6LYpUQPGtimnQ0uiKZ',
     name: 'Burger Prince',
     image: 'the_chicken_king.webp',
-    badge: 'healthy',
+    badge_type: 'healthy',
     delivery_time: 1440,
     rating: 4.8
   })
@@ -43,7 +43,7 @@ const dishes = ref([
     restaurantId: 'GrBB4fljG8I7axtTP4GH',
     name: 'Chicken Hell',
     image: 'chicken_hell_dish.png',
-    badge: 'popularity',
+    badge_type: 'trending',
     delivery_time: 1440,
     rating: 4.8,
     price: 1799
@@ -53,7 +53,7 @@ const dishes = ref([
     restaurantId: 'GrBB4fljG8I7axtTP4GH',
     name: 'Swe Dish',
     image: 'swe_dish.png',
-    badge: 'popularity',
+    badge_type: 'trending',
     delivery_time: 2040,
     rating: 4.9,
     price: 2499
@@ -63,7 +63,7 @@ const dishes = ref([
     restaurantId: 'oUslJGVthnAJ71FBgyEd',
     name: 'Fish Hell',
     image: 'fish_hell_dish.png',
-    badge: 'supreme',
+    badge_type: 'supreme',
     delivery_time: 1440,
     rating: 4.9,
     price: 2499
@@ -73,7 +73,7 @@ const dishes = ref([
     restaurantId: 'rH6LYpUQPGtimnQ0uiKZ',
     name: 'Chicken Hell',
     image: 'chicken_hell_dish.png',
-    badge: 'healthy',
+    badge_type: 'healthy',
     delivery_time: 1440,
     rating: 4.8,
     price: 1799
@@ -83,7 +83,7 @@ const dishes = ref([
     restaurantId: 'rH6LYpUQPGtimnQ0uiKZ',
     name: 'Swe Dish',
     image: 'swe_dish.png',
-    badge: 'popularity',
+    badge_type: 'trending',
     delivery_time: 2040,
     rating: 4.9,
     price: 2499
