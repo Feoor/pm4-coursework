@@ -73,7 +73,6 @@ watch(isNavMenuOpen, (newValue) => {
             <UserMiniProfile />
           </div>
 
-          <!-- FIXME: Профиль пользователя и кнопки аутификации не одного размера -->
           <div v-else-if="mode === 'full' && !authStore.profile && authStore.isAuthInitialized"
             class="header__auth-buttons d-none d-sm-flex">
             <router-link to="/sign-in" class="header__login me-2">Войти</router-link>

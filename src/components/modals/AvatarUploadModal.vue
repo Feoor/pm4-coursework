@@ -84,7 +84,6 @@ const handleRemovePhoto = () => {
 // Сохранить изменения
 const handleSave = () => {
   if (selectedFile.value) {
-    // TODO: Логика загрузки файла
     emit('upload', selectedFile.value)
   }
   emit('close')
