@@ -35,10 +35,10 @@ export const adminService = {
         // Строго указываем поля, которые хотим сохранить в Firestore
         name: restaurantData.name,
         categories: normalizedCategories,
-        delivery_time: normalizedDeliveryTime,
+        delivery_time: normalizedDeliveryTime, // FIXME: Привести в camelCase(Firestore)
         image: restaurantData.imageUrl,
         popularity: 1, // Инициализируем популярность новым рестораном
-        badge_type: restaurantData.badge,
+        badge_type: restaurantData.badge, // FIXME: Привести в camelCase(Firestore)
         rating: restaurantData.rating,
       }
 

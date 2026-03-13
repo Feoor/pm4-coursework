@@ -13,6 +13,7 @@ defineProps({
     default: false
   }
 });
+
 </script>
 
 <template>
@@ -25,8 +26,10 @@ defineProps({
     </div>
     <div class="sidebar__nav">
       <ul class="sidebar__list menu list-reset">
+        <!-- FIXME: При переходе на другую страницу при открытом боковом меню скролл не разблокируется -->
         <li class="menu__item"><router-link to="/menu">Меню</router-link></li>
         <li class="menu__item"><router-link to="/contacts">Контакты</router-link></li>
+        <li class="menu__item" v-if="authStore.isAuthenticated()"><router-link to="/profile">Профиль</router-link></li>
       </ul>
     </div>
     <div v-if="mode === 'full'" class="sidebar__buttons justify-content-between text-center">
@@ -133,6 +136,10 @@ defineProps({
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  .sidebar__list {
+    list-style: none;
   }
 
   .menu__item>a {

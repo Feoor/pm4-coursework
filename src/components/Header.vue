@@ -95,7 +95,7 @@ watch(isNavMenuOpen, (newValue) => {
         <div class="sidebar" :class="(isNavMenuOpen || cartStore.isMenuOpen) ? 'sidebar--show' : ''" @click.self="handleSidebarClose">
 
           <!-- Меню для навигации -->
-          <!-- FIXME: Сломались стили -->
+          <!-- FIXME: Сломались стили на страницах с корзиной -->
           <NavSidebar :mode="mode" :isMenuOpen="isNavMenuOpen" />
 
           <!-- Меню корзины -->
