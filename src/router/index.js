@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
 
 function checkAccess(to, next, authStore) {
   const isAuthenticated = authStore.isAuthenticated();
-  const isAdmin = authStore.profile?.role === 'admin';
+  const isAdmin = authStore.profile?.isAdmin;
 
   if (to.meta.requireAuth && !isAuthenticated) {
     next('/sign-in');

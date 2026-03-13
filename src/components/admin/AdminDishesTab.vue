@@ -31,12 +31,16 @@ onMounted(async () => {
 const selectedRestaurantId = ref('')
 const sections = ref([
   {
-    id: 'sec1',
+    id: 'Пицца',
     name: 'Пицца'
   },
   {
-    id: 'sec2',
+    id: 'Суши',
     name: 'Суши'
+  },
+  {
+    id: 'Напитки',
+    name: 'Напитки'
   }
 ]) // Секции выбранного ресторана
 const dishesPerPageSize = 10; // Кол-во блюд на странице (для пагинации)

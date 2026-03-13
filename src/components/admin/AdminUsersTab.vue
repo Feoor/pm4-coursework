@@ -7,8 +7,10 @@ import {useConfirmModal} from "@/composables/useConfirmModal.js";
 import {orderService} from "@/services/orderService.js";
 import {adminService} from "@/services/adminService.js";
 import {onMounted, onUnmounted, ref, watch} from "vue";
+import {useAuthStore} from "@/store/authStore.js";
 
 const { confirm } = useConfirmModal();
+const authStore = useAuthStore();
 
 // --- Пользователи ---
 const users = ref([])
@@ -91,6 +93,15 @@ const handleDeselectUser = () => {
 }
 
 const handleToggleAdmin = async (user) => {
+  if (user.id === authStore.profile.id) {
+    alert('Вы не можете изменить свою собственную роль!')
+    return;
+  }
+  if (user.role === 'superadmin') {
+    alert('Роль супер-администратора нельзя изменить!')
+    return;
+  }
+
   const newRole = user.role === 'admin' ? 'user' : 'admin'
   const actionText = newRole === 'admin' ? 'назначить администратором' : 'снять права администратора'
 
@@ -175,15 +186,15 @@ onUnmounted(() => {
                 <div class="admin-users-list__item-info">
                   <div class="admin-users-list__item-name">
                     {{ user.displayName }}
-                    <span v-if="user.role === 'admin'" class="admin-users-list__item-badge">Админ</span>
+                    <span v-if="user.isAdmin" class="admin-users-list__item-badge">Админ</span>
                   </div>
                   <div class="admin-users-list__item-email">{{ user.email }}</div>
                 </div>
                 <button
                     class="admin-users-list__item-role-btn"
-                    :class="{ 'admin-users-list__item-role-btn--active': user.role === 'admin' }"
+                    :class="{ 'admin-users-list__item-role-btn--active': user.isAdmin }"
                     @click.stop="handleToggleAdmin(user)"
-                    :title="user.role === 'admin' ? 'Снять права админа' : 'Назначить админом'"
+                    :title="user.isAdmin ? 'Снять права админа' : 'Назначить админом'"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
@@ -246,9 +257,13 @@ onUnmounted(() => {
                 </div>
                 <div class="admin-user-info__row">
                   <span class="admin-user-info__label">Роль:</span>
-                  <span class="admin-user-info__value admin-user-info__value--role" :class="selectedUser.role === 'admin' ? 'admin-user-info__value--admin' : ''">
-                        {{ selectedUser.role === 'admin' ? 'Администратор' : 'Пользователь' }}
+                  <span class="admin-user-info__value admin-user-info__value--role" :class="selectedUser.isAdmin ? 'admin-user-info__value--admin' : ''">
+                        {{ selectedUser.isAdmin ? 'Администратор' : 'Пользователь' }}
                       </span>
+                </div>
+                <div class="admin-user-info__row">
+                  <span class="admin-user-info__label">UID:</span>
+                  <span class="admin-user-info__value">{{ selectedUser.id }}</span>
                 </div>
               </div>
 

@@ -42,8 +42,12 @@ export const getOrderStatusClass = (status) => {
   return statusClasses[status] || 'status-unknown';
 }
 
-export const getImageUrl = (imageName) => {
-  return new URL(`../assets/img/${imageName}`, import.meta.url).href;
+export const getImageUrl = (imageURL) => {
+  if (imageURL.startsWith('http')) {
+    return imageURL;
+  }
+
+  return new URL(`../assets/img/${imageURL}`, import.meta.url).href;
 }
 
 export const getDateObj = (date) => {

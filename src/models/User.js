@@ -14,8 +14,10 @@ export class User {
   get shortName() {
     return this.displayName.split(' ')[0]; // Возвращаем только первое имя для краткого отображения
   }
-
   get formattedCreatedAt() {
     return formatDate(this.createdAt);
+  }
+  get isAdmin() {
+    return this.role === 'admin' || this.role === 'superadmin';
   }
 }
