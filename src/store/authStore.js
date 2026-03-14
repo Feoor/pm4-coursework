@@ -37,9 +37,6 @@ export const useAuthStore = defineStore("auth", () => {
     });
   };
 
-  // Вызываем инициализацию
-  initAuthListener();
-
   // Actions
   const waitForInitialization = async () => {
     if (!isAuthInitialized.value) {
@@ -150,6 +147,9 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   return {
+    // Init
+    initAuthListener,
+
     // State
     profile,
     isAuthInitialized,

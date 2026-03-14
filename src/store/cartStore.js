@@ -48,9 +48,6 @@ export const useCartStore = defineStore("cart", () => {
     }
   };
 
-  // Дожидаемся готовности auth, затем инициализируем
-  authStore.waitForInitialization().then(initializeCart);
-
   // При смене пользователя — переинициализируем
   watch(
     () => authStore.profile?.id,
@@ -178,6 +175,9 @@ export const useCartStore = defineStore("cart", () => {
   //  Return
 
   return {
+    // Init
+    initializeCart,
+
     // State
     cartGroups,
     isMenuOpen,
