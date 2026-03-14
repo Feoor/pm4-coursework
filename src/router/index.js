@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-import HomeView from '@/views/HomeView.vue'
-import EatlyMenu from '@/views/EatlyMenuView.vue'
-import ContactPage from '@/views/ContactPageView.vue'
-import SignUpView from '@/views/SignUpView.vue'
-import SignInView from '@/views/SignInView.vue'
-import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
-import RestaurantView from '@/views/RestaurantView.vue'
-import UserProfile from '@/views/UserProfileView.vue'
-import AdminPanelView from "@/views/AdminPanelView.vue";
 import {useAuthStore} from "@/store/authStore.js";
+
+const authStore = useAuthStore();
+
+const HomeView = () => import('@/views/HomeView.vue')
+const EatlyMenu = () => import('@/views/EatlyMenuView.vue')
+const ContactPage = () => import('@/views/ContactPageView.vue')
+const SignUpView = () => import('@/views/SignUpView.vue')
+const SignInView = () => import('@/views/SignInView.vue')
+const ForgotPasswordView = ()  => import('@/views/ForgotPasswordView.vue')
+const RestaurantView = () => import('@/views/RestaurantView.vue')
+const UserProfile = () => import('@/views/UserProfileView.vue')
+const AdminPanelView = () => import('@/views/AdminPanelView.vue');
 
 const routes = [
   { path: '/', component: HomeView },
@@ -29,8 +31,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
-
   // Если auth еще не инициализирован, ждем его готовности
   if (!authStore.isAuthInitialized) {
     authStore.waitForInitialization().then(() => {
