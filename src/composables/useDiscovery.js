@@ -1,8 +1,9 @@
 import { ref } from 'vue';
 import { db } from '@/firebase-config';
-import { collection, query, where, orderBy, limit, getDocs, doc } from 'firebase/firestore';
+import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { Restaurant } from '@/models/Restaurant';
 import { Dish } from '@/models/Dish';
+import {COLLECTIONS} from "@/constants/collections.js";
 
 export function useDiscovery() {
   const restaurants = ref([]);
@@ -14,7 +15,7 @@ export function useDiscovery() {
   const fetchRestaurants = async () => {
     try {
       const restQuery = query(
-        collection(db, 'restaurants'),
+        collection(db, COLLECTIONS.RESTAURANTS),
         orderBy('popularity', 'desc'),
         limit(10)
       );
@@ -30,7 +31,7 @@ export function useDiscovery() {
   const fetchDishes = async () => {
     try {
       const dishQuery = query(
-        collection(db, 'dishes'),
+        collection(db, COLLECTIONS.DISHES),
         orderBy('popularity', 'desc'),
         limit(10)
       );
