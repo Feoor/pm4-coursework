@@ -51,6 +51,10 @@ defineProps({
     line-height: 133%;
     color: #8e97a6;
   }
+
+  .card-img-top {
+    height: 175px;
+  }
 }
 
 @media screen and (max-width: 1199.98px) {

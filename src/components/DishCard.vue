@@ -32,7 +32,7 @@ const handleShowDetails = () => {
   <div class="dish-card card h-100">
     <!-- Для preview -->
     <router-link v-if="mode === 'preview'" :to="`/restaurant/${dish.restaurant.id}`">
-      <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image">
+      <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">
 
       <div class="card-body">
         <span :class="`badge ${getBadgeClass(dish.badge)}`">{{ getBadgeText(dish.badge) }}</span>
