@@ -1,6 +1,53 @@
 <script setup>
+import { ref } from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import {userService} from '@/services/userService';
+
+const feedbackFullNameInput = ref('');
+const feedbackEmailInput = ref('');
+const feedbackComment = ref('');
+
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validateFullName = (fullName) => {
+  const fullNameRegex = /^[a-zA-Zа-яА-ЯёЁ\s]+$/;
+  return fullNameRegex.test(fullName);
+};
+
+const validateComment = (comment) => {
+  return comment.trim().length > 0;
+};
+
+const checkValidity = () => {
+  const isFullNameValid = validateFullName(feedbackFullNameInput.value);
+  const isEmailValid = validateEmail(feedbackEmailInput.value);
+  const isCommentValid = validateComment(feedbackComment.value);
+
+  return isFullNameValid && isEmailValid && isCommentValid;
+};
+
+const handleSubmit = async (event) => {
+
+  const form = event.target;
+  if (checkValidity()) {
+    const contactMessageId = await userService.sendContactForm({
+      name: feedbackFullNameInput.value,
+      email: feedbackEmailInput.value,
+      message: feedbackComment.value
+    });
+
+    alert('Ваше сообщение успешно отправлено!');
+    console.log('ID отправленного сообщения:', contactMessageId);
+    form.reset();
+  } else {
+    alert('Пожалуйста, заполните все поля корректно.');
+    form.classList.add('was-validated'); // Добавляем класс для отображения ошибок валидации
+  }
+};
 </script>
 
 <template>
@@ -25,22 +72,22 @@ import Footer from '@/components/Footer.vue'
               Поддержка
               <span class="highlight--purple">клиентов</span>
             </h2>
-            <form id="feedbackForm" class="contact__form needs-validation" novalidate>
+            <form id="feedbackForm" class="contact__form needs-validation" @submit.prevent="handleSubmit" novalidate>
               <div class="contact__form-input contact__form-input--text form-floating mb-4">
-                <input type="text" class="form-control" id="feedbackFullNameInput" placeholder="Имя Фамилия" required>
+                <input v-model="feedbackFullNameInput" type="text" class="form-control" id="feedbackFullNameInput" placeholder="Имя Фамилия" required>
                 <label for="feedbackFullNameInput">Имя Фамилия</label>
               </div>
               <div class="contact__form-input contact__form-input--email form-floating mb-5 mb-sm-4 mb-xl-5">
-                <input type="email" class="form-control" id="feedbackEmailInput" placeholder="Адрес электронной почты"
+                <input v-model="feedbackEmailInput" type="email" class="form-control" id="feedbackEmailInput" placeholder="Адрес электронной почты"
                   required>
                 <label for="feedbackEmailInput">Адрес электронной почты</label>
               </div>
               <div class="contact__form-input contact__form-input--textarea form-floating">
-                <textarea class="form-control" placeholder="Leave a comment here" id="feedbackComment"
+                <textarea v-model="feedbackComment" class="form-control" placeholder="Leave a comment here" id="feedbackComment"
                   required></textarea>
                 <label for="feedbackComment">Введите проблему или запрос</label>
               </div>
-              <button type="submit" class="contact__form-btn btn btn-primary w-100">Отправить</button>
+              <button class="contact__form-btn btn btn-primary w-100">Отправить</button>
             </form>
           </div>
 

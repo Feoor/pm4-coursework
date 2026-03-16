@@ -1,5 +1,5 @@
 import {auth, db} from "@/firebase-config";
-import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp, addDoc, collection } from "firebase/firestore";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { User } from "@/models/User";
 import { COLLECTIONS } from "@/constants/collections";
@@ -71,5 +71,19 @@ export const userService = {
    */
   async resetUserPassword(email) {
     return await sendPasswordResetEmail(auth, email);
+  },
+
+  async sendContactForm(data) {
+    const messageData = {
+      name: data.name,
+      email: data.email,
+      message: data.message,
+      userId: auth.currentUser ? auth.currentUser.uid : null,
+      createdAt: serverTimestamp(),
+    };
+
+    const docRef = await addDoc(collection(db, COLLECTIONS.CONTACT_MESSAGES), messageData);
+
+    return docRef.id; // Возвращаем ID созданного сообщения
   }
 }
