@@ -2,5 +2,6 @@ export const COLLECTIONS = {
   USERS: "users",
   ORDERS: "orders",
   RESTAURANTS: "restaurants",
-  DISHES: "dishes"
+  DISHES: "dishes",
+  CONTACT_MESSAGES: "contact_messages",
 }
