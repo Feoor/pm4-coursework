@@ -17,7 +17,6 @@ import {
 } from 'firebase/firestore';
 import {ORDER_STATUS} from '@/constants/orderStatus';
 import {COLLECTIONS} from '@/constants/collections';
-import {Dish} from "@/models/Dish.js";
 import {Order} from "@/models/Order.js";
 
 export const orderService = {
@@ -52,6 +51,7 @@ export const orderService = {
       createdAt: serverTimestamp(),
       status: ORDER_STATUS.PENDING,
       totalAmount: orderData.totalAmount,
+      // TODO: Стоит воспользоваться методов объекта Dish для получение плоского объекта блюда
       items: orderData.items.map(item => {
         const dish = item.dish || {};
         const restaurant = dish.restaurant || {};

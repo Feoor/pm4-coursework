@@ -31,7 +31,7 @@ export function useMenuFilters(initialRestaurants, initialDishes) {
         'price-high-low': () => b.price - a.price
       }
 
-      return options[selectedSortOption.value] ? options[selectedSortOption.value]() : 0;
+      return options[selectedSortOption.value] ? options[selectedSortOption.value]() : [];
     });
   });
 
@@ -54,7 +54,7 @@ export function useMenuFilters(initialRestaurants, initialDishes) {
         'rating': () => b.rating - a.rating,
       }
 
-      return options[selectedSortOption.value] ? options[selectedSortOption.value]() : 0;
+      return options[selectedSortOption.value] ? options[selectedSortOption.value]() : [];
     });
   });
 
