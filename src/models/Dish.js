@@ -13,8 +13,8 @@ export class Dish {
     this.image = dishData?.image || '';
     this.section = dishData.section || '';  
     this.restaurant = {
-      id: dishData.restaurant?.id || 'unknown',
-      name: dishData.restaurant?.name || 'unknown restaurant',
+      id: dishData.restaurant?.id || dishData.restaurantId || 'unknown',
+      name: dishData.restaurant?.name || dishData.restaurantName || 'unknown restaurant',
     }
   }
 
