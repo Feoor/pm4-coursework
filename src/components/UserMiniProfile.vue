@@ -3,6 +3,9 @@ import { useAuthStore } from '@/store/authStore'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
+// Icons
+import { ChevronDown, NotebookText, Heart, User, LogOut } from "@lucide/vue";
+
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -32,7 +35,7 @@ const goToProfile = () => {
 const handleLogout = async () => {
   isMenuOpen.value = false
   await authStore.logout()
-  router.push('/')
+  await router.push('/');
 }
 
 // Добавляем/удаляем слушатель клика
@@ -59,8 +62,7 @@ onBeforeUnmount(() => {
           :alt="authStore.profile?.displayName || 'User'"
         >
       </div>
-      <img src="@/assets/icons/arrow.svg"
-        alt="Arrow Icon"
+      <ChevronDown
         class="profile-trigger__arrow"
         :class="{ 'profile-trigger__arrow--open': isMenuOpen }"
       />
@@ -93,18 +95,15 @@ onBeforeUnmount(() => {
         <!-- Статистика -->
         <div class="profile-dropdown__stats">
           <div class="stat-item">
-            <div class="stat-icon">
-              <img src="@/assets/icons/empty-state_icon.svg" alt="Empty State Icon">
-            </div>
+            <NotebookText class="stat-icon"/>
+
             <div class="stat-text">
               <span class="stat-value">0</span>
               <span class="stat-label">Заказов</span>
             </div>
           </div>
           <div class="stat-item">
-            <div class="stat-icon">
-              <img src="@/assets/icons/heart.svg" alt="Heart Icon">
-            </div>
+            <Heart class="stat-icon"/>
             <div class="stat-text">
               <span class="stat-value">0</span>
               <span class="stat-label">Избранное</span>
@@ -119,14 +118,14 @@ onBeforeUnmount(() => {
         <div class="profile-dropdown__menu">
           <button class="menu-item" @click="goToProfile">
             <div class="menu-item__icon">
-              <img src="@/assets/icons/profile.svg" alt="Профиль">
+              <User />
             </div>
             <span class="menu-item__text">Мой профиль</span>
           </button>
 
           <button class="menu-item menu-item--danger" @click="handleLogout">
             <div class="menu-item__icon">
-              <img src="@/assets/icons/exit.svg" alt="Выход">
+              <LogOut />
             </div>
             <span class="menu-item__text">Выйти</span>
           </button>
@@ -272,20 +271,12 @@ onBeforeUnmount(() => {
       border-radius: 12px;
 
       .stat-icon {
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 20px;
+        height: 20px;
         background: #fff;
         border-radius: 8px;
         color: $purple;
         flex-shrink: 0;
-
-        img {
-          width: 16px;
-          height: 16px;
-        }
       }
 
       .stat-text {

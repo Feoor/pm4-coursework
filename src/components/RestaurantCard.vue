@@ -2,6 +2,9 @@
 import { getBadgeClass, getBadgeText } from '@/utils/helpers.js'
 import { Restaurant } from '@/models/Restaurant.js'
 
+// Icons
+import { Star } from '@lucide/vue'
+
 defineProps({
   restaurant: {
     type: Restaurant,
@@ -22,7 +25,7 @@ defineProps({
 
         <div class="restaurant-card__info d-flex align-items-center">
           <span class="me-1 me-xl-2">{{ restaurant.formattedDeliveryTime }} •</span>
-          <img src="@/assets/icons/purple_star.svg" alt="Purple star">
+          <Star size="24" fill="#6c5fbc" strokeWidth="0"/>
           <span class="ms-1">{{ restaurant.rating }}</span>
         </div>
       </div>

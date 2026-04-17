@@ -2,10 +2,18 @@
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 
+import { setLucideProps } from '@lucide/vue';
+
+setLucideProps({
+  strokeWidth: 1.5,
+});
+
 const { modalProps, onConfirm, onClose, isOpen } = useConfirmModal()
 </script>
 
 <template>
+<!-- TODO: Перейти на Tailwind CSS -->
+<!-- TODO: Переделать все иконки на lucide icons -->
   <router-view />
 
   <!-- Глобальное модальное окно подтверждения -->

@@ -2,6 +2,9 @@
 import { getBadgeClass, getBadgeText } from '@/utils/helpers'
 import { Dish } from '@/models/Dish.js'
 
+// Icons
+import { Star } from '@lucide/vue';
+
 const props = defineProps({
   dish: {
     type: Dish,
@@ -40,7 +43,7 @@ const handleShowDetails = () => {
 
         <div class="dish-card__info d-flex align-items-center mb-2">
           <span class="me-1 me-xl-2">{{ dish.formattedDeliveryTime }} •</span>
-          <img src="@/assets/icons/purple_star.svg" alt="Purple star">
+          <Star size="24" fill="#6c5fbc" strokeWidth="0" />
           <span class="ms-1">{{ dish.rating }}</span>
         </div>
 
@@ -60,7 +63,7 @@ const handleShowDetails = () => {
 
         <div class="dish-card__info d-flex align-items-center mb-2">
           <span class="me-2">{{ dish.formattedDeliveryTime }} •</span>
-          <img src="@/assets/icons/purple_star.svg" alt="Purple star">
+          <Star size="24" fill="#6c5fbc" strokeWidth="0" />
           <span class="ms-1">{{ dish.rating }}</span>
         </div>
         <h5 class="dish-card__price menu-section__dish-price">{{ dish.formattedPrice }}</h5>

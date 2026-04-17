@@ -10,6 +10,9 @@ import { getImageUrl } from '@/utils/helpers'
 import { Restaurant } from '@/models/Restaurant'
 import { Dish } from '@/models/Dish'
 
+// Icons
+import { Star, ArrowRight } from "@lucide/vue";
+
 const restaurants = ref([
   new Restaurant({
     id: 'GrBB4fljG8I7axtTP4GH',
@@ -146,7 +149,7 @@ const reviews = ref([
                   <img class="hero__review-logo" src="@/assets/img/trustpilot_logo.svg" alt="Trust-pilot logo">
 
                   <div class="hero__review-stars">
-                      <img v-for="star in 5" :key="star" src="@/assets/icons/full_star.svg" alt="star">
+                      <Star v-for="star in 5" :key="star" size="18" fill="#FDCC0D" strokeWidth="0"/>
                   </div>
 
                   <div class="hero__review-counts">
@@ -222,7 +225,10 @@ const reviews = ref([
                 </li>
               </ul>
 
-              <button class="app-download__btn">Скачать</button>
+              <button class="app-download__btn group">
+                Скачать
+                <ArrowRight class="inline-block transition-transform group-hover:translate-x-2" />
+              </button>
             </div>
           </div>
 
@@ -250,9 +256,10 @@ const reviews = ref([
             </div>
 
             <!-- Переход на страницу меню -->
-            <div class="col-12 text-end">
-              <router-link to="/menu" class="view-all">Посмотреть все</router-link>
-            </div>
+            <router-link to="/menu" class="view-all group flex align-items-center justify-content-end">
+              <span class="group-hover:underline underline-offset-3">Посмотреть все</span>
+              <ArrowRight class="transition-transform group-hover:translate-x-2" size="28"/>
+            </router-link>
 
           </div>
 
@@ -278,9 +285,10 @@ const reviews = ref([
               />
             </div>
             <!-- Переход на страницу меню -->
-            <div class="col-12 text-end">
-              <router-link to="/menu" class="view-all">Посмотреть все</router-link>
-            </div>
+            <router-link to="/menu" class="view-all group flex align-items-center justify-content-end">
+              <span class="group-hover:underline underline-offset-3">Посмотреть все</span>
+              <ArrowRight class="transition-transform group-hover:translate-x-2" size="28"/>
+            </router-link>
 
           </div>
 
@@ -360,35 +368,11 @@ const reviews = ref([
 .view-all {
   position: relative;
   z-index: 1; /* Чтобы тень не перекрывала текст */
-  margin-top: 65px;
-  padding-right: 40px;
+  margin-top: 24px;
   font-family: $font-family, sans-serif;
   font-weight: 500;
   font-size: 20px;
-  line-height: 226%;
-  letter-spacing: -0.01em;
   color: #acadb9;
-
-  &::after {
-    display: inline-block;
-    content: "";
-    width: 24px;
-    height: 24px;
-    background: url("@/assets/icons/gray_right_arrow.svg") no-repeat;
-    background-size: contain;
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    transition: transform .2s;
-  }
-  &:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    &::after {
-      transform: translateX(8px) translateY(-50%);
-    }
-  }
 }
 
 .hero__wrapper {
@@ -463,7 +447,6 @@ const reviews = ref([
         .hero__review-stars {
           display: flex;
           gap: 4px;
-          width: 96px;
         }
         .hero__review-counts {
           font-family: $font5, sans-serif;
@@ -649,7 +632,7 @@ const reviews = ref([
     .app-download__btn {
       position: relative;
       width: max-content;
-      padding: 1.25rem 68px 1.25rem 26px;
+      padding: 1.25rem 24px;
       border-radius: 15px;
       background: $purple;
       border: none;
@@ -662,19 +645,6 @@ const reviews = ref([
       color: #fff;
       transition: background .3s;
 
-      &::after {
-        display: inline-block;
-        content: "";
-        width: 30px;
-        height: 30px;
-        background: url("@/assets/icons/right_arrow.svg") no-repeat;
-        background-size: contain;
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-45%);
-        transition: transform .2s;
-      }
       &::before {
         display: inline-block;
         content: "";
@@ -689,9 +659,6 @@ const reviews = ref([
       }
       &:hover {
         background: $purple-hover;
-      }
-      &:hover::after {
-        transform: translateX(8px) translateY(-45%);
       }
     }
   }
@@ -1009,11 +976,6 @@ const reviews = ref([
         padding: 1rem 3rem 1rem 1.5rem;
         font-size: 18px;
 
-        &::after {
-          width: 24px;
-          height: 24px;
-          right: 14px;
-        }
         &::before {
           width: 110px;
           height: 44px;
@@ -1227,11 +1189,6 @@ const reviews = ref([
         padding: 1.25rem 3.5rem 1.25rem 1.75rem;
         font-size: 18px;
 
-        &::after {
-          width: 28px;
-          height: 28px;
-          right: 14px;
-        }
         &::before {
           width: 140px;
           height: 52px;

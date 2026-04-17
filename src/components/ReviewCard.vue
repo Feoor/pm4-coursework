@@ -1,5 +1,8 @@
 <script setup>
-defineProps({
+// Icons
+import { Star } from '@lucide/vue';
+
+const props = defineProps({
   review: {
     type: Object,
     required: true
@@ -24,8 +27,8 @@ defineProps({
         "{{ review.text }}"
       </p>
 
-      <div class="review-card__rating">
-          <img v-for="i in review.rating" :key="i" src="@/assets/icons/full_star.svg" alt="Full star">
+      <div class="flex align-items-center mt-3">
+          <Star v-for="i in review.rating" :key="i" size="24" fill="#FDCC0D" strokeWidth="0"/>
       </div>
     </div>
   </div>

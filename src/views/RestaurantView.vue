@@ -12,6 +12,9 @@ import { useRestaurant } from '@/composables/useRestaurant';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
 
+// Icons
+import { Star } from '@lucide/vue';
+
 const route = useRoute();
 const { restaurant, isLoading, menu, popularDishes, fetchRestaurantData } = useRestaurant();
 const authStore = useAuthStore();
