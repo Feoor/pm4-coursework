@@ -14,6 +14,9 @@ import {usePagination} from "@/composables/usePagination.js";
 import {orderService} from "@/services/orderService.js";
 import OrderDetailsModal from '@/components/modals/OrderDetailsModal.vue'
 
+// Icons
+import { Pen, BookDashed } from '@lucide/vue';
+
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -276,8 +279,8 @@ onUnmounted(() => {
                   alt="Avatar"
                   class="avatar-image"
                 >
-                <button class="avatar-edit-btn" @click="handleEditProfilePicture">
-                  <img src="@/assets/icons/pen_icon.svg" alt="Редактировать аватар">
+                <button class="avatar-edit-btn p-2" @click="handleEditProfilePicture">
+                  <Pen class="text-white" size="24"/>
                 </button>
               </div>
             </div>
@@ -400,9 +403,9 @@ onUnmounted(() => {
 
             <div class="info-card__body">
               <!-- Пустое состояние -->
-              <div v-if="ordersTotalCount === 0" class="empty-state">
-                <div class="empty-state__icon">
-                  <img src="@/assets/icons/empty-state_icon.svg" alt="Пустое состояние">
+              <div v-if="true" class="empty-state">
+                <div class="flex justify-center mb-4">
+                  <BookDashed size="48" class="text-[#6c5fbc]"/>
                 </div>
                 <h5>У вас пока нет заказов</h5>
                 <p>Ваши заказы будут отображаться здесь</p>
@@ -492,8 +495,6 @@ onUnmounted(() => {
         position: absolute;
         bottom: 5px;
         right: 5px;
-        width: 40px;
-        height: 40px;
         background: $purple;
         border: 3px solid #fff;
         border-radius: 50%;

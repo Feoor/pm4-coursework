@@ -9,6 +9,9 @@ import { getImageUrl } from '@/utils/helpers'
 import { useMenuFilters } from '@/composables/useMenuFilters';
 import { useDiscovery } from '@/composables/useDiscovery';
 
+//
+import { Plus } from '@lucide/vue';
+
 const faqItems = ref([
   {
     id: 1,
@@ -274,8 +277,11 @@ const {
            >
             <!-- Вопрос, заголовок всегда виден -->
             <div class="faq__question-header">
-              <button class="faq__header-btn" @click="handleFaqClick(faq)">
-                {{ faq.question }}
+              <button class="faq__header-btn flex justify-content-between" @click="handleFaqClick(faq)">
+                <span>{{ faq.question }}</span>
+                <div class="bg-[#6c5fbc] h-fit rounded-full p-1">
+                  <Plus class="text-white transition-transform" :class="faq.active ? 'rotate-45' : ''"/>
+                </div>
               </button>
             </div>
 
@@ -720,20 +726,6 @@ const {
         font-size: 24px;
         text-align: left;
         color: #323142;
-
-        &::after {
-          display: inline-block;
-          content: "";
-          width: 36px;
-          height: 36px;
-          background: $purple url("@/assets/icons/plus.svg") no-repeat center;
-          border-radius: 50%;
-          position: absolute;
-          top: 50%;
-          right: 0;
-          transform: translateY(-50%) rotate(0deg);
-          transition: .3s transform;
-        }
       }
     }
 
@@ -752,14 +744,6 @@ const {
   }
   // Активный вопрос
   .faq__question--active {
-    .faq__question-header {
-      .faq__header-btn {
-        &::after {
-          transform: translateY(-50%) rotate(45deg);
-          background-color: $purple-hover;
-        }
-      }
-    }
     .faq__question-body {
       max-height: 200px;
       padding: .25rem .5rem 2.5rem;
@@ -1038,11 +1022,6 @@ const {
       .faq__question-header {
         .faq__header-btn {
           font-size: 20px;
-
-          &::after {
-              width: 30px;
-              height: 30px;
-          }
         }
       }
 
@@ -1146,11 +1125,6 @@ const {
         .faq__header-btn {
           font-size: 18px;
           padding: 1rem 2.5rem 1rem 0.5rem;
-
-          &::after {
-            width: 28px;
-            height: 28px;
-          }
         }
       }
 

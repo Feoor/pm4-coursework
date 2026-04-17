@@ -13,7 +13,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
 
 // Icons
-import { Star } from '@lucide/vue';
+import { Star, Bookmark } from '@lucide/vue';
 
 const route = useRoute();
 const { restaurant, isLoading, menu, popularDishes, fetchRestaurantData } = useRestaurant();
@@ -123,11 +123,14 @@ const addToCartFromModal = (dish) => {
 
               <div class="our-restaurants__restaurant-info d-flex align-items-center">
                 <span class="me-2">{{ restaurant.formattedDeliveryTime }}</span>
-                <img src="@/assets/icons/purple_star.svg" alt="Purple star">
+                <Star size="28" fill="#6c5fbc" strokeWidth="0"/>
                 <span class="ms-1">{{ restaurant.rating }}</span>
               </div>
 
-              <button class="restaurant-bookmark"></button>
+              <!-- FIXME: Bootstrap перекрывает стили Tailwind CSS -->
+              <button class="group bg-[#dbd9ee] p-2.75 transition-colors hover:bg-[#6c5fbc]" style="border-radius: calc(infinity * 1px)">
+                <Bookmark size="28" class="text-[#6c5fbc] transition-colors group-hover:text-[#dbd9ee]" />
+              </button>
             </div>
           </div>
 

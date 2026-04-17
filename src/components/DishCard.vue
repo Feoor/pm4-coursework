@@ -3,7 +3,7 @@ import { getBadgeClass, getBadgeText } from '@/utils/helpers'
 import { Dish } from '@/models/Dish.js'
 
 // Icons
-import { Star } from '@lucide/vue';
+import { Star, Plus, Heart } from '@lucide/vue';
 
 const props = defineProps({
   dish: {
@@ -53,7 +53,9 @@ const handleShowDetails = () => {
 
     <!-- Для full -->
     <div v-else @click="handleShowDetails">
-      <button class="dish-card__favorite-btn" @click.stop="handleFavoriteClick"></button>
+      <button class="absolute top-3 right-3 p-1.5 transition-colors hover:bg-gray-400/25" style="border-radius: 50%" @click.stop="handleFavoriteClick">
+        <Heart class="text-red-500" />
+      </button>
 
       <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">
 
@@ -69,7 +71,9 @@ const handleShowDetails = () => {
         <h5 class="dish-card__price menu-section__dish-price">{{ dish.formattedPrice }}</h5>
 
         <!-- Кнопка "Добавить в корзину" -->
-        <button class="dish-card__cart-btn add-to-cart" @click.stop="handleAddToCart"></button>
+        <button class="absolute bg-[#323142] bottom-5 right-5 rounded-3 p-1.5 transition-colors hover:bg-[#6c5fbc]" @click.stop="handleAddToCart">
+          <Plus class="text-white" size="28" />
+        </button>
       </div>
     </div>
   </div>
@@ -80,7 +84,7 @@ const handleShowDetails = () => {
   flex: 0 0 auto;
   scroll-snap-align: start;
   width: 225px;
-  padding: 37px 20px 26px;
+  padding: 37px 20px 20px;
   border: 2px solid #f4f4f4 !important;
   border-radius: 30px;
   position: relative;
@@ -95,34 +99,6 @@ const handleShowDetails = () => {
     border-radius: 30px 30px 0 0;
   }
 
-  /* Добавить блюдо в любимое */
-  .dish-card__favorite-btn {
-    position: absolute;
-    top: 14px;
-    right: 12px;
-    border: none;
-    border-radius: 50%;
-    background: transparent;
-    width: 40px;
-    height: 40px;
-    transition: background-color .2s;
-
-    &::after {
-      display: inline-block;
-      content: "";
-      max-width: 22px;
-      max-height: 19px;
-      background: url("@/assets/icons/heart.svg") no-repeat;
-      background-size: contain;
-      position: absolute;
-      margin: auto;
-      top: 0; left: 0; bottom: 0; right: 0;
-    }
-    &:hover {
-      background-color: #f7c5ba;
-    }
-  }
-
   .card-body {
     padding: 0;
 
@@ -133,34 +109,6 @@ const handleShowDetails = () => {
       line-height: 133%;
       color: #8e97a6;
     }
-
-    /* Добавить блюдо в корзину */
-    .dish-card__cart-btn {
-      position: absolute;
-      bottom: 26px;
-      right: 24px;
-      border: none;
-      border-radius: 9px;
-      background-color: #323142;
-      width: 44px;
-      height: 40px;
-      transition: background-color .2s;
-
-      &::after {
-        display: inline-block;
-        content: "";
-        width: 24px;
-        height: 24px;
-        background: url("@/assets/icons/plus.svg") no-repeat;
-        background-size: contain;
-        position: absolute;
-        margin: auto;
-        top: 0; left: 0; bottom: 0; right: 0;
-      }
-      &:hover {
-        background-color: $purple;
-      }
-    }
   }
 }
 
@@ -170,11 +118,6 @@ const handleShowDetails = () => {
   .dish-card {
     width: 175px;
     padding: 1rem;
-
-    .dish-card__favorite-btn {
-      top: 8px;
-      right: 8px;
-    }
 
     h5 {
       font-size: 22px;
@@ -188,13 +131,6 @@ const handleShowDetails = () => {
           width: 23px;
           height: 23px;
         }
-      }
-
-      .add-to-cart {
-        width: 40px;
-        height: 36px;
-        right: 16px;
-        bottom: 20px;
       }
     }
   }
@@ -211,17 +147,6 @@ const handleShowDetails = () => {
       font-size: 24px;
     }
 
-    .dish-card__favorite-btn {
-      top: 12px;
-      width: 35px;
-      height: 35px;
-
-      &::after {
-        width: 23px;
-        height: 19px;
-      }
-    }
-
     .card-body {
       .dish-card__info {
         font-size: 18px;
@@ -230,11 +155,6 @@ const handleShowDetails = () => {
           width: 24px;
           height: 24px;
         }
-      }
-
-      .dish-card__cart-btn {
-        width: 40px;
-        height: 36px;
       }
     }
   }
