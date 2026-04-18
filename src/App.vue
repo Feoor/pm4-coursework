@@ -13,7 +13,6 @@ const { modalProps, onConfirm, onClose, isOpen } = useConfirmModal()
 
 <template>
 <!-- TODO: Перейти на Tailwind CSS -->
-<!-- TODO: Переделать все иконки на lucide icons -->
   <router-view />
 
   <!-- Глобальное модальное окно подтверждения -->

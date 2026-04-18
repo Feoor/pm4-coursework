@@ -1,13 +1,15 @@
 import { ref, computed } from 'vue';
 import { db } from '@/firebase-config';
-import { collection, query, where, orderBy, doc, getDocs, getDoc, } from 'firebase/firestore';
+import { collection, query, where, doc, getDocs, getDoc, } from 'firebase/firestore';
 import { Restaurant } from '@/models/Restaurant';
 import { Dish } from '@/models/Dish';
+import { useRouter } from "vue-router";
 
 export function useRestaurant() {
   const restaurant = ref(null);
   const allDishes = ref([]);
   const isLoading = ref(false);
+  const router = useRouter();
 
   const fetchRestaurantData = async (restaurantId) => {
     isLoading.value = true;
@@ -17,7 +19,8 @@ export function useRestaurant() {
       const restaurantDoc = await getDoc(doc(db, 'restaurants', restaurantId));
       
       if (!restaurantDoc.exists()) {
-        throw new Error('Restaurant not found');
+        console.warn('Restaurant not found');
+        await router.replace('/not-found'); // Перенаправляем на страницу 404 если ресторан не найден
       }
       restaurant.value = new Restaurant({ id: restaurantDoc.id, ...restaurantDoc.data() });
 
@@ -38,8 +41,8 @@ export function useRestaurant() {
         const data = doc.data();
         return new Dish({ id: doc.id, ...data, restaurant: { id: restaurantId, name: restaurant.value.name } });
       });
-    } catch (err) {
-      console.error('Error fetching restaurant data:', err);
+    } catch (error) {
+      console.error(error);
     } finally {
       isLoading.value = false;
     }

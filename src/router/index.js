@@ -3,6 +3,7 @@ import {useAuthStore} from "@/store/authStore.js";
 
 const authStore = useAuthStore();
 
+const NotFound = () => import('@/views/NotFoundView.vue')
 const HomeView = () => import('@/views/HomeView.vue')
 const EatlyMenu = () => import('@/views/EatlyMenuView.vue')
 const ContactPage = () => import('@/views/ContactPageView.vue')
@@ -14,6 +15,7 @@ const UserProfile = () => import('@/views/UserProfileView.vue')
 const AdminPanelView = () => import('@/views/AdminPanelView.vue');
 
 const routes = [
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
   { path: '/', component: HomeView },
   { path: '/menu', component: EatlyMenu },
   { path: '/contacts', component: ContactPage },
