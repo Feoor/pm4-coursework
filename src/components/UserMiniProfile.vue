@@ -1,5 +1,7 @@
 <script setup>
 import { useAuthStore } from '@/store/authStore'
+import { favoritesService } from "../services/favoritesService.js";
+import { orderService } from "../services/orderService.js";
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -12,6 +14,10 @@ const router = useRouter()
 // Управление состоянием выпадающего меню
 const isMenuOpen = ref(false)
 const menuRef = ref(null)
+
+// Счет заказов и избранных
+const ordersCount = ref(0);
+const favoritesCount = ref(0);
 
 // Переключение меню
 const toggleMenu = () => {
@@ -39,12 +45,14 @@ const handleLogout = async () => {
 }
 
 // Добавляем/удаляем слушатель клика
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
+onMounted(async () => {
+  document.addEventListener('click', handleClickOutside);
+  ordersCount.value = await orderService.getOrdersCountForUser(authStore.profile.id);
+  favoritesCount.value = (await favoritesService.getTotalFavoritesCount(authStore.profile.id)).totalCount;
 })
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('click', handleClickOutside);
 })
 </script>
 
@@ -98,14 +106,14 @@ onBeforeUnmount(() => {
             <NotebookText class="stat-icon"/>
 
             <div class="stat-text">
-              <span class="stat-value">0</span>
+              <span class="stat-value">{{ ordersCount }}</span>
               <span class="stat-label">Заказов</span>
             </div>
           </div>
           <div class="stat-item">
             <Heart class="stat-icon"/>
             <div class="stat-text">
-              <span class="stat-value">0</span>
+              <span class="stat-value">{{ favoritesCount }}</span>
               <span class="stat-label">Избранное</span>
             </div>
           </div>

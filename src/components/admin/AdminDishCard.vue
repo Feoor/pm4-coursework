@@ -21,7 +21,7 @@ const handleDeleteDish = (dishId) => {
 <template>
   <div class="admin-dishes-list__item">
     <div class="admin-dishes-list__item-image">
-      <img :src="props.dish.imageUrl" :alt="props.dish.name">
+      <img :src="props.dish.image" :alt="props.dish.name">
     </div>
     <div class="admin-dishes-list__item-info">
       <div class="admin-dishes-list__item-name">{{ props.dish.name }}</div>

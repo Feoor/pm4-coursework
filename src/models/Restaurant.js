@@ -9,7 +9,7 @@ export class Restaurant {
     this.rating = restaurantData.rating || 0;
     this.deliveryTime = restaurantData.delivery_time || 0;
     this.popularity = restaurantData.popularity || 0;
-    this.imageUrl = restaurantData.image ? getImageUrl(restaurantData.image) : '';
+    this.image = restaurantData.image ? getImageUrl(restaurantData.image) : '';
   }
 
   get formattedDeliveryTime() {
@@ -44,7 +44,7 @@ export class Restaurant {
       rating: this.rating,
       delivery_time: this.deliveryTime,
       popularity: this.popularity,
-      image: this.imageUrl ? this.imageUrl.split('/').pop() : '',
+      image: this.image ? this.image.split('/').pop() : '',
     };
   }
 

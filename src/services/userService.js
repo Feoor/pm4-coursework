@@ -4,7 +4,6 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { User } from "@/models/User";
 import { COLLECTIONS } from "@/constants/collections";
 
-
 export const userService = {
   /**
    * Создает профиль пользователя в Firestore

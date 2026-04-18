@@ -26,7 +26,7 @@ export class CartItem {
     return this.dish.name;
   }
   get imageUrl() {
-    return this.dish.imageUrl;
+    return this.dish.image;
   }
   get id() {
     return this.dish.id;

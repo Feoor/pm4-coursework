@@ -17,7 +17,7 @@ defineProps({
   <div class="restaurant-card card h-100">
 
     <router-link :to="`/restaurant/${restaurant.id}`">
-      <img :src="restaurant.imageUrl" :alt="restaurant.name" class="card-img-top">
+      <img :src="restaurant.image" :alt="restaurant.name" class="card-img-top">
 
       <div class="card-body">
         <span :class="`badge ${getBadgeClass(restaurant.badge)} mb-1`">{{ getBadgeText(restaurant.badge) }}</span>

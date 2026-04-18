@@ -36,7 +36,7 @@ const {
 
 const restaurantForm = ref({
   name: '',
-  imageUrl: '',
+  image: '',
   rating: '',
   deliveryTime: '',
   badge: '',
@@ -57,7 +57,7 @@ const handleAddRestaurant = async () => {
   // После успешного добавления ресторана, очищаем форму и добавляем новый ресторан в список
   restaurantForm.value = {
     name: '',
-    imageUrl: '',
+    image: '',
     rating: '',
     deliveryTime: '',
     badge: '',

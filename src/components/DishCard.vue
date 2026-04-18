@@ -1,6 +1,8 @@
 <script setup>
+import { computed } from 'vue'
 import { getBadgeClass, getBadgeText } from '@/utils/helpers'
 import { Dish } from '@/models/Dish.js'
+import { useFavoritesStore } from "../store/favoritesStore.js";
 
 // Icons
 import { Star, Plus, Heart } from '@lucide/vue';
@@ -15,6 +17,10 @@ const props = defineProps({
     default: 'preview' // 'preview' - отображение карточки как реклама, 'full' - отображение карточки на странице ресторана
   }
 })
+
+const favoriteStore = useFavoritesStore();
+
+const isFavorite = computed(() => favoriteStore.dishInFavorite(props.dish.id));
 
 const emit = defineEmits(['add-to-cart', 'add-to-favorites', 'show-details'])
 
@@ -54,7 +60,7 @@ const handleShowDetails = () => {
     <!-- Для full -->
     <div v-else @click="handleShowDetails">
       <button class="absolute top-3 right-3 p-1.5 transition-colors hover:bg-gray-400/25" style="border-radius: 50%" @click.stop="handleFavoriteClick">
-        <Heart class="text-red-500" />
+        <Heart class="text-red-500" :fill="isFavorite ? 'currentColor' : 'none'" />
       </button>
 
       <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">

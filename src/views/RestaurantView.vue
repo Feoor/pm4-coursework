@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
@@ -11,6 +11,7 @@ import { getBadgeClass, getBadgeText } from '@/utils/helpers';
 import { useRestaurant } from '@/composables/useRestaurant';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
+import { useFavoritesStore } from "../store/favoritesStore.js";
 
 // Icons
 import { Star, Bookmark } from '@lucide/vue';
@@ -19,20 +20,51 @@ const route = useRoute();
 const { restaurant, isLoading, menu, popularDishes, fetchRestaurantData } = useRestaurant();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
+const favoritesStore = useFavoritesStore();
 const isOrderPaymentModalOpen = ref(false);
 const currentOrder = ref(null);
 const isDishDetailsModalOpen = ref(false);
 const selectedDish = ref(null);
 
 // Загружаем данные ресторана при монтировании компонента (используем ID из URL)
-onMounted(() => fetchRestaurantData(route.params.id));
+onMounted(() => {
+  fetchRestaurantData(route.params.id)
+  favoritesStore.initialState();
+});
+
+const isRestaurantFavorite = computed(() => favoritesStore.restaurantInFavorite(restaurant.value?.id));
 
 const addToCart = (dish) => {
   cartStore.addToCart(dish);
 }
 
-const addToFavorites = (dish) => {
-  console.log('Добавлено в избранное:', dish);
+const toggleRestaurantFavorite = async (restaurant) => {
+  if (!authStore.isAuthenticated()) {
+    alert('Пожалуйста, войдите в свой аккаунт, чтобы добавить ресторан в избранное.');
+    return;
+  }
+
+  const res = await favoritesStore.toggleRestaurantFavorite(restaurant);
+  if (res.action === 'added') {
+    alert(`Ресторан "${restaurant.name}" добавлен в избранное!`);
+  } else {
+    alert(`Ресторан "${restaurant.name}" удален из избранного!`);
+  }
+}
+
+const toggleDishFavorite = async (dish) => {
+  if (!authStore.isAuthenticated()) {
+    alert('Пожалуйста, войдите в свой аккаунт, чтобы добавить блюдо в избранное.');
+    return;
+  }
+
+  const res = await favoritesStore.toggleDishFavorite(dish);
+
+  if (res.action === 'added') {
+    alert(`Блюдо "${dish.name}" добавлено в избранное!`);
+  } else {
+    alert(`Блюдо "${dish.name}" удалено из избранного!`);
+  }
 }
 
 const handleCloseOrderPaymentModal = () => {
@@ -113,7 +145,7 @@ const addToCartFromModal = (dish) => {
       <div class="container-sm">
         <div class="restaurant-hero__wrapper">
           <div v-if="!isLoading && restaurant" class="card">
-            <img :src="restaurant.imageUrl" :alt="restaurant.name" class="card-img-top">
+            <img :src="restaurant.image" :alt="restaurant.name" class="card-img-top">
 
             <div
               class="card-body d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between"
@@ -128,8 +160,16 @@ const addToCartFromModal = (dish) => {
               </div>
 
               <!-- FIXME: Bootstrap перекрывает стили Tailwind CSS -->
-              <button class="group bg-(--primary-translucent) p-2.75 transition-colors hover:bg-(--primary)" style="border-radius: calc(infinity * 1px)">
-                <Bookmark size="28" class="text-(--primary) transition-colors group-hover:text-(--primary-translucent)" />
+              <button
+                  class="group bg-(--primary-translucent) p-2.75 transition-colors hover:bg-(--primary)"
+                  style="border-radius: calc(infinity * 1px)"
+                  @click="toggleRestaurantFavorite(restaurant)"
+              >
+                <Bookmark
+                    size="28"
+                    class="text-(--primary) transition-colors group-hover:text-(--primary-translucent)"
+                    :fill="isRestaurantFavorite ? 'currentColor' : 'none'"
+                />
               </button>
             </div>
           </div>
@@ -177,7 +217,7 @@ const addToCartFromModal = (dish) => {
               :dish="dish"
               :mode="'full'"
               @add-to-cart="addToCart"
-              @add-to-favorites="addToFavorites"
+              @add-to-favorites="toggleDishFavorite"
               @show-details="showDishDetails"
             />
           </div>
@@ -204,7 +244,7 @@ const addToCartFromModal = (dish) => {
               :dish="dish"
               :mode="'full'"
               @add-to-cart="addToCart"
-              @add-to-favorites="addToFavorites"
+              @add-to-favorites="toggleDishFavorite"
               @show-details="showDishDetails"
             />
           </div>

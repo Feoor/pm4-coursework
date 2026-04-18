@@ -36,7 +36,7 @@ export const adminService = {
         name: restaurantData.name,
         categories: normalizedCategories,
         delivery_time: normalizedDeliveryTime, // FIXME: Привести в camelCase(Firestore)
-        image: restaurantData.imageUrl,
+        image: restaurantData.image,
         popularity: 1, // Инициализируем популярность новым рестораном
         badge_type: restaurantData.badge, // FIXME: Привести в camelCase(Firestore)
         rating: restaurantData.rating,
@@ -85,7 +85,7 @@ export const adminService = {
         name: dishData.name,
         categories: normalizedCategories,
         delivery_time: normalizedDeliveryTime,
-        image: dishData.imageUrl,
+        image: dishData.image,
         price: dishData.price,
         rating: dishData.rating,
         badge_type: dishData.badge,

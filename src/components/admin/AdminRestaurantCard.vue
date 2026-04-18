@@ -21,7 +21,7 @@ const handleDeleteRestaurant = (id) => {
 <template>
   <div class="admin-list__item">
     <div class="admin-list__item-image">
-      <img :src="props.rest.imageUrl" :alt="props.rest.name">
+      <img :src="props.rest.image" :alt="props.rest.name">
     </div>
     <div class="admin-list__item-info">
       <div class="admin-list__item-name">{{ props.rest.name }}</div>

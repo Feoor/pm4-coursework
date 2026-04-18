@@ -12,6 +12,7 @@ import {userService} from '@/services/userService'
 import {formatPhoneNumber} from '@/utils/formatters'
 import {usePagination} from "@/composables/usePagination.js";
 import {orderService} from "@/services/orderService.js";
+import {favoritesService} from "../services/favoritesService.js";
 import OrderDetailsModal from '@/components/modals/OrderDetailsModal.vue'
 
 // Icons
@@ -113,6 +114,9 @@ const handleLogout = () => {
   authStore.logout();
   router.push('/sign-in');
 }
+
+// Кол-во любимых блюд и ресторанов
+const countFavorites = ref(0);
 
 // История заказов
 const isPaymentModalOpen = ref(false)
@@ -223,6 +227,9 @@ onMounted(async () => {
   // Пагинация заказов
   await fetchTotalCount();
   await nextPage(); // Загружаем первую страницу заказов при загрузке профиля
+
+  // Кол-во избранных
+  countFavorites.value = (await favoritesService.getTotalFavoritesCount(authStore.profile.id)).totalCount;
 });
 
 onUnmounted(() => {
@@ -303,7 +310,7 @@ onUnmounted(() => {
               </div>
               <div class="stat-divider"></div>
               <div class="stat-item">
-                <div class="stat-value">0</div>
+                <div class="stat-value">{{ countFavorites }}</div>
                 <div class="stat-label">Избранное</div>
               </div>
             </div>
