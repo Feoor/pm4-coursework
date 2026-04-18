@@ -12,6 +12,7 @@ export const formatCategories = (categories) => {
   const categoryTexts = {
     'pizza': 'Пицца',
     'sushi': 'Суши',
+    'fish': 'Рыба',
     'burger': 'Бургеры',
     'chicken': 'Курица',
     'salads': 'Салаты',
