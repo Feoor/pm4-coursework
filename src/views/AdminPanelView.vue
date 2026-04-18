@@ -2,20 +2,13 @@
 import {ref, onMounted, watch, onUnmounted} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import PaginationControls from "@/components/PaginationControls.vue";
-import AdminRestaurantCard from "@/components/admin/AdminRestaurantCard.vue";
-import AdminDishCard from "@/components/admin/AdminDishCard.vue";
-import AdminUserCard from "@/components/admin/AdminUserCard.vue";
-import { formatDate } from "@/utils/formatters.js";
-import { getBadgeText } from "@/utils/helpers.js";
-import { adminService } from "@/services/adminService.js";
-import { orderService } from "@/services/orderService.js";
 import { useConfirmModal } from "@/composables/useConfirmModal.js";
-import { usePagination } from "@/composables/usePagination.js";
-import { Dish } from "@/models/Dish.js";
 import AdminRestaurantsTab from "@/components/admin/AdminRestaurantsTab.vue";
 import AdminDishesTab from "@/components/admin/AdminDishesTab.vue";
 import AdminUsersTab from "@/components/admin/AdminUsersTab.vue";
+
+// Icons
+import { Utensils, CookingPot, Users } from "@lucide/vue";
 
 const { confirm } = useConfirmModal();
 
@@ -60,10 +53,7 @@ onMounted(async () => {
           @click="handleTabChange('restaurants')"
         >
           <!-- Иконка ресторана -->
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 21V7L12 3L21 7V21H3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M9 21V13H15V21" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          </svg>
+          <Utensils size="20" />
           Рестораны
         </button>
         <button
@@ -72,11 +62,7 @@ onMounted(async () => {
           @click="handleTabChange('menu')"
         >
           <!-- Иконка меню -->
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 6H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M4 18H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+          <CookingPot size="20" />
           Меню и блюда
         </button>
         <button
@@ -85,12 +71,7 @@ onMounted(async () => {
           @click="handleTabChange('users')"
         >
           <!-- Иконка пользователей -->
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
-            <path d="M23 21V19C22.9986 17.1771 21.765 15.5857 20 15.13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M16 3.13C17.7699 3.58317 19.0078 5.17799 19.0078 7.005C19.0078 8.83201 17.7699 10.4268 16 10.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <Users size="20" />
           Пользователи
         </button>
       </div>

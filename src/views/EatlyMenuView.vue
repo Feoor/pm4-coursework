@@ -9,8 +9,8 @@ import { getImageUrl } from '@/utils/helpers'
 import { useMenuFilters } from '@/composables/useMenuFilters';
 import { useDiscovery } from '@/composables/useDiscovery';
 
-//
-import { Plus } from '@lucide/vue';
+// Icons
+import { Plus, Search } from '@lucide/vue';
 
 const faqItems = ref([
   {
@@ -122,7 +122,10 @@ const {
               <div class="form-floating">
                 <input type="text" class="food-filter__search-input form-control" placeholder="Поиск"
                   v-model="searchQuery">
-                <label for="foodFilterSearchInput">Поиск...</label>
+                <label for="foodFilterSearchInput">
+                  <Search size="20" class="inline-block mr-1"/>
+                  Поиск
+                </label>
               </div>
 
               <div class="food-filter__display-filters col-12 btn-group" role="group">
@@ -279,7 +282,7 @@ const {
             <div class="faq__question-header">
               <button class="faq__header-btn flex justify-content-between" @click="handleFaqClick(faq)">
                 <span>{{ faq.question }}</span>
-                <div class="bg-[#6c5fbc] h-fit rounded-full p-1">
+                <div class="bg-(--primary) h-fit rounded-full p-1">
                   <Plus class="text-white transition-transform" :class="faq.active ? 'rotate-45' : ''"/>
                 </div>
               </button>
@@ -347,35 +350,22 @@ const {
     .form-floating {
       position: relative;
 
-      &::before {
-        display: inline-block;
-        content: "";
-        width: 35px;
-        height: 35px;
-        background: url("@/assets/icons/search.svg") no-repeat;
-        position: absolute;
-        z-index: 1;
-        top: 50%;
-        left: 16px;
-        transform: translateY(-50%);
-      }
       .food-filter__search-input {
         position: relative;
-        padding-left: 62px;
-        padding-right: 16px;
+        padding: 0 16px;
         margin-bottom: 32px;
         border-radius: 19px;
         border-color: #ededed;
         background: #ededed;
         font-family: $font-family, sans-serif;
         font-weight: 600;
-        font-size: 18px;
+        font-size: 16px;
         line-height: 117%;
         color: #18181b;
         transition: .2s all;
       }
       .food-filter__search-input ~ label {
-        padding-left: 70px;
+        padding-left: 16px;
 
         &::after {
           background: inherit;

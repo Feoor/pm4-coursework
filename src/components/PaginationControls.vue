@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 
+// Icons
+import { ChevronLeft, ChevronRight } from '@lucide/vue';
+
 const props = defineProps({
   currentPage: {
     type: Number,
@@ -50,9 +53,7 @@ const nextPage = () => {
       @click="prevPage"
       aria-label="Предыдущая страница"
     >
-      <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-        <path d="M6 1L1 6L6 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <ChevronLeft />
     </button>
 
     <!-- Текущая страница -->
@@ -75,9 +76,7 @@ const nextPage = () => {
       @click="nextPage"
       aria-label="Следующая страница"
     >
-      <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-        <path d="M1 1L6 6L1 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <ChevronRight />
     </button>
   </nav>
 </template>

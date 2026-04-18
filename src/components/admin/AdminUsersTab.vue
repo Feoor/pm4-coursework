@@ -1,13 +1,16 @@
 <script setup>
 import {formatDate} from "@/utils/formatters.js";
 import PaginationControls from "@/components/PaginationControls.vue";
-import AdminUserCard from "@/components/admin/AdminUserCard.vue";
+import AdminUserOrderCard from "@/components/admin/AdminUserOrderCard.vue";
 import {usePagination} from "@/composables/usePagination.js";
 import {useConfirmModal} from "@/composables/useConfirmModal.js";
 import {orderService} from "@/services/orderService.js";
 import {adminService} from "@/services/adminService.js";
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import {useAuthStore} from "@/store/authStore.js";
+
+// Icons
+import { SquareDashedMousePointer, Search, UserX, Star, Plus } from '@lucide/vue';
 
 const { confirm } = useConfirmModal();
 const authStore = useAuthStore();
@@ -155,19 +158,13 @@ onUnmounted(() => {
                   @input="handleSearchUsers"
               >
               <button class="btn btn-primary admin-form__btn-add" title="Найти" @click="handleSearchUsers">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                  <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+                <Search />
               </button>
             </div>
 
             <!-- Пустое состояние -->
-            <div v-if="users.length === 0" class="admin-empty">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
-              </svg>
+            <div v-if="users.length === 0" class="admin-empty flex flex-col items-center">
+              <UserX size="48"/>
               <p>Пользователей пока нет</p>
             </div>
 
@@ -196,9 +193,7 @@ onUnmounted(() => {
                     @click.stop="handleToggleAdmin(user)"
                     :title="user.isAdmin ? 'Снять права админа' : 'Назначить админом'"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                  </svg>
+                  <Star size="20" :fill="user.isAdmin ? '#6c5fbc' : 'none'" :strokeWidth="user.isAdmin ? '0' : '1.5'"/>
                 </button>
               </div>
             </div>
@@ -221,22 +216,14 @@ onUnmounted(() => {
             <div v-if="selectedUser" style="display: flex; align-items: center; gap: 8px;">
               <span class="admin-card__counter">{{ selectedUserOrdersCount }}</span>
               <button class="admin-users__back-btn" @click="handleDeselectUser" title="Вернуться к списку">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+                <Plus class="rotate-45"/>
               </button>
             </div>
           </div>
           <div class="admin-card__body">
             <!-- Подсказка, если пользователь не выбран -->
-            <div v-if="!selectedUser" class="admin-empty">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 3H21V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9 21H3V15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M21 3L14 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 21L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+            <div v-if="!selectedUser" class="admin-empty flex flex-col items-center">
+              <SquareDashedMousePointer size="48" />
               <p>Выберите пользователя из списка, чтобы просмотреть его заказы</p>
             </div>
 
@@ -283,7 +270,7 @@ onUnmounted(() => {
                     @prev-page="selectedUserPrevOrdersPage"
                 />
 
-                <AdminUserCard
+                <AdminUserOrderCard
                     v-for="order in selectedUserDisplayedOrders"
                     :key="order.id"
                     :order="order"

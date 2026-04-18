@@ -1,6 +1,9 @@
 <script setup>
 import {Dish} from "@/models/Dish.js";
 
+// Icons
+import { Trash2 } from '@lucide/vue';
+
 const props = defineProps({
   dish: {
     type: Dish,
@@ -30,13 +33,7 @@ const handleDeleteDish = (dishId) => {
 
     <!-- Иконка корзины для удаления -->
     <button class="admin-list__item-delete" @click="handleDeleteDish(props.dish.id)" title="Удалить">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M8 6V4C8 3.44772 8.44772 3 9 3H15C15.5523 3 16 3.44772 16 4V6" stroke="currentColor" stroke-width="2"/>
-        <path d="M5 6L6 20C6 20.5523 6.44772 21 7 21H17C17.5523 21 18 20.5523 18 20L19 6" stroke="currentColor" stroke-width="2"/>
-        <path d="M10 10V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M14 10V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
+      <Trash2 size="20" />
     </button>
   </div>
 </template>

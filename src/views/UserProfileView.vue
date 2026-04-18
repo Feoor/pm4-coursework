@@ -403,9 +403,9 @@ onUnmounted(() => {
 
             <div class="info-card__body">
               <!-- Пустое состояние -->
-              <div v-if="true" class="empty-state">
+              <div v-if="ordersTotalCount === 0" class="empty-state">
                 <div class="flex justify-center mb-4">
-                  <BookDashed size="48" class="text-[#6c5fbc]"/>
+                  <BookDashed size="48" class="text-(--primary)"/>
                 </div>
                 <h5>У вас пока нет заказов</h5>
                 <p>Ваши заказы будут отображаться здесь</p>

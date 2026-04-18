@@ -5,6 +5,9 @@ import { ORDER_STATUS } from '@/constants/orderStatus'
 import ModalLayout from "@/components/modals/ModalLayout.vue"
 import {Order} from "@/models/Order.js";
 
+// Icons
+import { MapPin, CreditCard, ReceiptText } from '@lucide/vue';
+
 const props = defineProps({
   isOpen: {
     type: Boolean,
@@ -81,10 +84,7 @@ const canPay = computed(() => {
         <div class="order-details__meta-grid">
           <div class="order-details__meta-item">
             <div class="order-details__meta-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z" stroke="currentColor" stroke-width="2"/>
-                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
-              </svg>
+              <MapPin />
             </div>
             <div class="order-details__meta-content">
               <span class="order-details__meta-label">Адрес доставки</span>
@@ -94,10 +94,7 @@ const canPay = computed(() => {
 
           <div class="order-details__meta-item">
             <div class="order-details__meta-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
-                <path d="M2 10H22" stroke="currentColor" stroke-width="2"/>
-              </svg>
+              <CreditCard />
             </div>
             <div class="order-details__meta-content">
               <span class="order-details__meta-label">Способ оплаты</span>
@@ -109,10 +106,7 @@ const canPay = computed(() => {
 
           <div v-if="order.paymentId" class="order-details__meta-item">
             <div class="order-details__meta-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-              </svg>
+              <ReceiptText />
             </div>
             <div class="order-details__meta-content">
               <span class="order-details__meta-label">ID транзакции</span>
@@ -137,10 +131,7 @@ const canPay = computed(() => {
             Закрыть
           </button>
           <button v-if="canPay" class="btn btn-primary" @click="handlePay">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
-              <path d="M2 10H22" stroke="currentColor" stroke-width="2"/>
-            </svg>
+            <CreditCard />
             Оплатить заказ
           </button>
         </div>

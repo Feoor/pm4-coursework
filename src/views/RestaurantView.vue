@@ -128,8 +128,8 @@ const addToCartFromModal = (dish) => {
               </div>
 
               <!-- FIXME: Bootstrap перекрывает стили Tailwind CSS -->
-              <button class="group bg-[#dbd9ee] p-2.75 transition-colors hover:bg-[#6c5fbc]" style="border-radius: calc(infinity * 1px)">
-                <Bookmark size="28" class="text-[#6c5fbc] transition-colors group-hover:text-[#dbd9ee]" />
+              <button class="group bg-(--primary-translucent) p-2.75 transition-colors hover:bg-(--primary)" style="border-radius: calc(infinity * 1px)">
+                <Bookmark size="28" class="text-(--primary) transition-colors group-hover:text-(--primary-translucent)" />
               </button>
             </div>
           </div>
@@ -227,107 +227,6 @@ const addToCartFromModal = (dish) => {
 </template>
 
 <style lang="scss" scoped>
-/* Добавить ресторан в избранное */
-.restaurant-bookmark {
-  width: 40px;
-  height: 40px;
-  position: absolute;
-  bottom: 16px;
-  right: 24px;
-  border: none;
-  border-radius: 50%;
-  background-color: #dbd9ee;
-  transition: background-color .2s;
-
-  &::after {
-    display: inline-block;
-    content: "";
-    max-width: 16px;
-    max-height: 21px;
-    background: url("@/assets/icons/bookmark.svg") no-repeat;
-    background-size: cover;
-    position: absolute;
-    margin: auto;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-
-  &:hover {
-    background-color: $purple;
-
-    &::after {
-      background: url("@/assets/icons/bookmark_white.svg") no-repeat;
-      background-size: cover;
-    }
-  }
-}
-
-/* Добавить блюдо в любимое */
-.dish-favorite {
-  position: absolute;
-  top: 14px;
-  right: 12px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  width: 40px;
-  height: 40px;
-  transition: background-color .2s;
-
-  &::after {
-    display: inline-block;
-    content: "";
-    max-width: 22px;
-    max-height: 19px;
-    background: url("@/assets/icons/heart.svg") no-repeat;
-    background-size: contain;
-    position: absolute;
-    margin: auto;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-
-  &:hover {
-    background-color: #f7c5ba;
-  }
-}
-
-/* Добавить блюдо в корзину */
-.add-to-cart {
-  position: absolute;
-  bottom: 26px;
-  right: 24px;
-  border: none;
-  border-radius: 9px;
-  background-color: #323142;
-  width: 44px;
-  height: 40px;
-  transition: background-color .2s;
-
-  &::after {
-    display: inline-block;
-    content: "";
-    width: 24px;
-    height: 24px;
-    background: url("@/assets/icons/plus.svg") no-repeat;
-    background-size: contain;
-    position: absolute;
-    margin: auto;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-
-  &:hover {
-    background-color: $purple;
-  }
-}
-
 // Корзина
 .cart-btn {
   padding: 17px 16px;
@@ -377,19 +276,6 @@ const addToCartFromModal = (dish) => {
         font-weight: 400;
         font-size: 26px;
         color: #8e97a6;
-      }
-
-      .restaurant-bookmark {
-        width: 62px;
-        height: 62px;
-        position: relative;
-        right: 0;
-        bottom: 0;
-
-        &::after {
-          max-width: 24px;
-          max-height: 32px;
-        }
       }
     }
   }
@@ -463,18 +349,6 @@ const addToCartFromModal = (dish) => {
 @media screen and (max-width: 1199.98px) {
 
   // Планшеты в горизонтальной ориентации, Ipad Pro (>= 1024px)
-  .dish-favorite {
-    top: 8px;
-    right: 8px;
-  }
-
-  .add-to-cart {
-    width: 40px;
-    height: 36px;
-    right: 16px;
-    bottom: 20px;
-  }
-
   .restaurant-hero__wrapper {
     padding-bottom: 24px;
 
@@ -494,13 +368,6 @@ const addToCartFromModal = (dish) => {
 
         .our-restaurants__restaurant-info {
           font-size: 28px;
-        }
-
-        .restaurant-bookmark {
-          &::after {
-            width: 24px;
-            height: 32px;
-          }
         }
       }
     }
@@ -535,17 +402,6 @@ const addToCartFromModal = (dish) => {
 @media screen and (max-width: 991.98px) {
 
   // Планшеты в вертикальной ориентации (>= 768px)
-  .dish-favorite {
-    top: 12px;
-    width: 35px;
-    height: 35px;
-
-    &::after {
-      width: 23px;
-      height: 19px;
-    }
-  }
-
   .cart-btn-section--md-position {
     bottom: 20px;
   }
@@ -568,18 +424,6 @@ const addToCartFromModal = (dish) => {
       .our-restaurants__restaurant-info {
         font-size: 24px;
       }
-
-      .card-body {
-        .restaurant-bookmark {
-          width: 56px;
-          height: 56px;
-
-          &::after {
-            width: 20px;
-            height: 28px;
-          }
-        }
-      }
     }
   }
 
@@ -601,13 +445,6 @@ const addToCartFromModal = (dish) => {
 @media screen and (max-width: 767.98px) {
 
   // Телефоны в горизонтальной ориентации (>= 576px)
-  .add-to-cart {
-    width: 36px;
-    height: 32px;
-    right: 16px;
-    bottom: 16px;
-  }
-
   .cart-btn {
     width: 100%;
   }
@@ -631,17 +468,6 @@ const addToCartFromModal = (dish) => {
 
         .our-restaurants__restaurant-info {
           font-size: 20px;
-        }
-
-        .restaurant-bookmark {
-          width: 48px;
-          height: 48px;
-
-          &::after {
-            width: 16px;
-            height: 24px;
-            background-size: contain;
-          }
         }
       }
     }
@@ -676,13 +502,6 @@ const addToCartFromModal = (dish) => {
 @media screen and (max-width: 566.98px) {
 
   // Телефоны в вертикальной ориентации (< 567px)
-  .add-to-cart {
-    width: 36px;
-    height: 32px;
-    right: 16px;
-    bottom: 16px;
-  }
-
   .restaurant-hero__wrapper {
     padding-bottom: 0;
 
@@ -696,19 +515,6 @@ const addToCartFromModal = (dish) => {
 
         .our-restaurants__restaurant-info {
           font-size: 18px;
-        }
-
-        .restaurant-bookmark {
-          position: absolute;
-          width: 48px;
-          height: 48px;
-          right: 18px;
-          bottom: 14px;
-
-          &::after {
-            width: 18px;
-            height: 26px;
-          }
         }
       }
     }

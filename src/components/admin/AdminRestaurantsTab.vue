@@ -7,6 +7,9 @@ import {usePagination} from "@/composables/usePagination.js";
 import { useConfirmModal } from "@/composables/useConfirmModal.js";
 import {onMounted, ref} from "vue";
 
+// Icons
+import { BookDashed } from '@lucide/vue';
+
 const { confirm } = useConfirmModal();
 
 // --- Рестораны ---
@@ -191,11 +194,8 @@ onMounted(async () => {
           </div>
           <div class="admin-card__body">
             <!-- Пустое состояние -->
-            <div v-if="restaurantsTotalCount === 0" class="admin-empty">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 21V7L12 3L21 7V21H3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                <path d="M9 21V13H15V21" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-              </svg>
+            <div v-if="restaurantsTotalCount === 0" class="admin-empty flex flex-col items-center">
+              <BookDashed size="48"/>
               <p>Ресторанов пока нет</p>
             </div>
 

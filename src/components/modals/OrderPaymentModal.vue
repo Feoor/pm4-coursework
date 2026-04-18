@@ -8,6 +8,9 @@ import { orderService } from '@/services/orderService'
 import { ORDER_STATUS } from '@/constants/orderStatus'
 import {Order} from "@/models/Order.js";
 
+// Icons
+import { CreditCard, Banknote, Bitcoin, Info, CircleCheck, CircleX } from '@lucide/vue';
+
 const props = defineProps({
   isOpen: {
     type: Boolean,
@@ -83,7 +86,7 @@ const handlePayment = async () => {
   
   try {
     // Симуляция обработки платежа
-    await new Promise(resolve => setTimeout(() => resolve(), 3000))
+    await new Promise(reject => setTimeout(() => reject(), 3000))
     
     // Обновляем статус заказа на "оплачен"
     await orderService.updateOrderStatus(authStore.profile?.id, props.order.id, ORDER_STATUS.PAID, { paymentMethod: paymentMethod.value })
@@ -164,10 +167,7 @@ const handleClose = () => {
             <input type="radio" name="payment" value="card" v-model="paymentMethod">
             <div class="payment-method__content">
               <div class="payment-method__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
-                  <path d="M2 10H22" stroke="currentColor" stroke-width="2"/>
-                </svg>
+                <CreditCard />
               </div>
               <div class="payment-method__info">
                 <div class="payment-method__name">Банковская карта</div>
@@ -180,12 +180,7 @@ const handleClose = () => {
             <input type="radio" name="payment" value="cash" v-model="paymentMethod">
             <div class="payment-method__content">
               <div class="payment-method__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="7" width="20" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
-                  <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
-                  <path d="M6 12C6 10.8954 6.89543 10 8 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M18 12C18 13.1046 17.1046 14 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+                <Banknote />
               </div>
               <div class="payment-method__info">
                 <div class="payment-method__name">Наличными</div>
@@ -198,11 +193,7 @@ const handleClose = () => {
             <input type="radio" name="payment" value="online-wallet" v-model="paymentMethod">
             <div class="payment-method__content">
               <div class="payment-method__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M21 12V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <circle cx="17" cy="17" r="4" stroke="currentColor" stroke-width="2"/>
-                  <path d="M17 15V19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+                <Bitcoin />
               </div>
               <div class="payment-method__info">
                 <div class="payment-method__name">Электронный кошелек</div>
@@ -273,11 +264,7 @@ const handleClose = () => {
       <transition name="slide-fade">
         <div v-if="paymentMethod === 'cash'" class="payment-note">
           <div class="payment-note__icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-              <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="12" cy="8" r="1" fill="currentColor"/>
-            </svg>
+            <Info />
           </div>
           <p>Оплата производится курьеру при получении заказа. Пожалуйста, подготовьте точную сумму.</p>
         </div>
@@ -287,11 +274,7 @@ const handleClose = () => {
       <transition name="slide-fade">
         <div v-if="paymentMethod === 'online-wallet'" class="payment-note">
           <div class="payment-note__icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-              <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="12" cy="8" r="1" fill="currentColor"/>
-            </svg>
+            <Info />
           </div>
           <p>После подтверждения заказа вы будете перенаправлены на страницу оплаты выбранного сервиса.</p>
         </div>
@@ -300,11 +283,8 @@ const handleClose = () => {
       <!-- Статус оплаты -->
       <transition name="fade">
         <div v-if="paymentStatus === 'success'" class="payment-status payment-status--success">
-          <div class="payment-status__icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-              <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <div class="payment-status__icon flex justify-center">
+            <CircleCheck />
           </div>
           <h4>Оплата прошла успешно!</h4>
           <p>Ваш заказ принят в обработку</p>
@@ -313,12 +293,8 @@ const handleClose = () => {
 
       <transition name="fade">
         <div v-if="paymentStatus === 'error'" class="payment-status payment-status--error">
-          <div class="payment-status__icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-              <path d="M15 9L9 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+          <div class="payment-status__icon flex justify-center">
+            <CircleX />
           </div>
           <h4>Ошибка оплаты</h4>
           <p>{{ errorMessage }}</p>

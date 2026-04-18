@@ -2,6 +2,9 @@
 import { useCartStore } from '@/store/cartStore';
 import { formatPrice } from '@/utils/formatters';
 
+// Icons
+import { Plus, Minus } from '@lucide/vue';
+
 const cartStore = useCartStore();
 
 const emit = defineEmits(['order-payment']);
@@ -29,7 +32,9 @@ const handleOrderPayment = () => {
       <h3 class="menu-cart__title pt-4 px-4">
         {{ cartStore.isEmpty() ? 'Корзина пуста' : `Ваш заказ` }}
       </h3>
-      <button @click="handleClose" class="sidebar__close-btn"></button>
+      <button @click="handleClose" class="absolute top-6 right-6 p-1 hover:bg-(--translucent-white) rounded-5">
+        <Plus class="rotate-45" size="32"/>
+      </button>
     </div>
 
     <div class="menu-cart__content">
@@ -53,9 +58,15 @@ const handleOrderPayment = () => {
             <!-- Кнопки управления количеством -->
             <div class="cart-dish__controls d-flex flex-column align-items-center">
               <div class="cart-dish__qty d-flex align-items-center">
-                <button @click="handleDecrement(item.dish)" class="cart-dish__minus-btn"></button>
+                <button @click="handleDecrement(item.dish)" class="border-2 p-1 transition-colors hover:bg-(--translucent-white) rounded-3">
+                  <Minus size="28" />
+                </button>
+
                 <span class="cart-dish__count">{{ item.quantity }}</span>
-                <button @click="handleIncrement(item.dish)" class="cart-dish__plus-btn"></button>
+
+                <button @click="handleIncrement(item.dish)" class="border-2 p-1 transition-colors hover:bg-(--translucent-white) rounded-3">
+                  <Plus size="28" />
+                </button>
               </div>
               <div class="cart-dish__total-price">
                 <span class="cart-dish__total">{{ formatPrice(item.cost) }}</span>
@@ -67,8 +78,8 @@ const handleOrderPayment = () => {
     </div>
 
     <div v-show="!cartStore.isEmpty()" class="sidebar__buttons">
-      <button @click="handleOrderPayment()" class="sidebar__checkout-btn w-100 d-flex align-items-center">
-        <span class="cart__count me-3 badge rounded-pill bg-danger">{{ cartStore.totalItems() }}</span>
+      <button @click="handleOrderPayment()" class="flex items-center w-full border-2 p-2.5 transition-colors hover:bg-(--translucent-white) rounded-5">
+        <span class="bg-danger rounded-full px-2 mr-3">{{ cartStore.totalItems() }}</span>
         Перейти к оплате
         <span class="cart__price ms-auto">{{ cartStore.formattedTotalPrice() }}</span>
       </button>
@@ -136,32 +147,6 @@ const handleOrderPayment = () => {
     font-weight: 700;
     color: #fff
   }
-
-  .sidebar__close-btn {
-    position: absolute;
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    margin: 1.5rem 1.5rem 0 0;
-    border: none;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    top: 0;
-    right: 0;
-
-    &::after {
-      display: inline-block;
-      content: "";
-      width: 23px;
-      height: 23px;
-      background: url("@/assets/icons/close_icon.svg") no-repeat;
-      background-size: contain;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
 }
 
 .menu-cart__content {
@@ -224,62 +209,6 @@ const handleOrderPayment = () => {
   .cart-dish__qty {
     font-size: 20px;
     gap: 16px;
-
-    button {
-      position: relative;
-      width: 40px;
-      height: 40px;
-      font-family: $font-family, sans-serif;
-      font-size: 32px;
-      border-radius: 10px;
-      transition: background-color .2s ease;
-
-      &::after {
-        display: inline-block;
-        content: "";
-        width: 28px;
-        height: 28px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-  }
-
-  .cart-dish__minus-btn {
-    background-color: $main-black;
-    color: #fff;
-    border: 1px solid #fff;
-
-    &::after {
-      background: url("@/assets/icons/minus.svg") no-repeat;
-      background-size: contain;
-    }
-
-    &:hover {
-      background-color: $translucent-white;
-    }
-  }
-
-  .cart-dish__plus-btn {
-    background-color: #fff;
-    color: $main-black;
-    border: 1px solid #fff;
-
-    &::after {
-      background: url("@/assets/icons/plus-black.svg") no-repeat;
-      background-size: contain;
-    }
-
-    &:hover {
-      background-color: $translucent-white;
-
-      &::after {
-        background: url("@/assets/icons/plus.svg") no-repeat;
-        background-size: contain;
-      }
-    }
   }
 
   .cart-dish__total-price {
@@ -337,16 +266,6 @@ const handleOrderPayment = () => {
     .cart-dish__qty {
       font-size: 16px;
       gap: 12px;
-
-      button {
-        width: 32px;
-        height: 32px;
-
-        &::after {
-          width: 20px;
-          height: 20px;
-        }
-      }
     }
 
     .cart-dish__total-price {

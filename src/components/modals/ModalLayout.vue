@@ -1,6 +1,9 @@
 <script setup>
 import { watch } from 'vue'
 
+// Icons
+import { Plus } from '@lucide/vue';
+
 const props = defineProps({
   isOpen: {
     type: Boolean,
@@ -59,11 +62,8 @@ const handleClose = () => {
           <slot name="header">
             <h3>{{ title }}</h3>
           </slot>
-          <button class="close-btn" @click="handleClose">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <button class="close-btn p-1" @click="handleClose">
+            <Plus size="32" class="rotate-45" />
           </button>
         </div>
 
@@ -133,8 +133,6 @@ const handleClose = () => {
   }
 
   .close-btn {
-    width: 36px;
-    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;

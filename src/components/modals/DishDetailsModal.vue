@@ -4,6 +4,9 @@ import { formatCategories } from '@/utils/formatters'
 import ModalLayout from "@/components/modals/ModalLayout.vue";
 import {Dish} from "@/models/Dish.js";
 
+// Icons
+import { Utensils, Star, Hourglass, ReceiptText, Plus } from '@lucide/vue';
+
 const props = defineProps({
   isOpen: {
     type: Boolean,
@@ -53,35 +56,25 @@ const handleAddToCart = () => {
         <div class="dish-details__header">
           <h3 class="dish-details__name">{{ dish.name }}</h3>
           <div class="dish-details__rating">
-            <img src="@/assets/icons/purple_star.svg" alt="Star">
+            <Star fill="#6c5fbc" strokeWidth="0" size="20" />
             <span>{{ dish.rating }}</span>
           </div>
         </div>
 
         <!-- Ресторан -->
         <div v-if="dish.restaurant" class="dish-details__restaurant">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 21V7L12 3L21 7V21H3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M9 21V13H15V21" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          </svg>
+          <Utensils size="18" />
           <span>{{ dish.restaurant.name }}</span>
         </div>
 
         <!-- Мета-информация (время доставки, категории) -->
         <div class="dish-details__meta">
           <div class="dish-details__meta-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-              <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <Hourglass size="18" />
             <span>{{ dish.formattedDeliveryTime }}</span>
           </div>
           <div v-if="dish.categories && dish.categories.length" class="dish-details__meta-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 6H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M4 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M4 18H18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+            <ReceiptText size="18" />
             <span>{{ formatCategories(dish.categories) }}</span>
           </div>
         </div>
@@ -102,10 +95,7 @@ const handleAddToCart = () => {
             <span class="dish-details__price-value">{{ dish.formattedPrice }}</span>
           </div>
           <button class="btn btn-primary dish-details__cart-btn" @click="handleAddToCart">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 5V19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
+            <Plus />
             В корзину
           </button>
         </div>

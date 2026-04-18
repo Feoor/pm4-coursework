@@ -71,7 +71,7 @@ const handleShowDetails = () => {
         <h5 class="dish-card__price menu-section__dish-price">{{ dish.formattedPrice }}</h5>
 
         <!-- Кнопка "Добавить в корзину" -->
-        <button class="absolute bg-[#323142] bottom-5 right-5 rounded-3 p-1.5 transition-colors hover:bg-[#6c5fbc]" @click.stop="handleAddToCart">
+        <button class="absolute bg-(--main-black) bottom-5 right-5 rounded-3 p-1.5 transition-colors hover:bg-(--primary)" @click.stop="handleAddToCart">
           <Plus class="text-white" size="28" />
         </button>
       </div>

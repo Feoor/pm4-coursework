@@ -38,7 +38,7 @@ const handleShowDetails = () => {
       </span>
       <button v-if="props.order.status === 'pending'"
        class="btn btn-primary btn-sm"
-       @click="handlePayOrder"
+       @click.stop="handlePayOrder"
       >
         Оплатить
       </button>

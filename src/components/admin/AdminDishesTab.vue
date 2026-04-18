@@ -8,6 +8,9 @@ import {Dish} from "@/models/Dish.js";
 import { useConfirmModal } from "@/composables/useConfirmModal.js";
 import {onMounted, ref} from "vue";
 
+// Icons
+import { Info, Plus, NotepadTextDashed } from '@lucide/vue';
+
 const { confirm } = useConfirmModal();
 
 // Переменные
@@ -159,11 +162,7 @@ const handleDeleteDish = async (id) => {
 
         <!-- Подсказка, если ресторанов нет -->
         <div v-if="restaurantsTotalCount === 0" class="admin-hint mt-3">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="12" cy="8" r="1" fill="currentColor"/>
-          </svg>
+          <Info size="20" />
           Сначала добавьте хотя бы один ресторан во вкладке «Рестораны»
         </div>
       </div>
@@ -190,10 +189,7 @@ const handleDeleteDish = async (id) => {
                     required
                 >
                 <button type="submit" class="btn btn-primary admin-form__btn-add" title="Добавить секцию">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 5V19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
+                  <Plus />
                 </button>
               </form>
 
@@ -214,10 +210,7 @@ const handleDeleteDish = async (id) => {
                       @click="handleDeleteSection(section.id)"
                       title="Удалить"
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                      <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
+                    <Plus class="rotate-45" />
                   </button>
                 </div>
               </div>
@@ -355,11 +348,8 @@ const handleDeleteDish = async (id) => {
               <span class="admin-card__counter">{{ dishesTotalCount }}</span>
             </div>
             <div class="admin-card__body">
-              <div v-if="dishesTotalCount === 0" class="admin-empty">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
+              <div v-if="dishesTotalCount === 0" class="admin-empty flex flex-col items-center">
+                <NotepadTextDashed size="48"/>
                 <p>Блюд пока нет</p>
               </div>
 
