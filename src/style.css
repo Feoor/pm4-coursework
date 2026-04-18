@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+@theme {
+    /* Colors */
+    --primary: #6c5fbc;
+    --primary-hover: #5a4aa3;
+    --primary-translucent: #dbd9ee;
+
+    --translucent-white: rgba(197, 197, 197, 0.15);
+
+    --main-black: #242424;
+}
