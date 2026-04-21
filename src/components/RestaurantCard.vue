@@ -3,20 +3,24 @@ import { getBadgeClass, getBadgeText } from '@/utils/helpers.js'
 import { Restaurant } from '@/models/Restaurant.js'
 
 // Icons
-import { Star } from '@lucide/vue'
+import { Star, Clock } from '@lucide/vue'
 
 defineProps({
   restaurant: {
     type: Restaurant,
     required: true
+  },
+  mode: {
+    type: String,
+    default: 'default' // 'default' - отображение карточки по умолчанию, 'favorite' - для отображения в избранных
   }
 })
 </script>
 
 <template>
-  <div class="restaurant-card card h-100">
+  <div class="restaurant-card card h-100 w-auto">
 
-    <router-link :to="`/restaurant/${restaurant.id}`">
+    <router-link v-if="mode === 'default'" :to="`/restaurant/${restaurant.id}`">
       <img :src="restaurant.image" :alt="restaurant.name" class="card-img-top">
 
       <div class="card-body">
@@ -31,6 +35,19 @@ defineProps({
       </div>
     </router-link>
 
+
+    <router-link v-if="mode === 'favorite'" :to="`/restaurant/${restaurant.id}`">
+      <img :src="restaurant.image" :alt="restaurant.name" class="card-img-top">
+
+      <div class="card-body">
+        <h5 class="card-title mb-2">{{ restaurant.name }}</h5>
+
+        <div class="restaurant-card__info d-flex align-items-center">
+          <Clock size="18" />
+          <span class="ms-1">{{ restaurant.addedAt }}</span>
+        </div>
+      </div>
+    </router-link>
   </div>
 </template>
 

@@ -5,7 +5,7 @@ import { Dish } from '@/models/Dish.js'
 import { useFavoritesStore } from "../store/favoritesStore.js";
 
 // Icons
-import { Star, Plus, Heart } from '@lucide/vue';
+import { Star, Plus, Heart, Clock } from '@lucide/vue';
 
 const props = defineProps({
   dish: {
@@ -14,7 +14,7 @@ const props = defineProps({
   },
   mode: {
     type: String,
-    default: 'preview' // 'preview' - отображение карточки как реклама, 'full' - отображение карточки на странице ресторана
+    default: 'preview' // 'preview' - отображение карточки как реклама, 'full' - отображение карточки на странице ресторана, 'favorite' - для отображения в избранных
   }
 })
 
@@ -58,8 +58,8 @@ const handleShowDetails = () => {
     </router-link>
 
     <!-- Для full -->
-    <div v-else @click="handleShowDetails">
-      <button class="absolute top-3 right-3 p-1.5 transition-colors hover:bg-gray-400/25" style="border-radius: 50%" @click.stop="handleFavoriteClick">
+    <div v-else-if="mode === 'full'" @click="handleShowDetails">
+      <button class="absolute top-3 right-3 p-1.5 transition-all hover:bg-gray-400/25 active:scale-90" style="border-radius: 50%" @click.stop="handleFavoriteClick">
         <Heart class="text-red-500" :fill="isFavorite ? 'currentColor' : 'none'" />
       </button>
 
@@ -82,6 +82,23 @@ const handleShowDetails = () => {
         </button>
       </div>
     </div>
+
+    <!-- Для favorites -->
+    <router-link v-if="mode === 'favorite'" :to="`/restaurant/${dish.restaurant.id}`">
+      <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">
+
+      <div class="card-body">
+        <span :class="`badge badge-default`">{{ dish.restaurant.name }}</span>
+        <h5 class="dish-card__title card-title mt-0">{{ dish.name }}</h5>
+
+        <div class="dish-card__info d-flex align-items-center mb-2">
+          <Clock size="18" />
+          <span class="ms-1">{{ dish.addedAt }}</span>
+        </div>
+
+        <h5 class="dish-card__price">{{ dish.formattedPrice }}</h5>
+      </div>
+    </router-link>
   </div>
 </template>
 
