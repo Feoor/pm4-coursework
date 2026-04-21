@@ -1,7 +1,7 @@
 <script setup>
 import { useAuthStore } from '@/store/authStore'
-import { favoritesService } from "../services/favoritesService.js";
-import { orderService } from "../services/orderService.js";
+import { favoritesService } from "../../services/favoritesService.js";
+import { orderService } from "../../services/orderService.js";
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 

@@ -40,7 +40,7 @@ const handleAddToCart = () => {
     <div v-if="dish" class="dish-details">
       <!-- Изображение блюда -->
       <div class="dish-details__image-wrapper">
-        <img :src="dish.image" :alt="dish.name" class="dish-details__image">
+        <img :src="dish.imageUrl" :alt="dish.name" class="dish-details__image">
         <!-- Бейдж поверх изображения -->
         <span
           v-if="dish.badge"
