@@ -42,7 +42,7 @@ export const favoritesService = {
     const docsSnap = await getDocs(docsQuery);
 
     return {
-      items: docsSnap.docs,
+      snap: docsSnap,
       lastVisible: docsSnap.docs.length > 0 ? docsSnap.docs[docsSnap.docs.length - 1] : null,
     }
   },
@@ -61,7 +61,7 @@ export const favoritesService = {
     return {
       dishesCount: dishesCountSnap.data().count,
       restaurantsCount: restaurantsCountSnap.data().count,
-      totalCount: dishesCountSnap.data().count,
+      totalCount: dishesCountSnap.data().count + restaurantsCountSnap.data().count,
     }
   },
 
@@ -73,6 +73,7 @@ export const favoritesService = {
       name: dish.name,
       image: dish.image,
       price: dish.price,
+      restaurantId: dish.restaurant.id,
       restaurantName: dish.restaurant.name,
       addedAt: serverTimestamp()
     }

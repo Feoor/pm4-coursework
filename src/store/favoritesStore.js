@@ -3,6 +3,8 @@ import { ref } from "vue";
 import { useAuthStore } from "./authStore";
 import { favoritesService } from "../services/favoritesService.js";
 import {COLLECTIONS} from "../constants/collections.js";
+import {Dish} from "../models/Dish.js";
+import {Restaurant} from "../models/Restaurant.js";
 
 export const useFavoritesStore = defineStore("favorites", () => {
   // State
@@ -17,15 +19,23 @@ export const useFavoritesStore = defineStore("favorites", () => {
       const userId = authStore.profile?.id;
 
       if (userId) {
-        // Авторизован → пробуем загрузить из Firestore
-        const dishesResult = await favoritesService.getFavoritesCollection(userId, COLLECTIONS.FAVORITE_DISHES);
-        const restaurantsResult = await favoritesService.getFavoritesCollection(userId, COLLECTIONS.FAVORITE_RESTAURANTS);
+        const dishesSnap = (await favoritesService.getFavoritesCollection(userId, COLLECTIONS.FAVORITE_DISHES)).snap;
+        const dishes = [];
+        dishesSnap.forEach((doc) => {
+          dishes.push(new Dish({id: doc.id, ...doc.data()}));
+        })
 
-        if (dishesResult && dishesResult.items.length > 0) {
-          favoriteDishes.value = dishesResult.items;
+        const restaurantsSnap = (await favoritesService.getFavoritesCollection(userId, COLLECTIONS.FAVORITE_RESTAURANTS)).snap;
+        const restaurants = [];
+        restaurantsSnap.forEach((doc) => {
+          restaurants.push(new Restaurant({id: doc.id, ...doc.data()}));
+        })
+
+        if (dishes && dishes.length > 0) {
+          favoriteDishes.value = dishes;
         }
-        if (restaurantsResult && restaurantsResult.items.length > 0) {
-          favoriteRestaurants.value = restaurantsResult.items;
+        if (restaurants && restaurants.length > 0) {
+          favoriteRestaurants.value = restaurants;
         }
       }
     } catch (error) {
