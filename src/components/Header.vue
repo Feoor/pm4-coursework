@@ -1,10 +1,10 @@
 <script setup>
 import { ref, watch } from 'vue';
-import CartSidebar from '@/components/sidebar/CartSidebar.vue';
-import NavSidebar from '@/components/sidebar/NavSidebar.vue';
-import UserMiniProfile from '@/components/UserMiniProfile.vue';
-import { useAuthStore } from '@/store/authStore';
-import { useCartStore } from '@/store/cartStore';
+import CartSidebar from '../components/sidebar/CartSidebar.vue';
+import NavSidebar from '../components/sidebar/NavSidebar.vue';
+import UserMiniProfile from './user/UserMiniProfile.vue';
+import { useAuthStore } from '../store/authStore';
+import { useCartStore } from '../store/cartStore';
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();

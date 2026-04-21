@@ -91,7 +91,7 @@ onMounted(async () => {
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/styles/admin-page.scss";
+@use "../assets/styles/admin-page.scss";
 
 .admin-page {
   padding: 40px 0 80px;
