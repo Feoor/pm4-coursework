@@ -48,7 +48,7 @@ const handleOrderPayment = () => {
             class="menu-cart__dish d-flex justify-content-between align-items-center">
             <!-- Краткая информация об блюде -->
             <div class="cart-dish__info d-flex align-items-center">
-              <img :src="item.image" :alt="item.name" class="cart-dish__image">
+              <img :src="item.dish.imageUrl" :alt="item.name" class="cart-dish__image">
               <div class="cart-dish__details">
                 <h5 class="cart-dish__name">{{ item.name }}</h5>
                 <span class="cart-dish__price">{{ formatPrice(item.price) }}</span>
