@@ -10,6 +10,7 @@ export class Restaurant {
     this.deliveryTime = restaurantData.delivery_time || 0;
     this.popularity = restaurantData.popularity || 0;
     this.image = restaurantData.image ? getImageUrl(restaurantData.image) : '';
+    this.addedAt = restaurantData.addedAt?.toDate().toLocaleString('ru-RU', { dateStyle: 'short' }) || 0; // Для избранных
   }
 
   get formattedDeliveryTime() {

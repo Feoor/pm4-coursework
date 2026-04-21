@@ -16,6 +16,7 @@ export class Dish {
       id: dishData.restaurant?.id || dishData.restaurantId || 'unknown',
       name: dishData.restaurant?.name || dishData.restaurantName || 'unknown restaurant',
     }
+    this.addedAt = dishData.addedAt?.toDate().toLocaleString('ru-RU', { dateStyle: 'short' }) || 0; // Для избранных
   }
 
   get formattedPrice() {
