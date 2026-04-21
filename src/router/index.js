@@ -55,7 +55,7 @@ function checkAccess(to, next, authStore) {
   if (to.meta.requiresAdmin && !isAdmin) {
     console.log('Доступ запрещен: требуется роль администратора');
     console.log(`Пользователь: ${authStore.profile?.displayName || 'неизвестный'}, Роль: ${authStore.profile?.role || 'неизвестная'}`);
-    next('/');
+    next('/not-found');
     return;
   }
 

@@ -17,7 +17,7 @@ const goHome = () => {
     <main class="flex-grow flex items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
       <div class="text-center max-w-xl mx-auto flex flex-col items-center">
         <div class="flex justify-center mb-6">
-          <Frown class="w-32 h-32 text-(--primary)/80" stroke-width="1" />
+          <Frown size="128" class="text-(--primary)/80" stroke-width="1" />
         </div>
         <h2 class="text-(--primary) font-bold tracking-widest uppercase text-sm mb-3">Ошибка 404</h2>
         <h1 class="text-4xl sm:text-5xl font-extrabold text-(--main-black) mb-5 tracking-tight">
