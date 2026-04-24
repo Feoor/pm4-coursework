@@ -194,7 +194,7 @@ const addToCartFromModal = (dish) => {
     <!-- Спиннер для индикации загрузки -->
     <section v-show="isLoading">
       <div class="d-flex justify-content-center my-5">
-        <div class="spinner-border text-primary" role="status">
+        <div class="spinner-border text-(--primary)" role="status">
           <span class="visually-hidden">Загружаем...</span>
         </div>
       </div>
