@@ -84,7 +84,7 @@ const handleShowDetails = () => {
     </div>
 
     <!-- Для favorites -->
-    <router-link v-if="mode === 'favorite'" :to="`/restaurant/${dish.restaurant.id}`">
+    <router-link v-else-if="mode === 'favorite'" :to="`/restaurant/${dish.restaurant.id}`">
       <img :src="dish.imageUrl" :alt="dish.name" class="dish-card__image card-img-top rounded-circle">
 
       <div class="card-body">
