@@ -43,9 +43,8 @@ const handleSubmit = async () => {
     <AuthLayout>
         <!--  Титул + быстрый вход  -->
           <h2 class="auth__title text-center mb-4 mb-lg-5">Вход в eatly</h2>
-          <div class="auth__social-login d-flex justify-content-between mb-4">
+          <div class="auth__social-login flex justify-center mb-4">
             <button @click="handleButtonClick('Google')" class="auth__social-btn auth__social-btn--google"></button>
-            <button @click="handleButtonClick('Apple')" class="auth__social-btn auth__social-btn--apple"></button>
           </div>
 
           <h3 class="auth__text-divider text-center mb-4">ИЛИ</h3>
