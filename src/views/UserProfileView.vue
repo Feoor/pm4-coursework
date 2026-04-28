@@ -183,7 +183,7 @@ onMounted(async () => {
             </button>
           </div>
 
-          <div class="bg-white rounded-5 p-7.5">
+          <div class="bg-white rounded-5 p-7.5 overflow-x-auto" >
             <!-- Личные данные -->
             <EditUserProfileTab v-if="activeTab === 'personal'" />
 

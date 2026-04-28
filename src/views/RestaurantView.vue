@@ -130,7 +130,7 @@ const addToCartFromModal = (dish) => {
     @add-to-cart="addToCartFromModal"
   />
 
-  <!--  -->
+  <!-- Модальное окно оплаты заказа -->
   <OrderPaymentModal
     v-if="currentOrder"
     :isOpen="isOrderPaymentModalOpen"
